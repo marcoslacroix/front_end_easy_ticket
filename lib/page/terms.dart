@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class Events extends StatefulWidget {
-  const Events({super.key});
+class Terms extends StatefulWidget {
+  const Terms({super.key});
 
 
   @override
-  _Events createState() => _Events();
+  _Terms createState() => _Terms();
 }
 
-class _Events extends State<Events> {
+class _Terms extends State<Terms> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Eventos"),
+        title: const Text("Termos de uso"),
         backgroundColor: Colors.green,
       ),
       body: Container(
