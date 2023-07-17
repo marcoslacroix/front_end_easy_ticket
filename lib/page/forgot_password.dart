@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class Terms extends StatefulWidget {
-  const Terms({super.key});
+class ForgotPassword extends StatefulWidget {
+  const ForgotPassword({super.key});
 
 
   @override
-  _Terms createState() => _Terms();
+  _ForgotPassword createState() => _ForgotPassword();
 }
 
-class _Terms extends State<Terms> {
+class _ForgotPassword extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,8 +19,8 @@ class _Terms extends State<Terms> {
         elevation: 0,
       ),
       body: Container(
-        child: const Center(
-          child: Text('Terms and Conditions'),
+        child: Center(
+          child: Text('Esqueci minha senha'),
         ),
       ),
     );

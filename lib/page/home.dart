@@ -2,6 +2,7 @@
 import 'package:easy_ticket/page/my_tickets.dart';
 import 'package:easy_ticket/page/perfil.dart';
 import 'package:easy_ticket/page/events.dart';
+import 'package:easy_ticket/page/search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,12 +26,14 @@ class _Home extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: IndexedStack(
         index: _selectedIndex,
         children: const <Widget>[
           Center(
             child: Events(),
+          ),
+          Center(
+            child: Search(),
           ),
           Center(
             child: MyTickets(),
@@ -47,6 +50,10 @@ class _Home extends State<Home> {
             label: 'Eventos',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.event_available),
+            label: 'Pesquisar',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart_outlined),
             label: 'Meus ingressos',
           ),
@@ -57,6 +64,10 @@ class _Home extends State<Home> {
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        selectedItemColor: Colors.black, // Defina a cor do item selecionado
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: true, // Remover rótulos dos itens selecionados
+        showUnselectedLabels: true, // Remover rótulos dos itens não selecionados
       ),
     );
   }

@@ -5,10 +5,12 @@ import 'package:easy_ticket/page/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:http/http.dart' as http;
 
 import '../auth/auth.dart';
 import '../util/urls.dart';
+import 'forgot_password.dart';
 import 'home.dart';
 
 class Login extends StatefulWidget {
@@ -114,30 +116,45 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              "Área exclusiva para clientes, faça o login ou crie um cadastro",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+    return Container(
+      margin: const EdgeInsets.only(top: 250.00),
+      child: Column(
+        children: [
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  "Area exclusiva para clientes, faça o login ou crie um cadastro",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            Column(
-              children: [
-                TextField(
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                child: TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(
                     labelText: 'E-mail',
                   ),
                 ),
-                TextField(
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                child: TextField(
                   controller: _passwordController,
                   decoration: InputDecoration(
                     labelText: 'Password',
@@ -155,45 +172,76 @@ class _LoginState extends State<Login> {
                   ),
                   obscureText: !isPasswordVisible,
                 ),
-                Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 10.0),
-                      width: 120,
-                      child: ElevatedButton(
-                        onPressed: () => _handleLogin(context),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                        ),
-                        child: const Text('Login'),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 10.0),
-                      width: 120,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Register(),
-                              fullscreenDialog: true,
-                            ),
-                                (route) => false,
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                        ),
-                        child: const Text('Registrar'),
-                      ),
-                    ),
-                  ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () => _handleLogin(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
                 ),
-              ],
-            ),
-          ],
-        ),
+                child: const Text('Acessar'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Register(),
+                      fullscreenDialog: false,
+                    ),
+                        (route) => true,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                ),
+                child: const Text(
+                  'Quero me registrar',
+                  style: TextStyle(
+                    color: Colors.black, // Defina a cor do texto
+                  ),
+                ),
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ForgotPassword(),
+                      fullscreenDialog: false,
+                    ),
+                        (route) => true,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                ),
+                child: const Text(
+                  'Esqueci minha senha',
+                  style: TextStyle(
+                    color: Colors.black, // Defina a cor do texto
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
       ),
     );
   }

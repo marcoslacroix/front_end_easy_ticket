@@ -37,7 +37,7 @@ class _TokenCheckerState extends State<TokenChecker> {
             child: const CircularProgressIndicator(),
           );
         } else {
-          return auth.token.isNotEmpty ? const Home() : const Login();
+          return auth.token.isNotEmpty ?  const Home() : const Login();
         }
       },
     );

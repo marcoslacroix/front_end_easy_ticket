@@ -1,3 +1,4 @@
-const String apiBaseUrl = 'http://192.168.2.105:3000';
+const String apiBaseUrl = 'https://7286-45-237-110-85.ngrok-free.app';
 const String createUserUrl = '$apiBaseUrl/users/';
 const String loginUrl = '$apiBaseUrl/login/';
+const String fetchEventsUrl = '$apiBaseUrl/event/';
