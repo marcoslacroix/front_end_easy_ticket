@@ -20,6 +20,7 @@ class _BuyTicketsState extends State<BuyTickets> {
   List<dynamic> items = [];
   Map<int, int> maleTicketCountMap = {};
   Map<int, int> femaleTicketCountMap = {};
+  var enableContinue = false;
 
   @override
   void initState() {
@@ -74,16 +75,16 @@ class _BuyTicketsState extends State<BuyTickets> {
                                     ElevatedButton(
                                       onPressed: () {
                                         setState(() {
-                                          if (type == 'MALE' &&
-                                              maleTicketCountMap[lotId]! > 0) {
-                                            maleTicketCountMap[lotId] =
-                                                maleTicketCountMap[lotId]! - 1;
-                                          } else if (type == 'FEMALE' &&
-                                              femaleTicketCountMap[lotId]! >
-                                                  0) {
-                                            femaleTicketCountMap[lotId] =
-                                                femaleTicketCountMap[lotId]! -
-                                                    1;
+                                          if (type == 'MALE' && maleTicketCountMap[lotId]! > 0) {
+                                              maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! - 1;
+                                              if (maleTicketCountMap[lotId]! == 0) {
+                                                  enableContinue = false;
+                                              }
+                                          } else if (type == 'FEMALE' && femaleTicketCountMap[lotId]! > 0) {
+                                              femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! - 1;
+                                              if (maleTicketCountMap[lotId]! == 0) {
+                                                enableContinue = false;
+                                              }
                                           }
                                         });
                                       },
@@ -91,21 +92,22 @@ class _BuyTicketsState extends State<BuyTickets> {
                                     ),
                                     const SizedBox(width: 20),
                                     Text(
-                                      type == 'MALE'
-                                          ? '${maleTicketCountMap[lotId]}'
-                                          : '${femaleTicketCountMap[lotId]}',
+                                      type == 'MALE' ? '${maleTicketCountMap[lotId]}' : '${femaleTicketCountMap[lotId]}',
                                     ),
                                     const SizedBox(width: 20),
                                     ElevatedButton(
                                       onPressed: () {
                                         setState(() {
                                           if (type == 'MALE') {
-                                            maleTicketCountMap[lotId] =
-                                                maleTicketCountMap[lotId]! + 1;
+                                            maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! + 1;
+                                            if (maleTicketCountMap[lotId]! > 0) {
+                                              enableContinue = true;
+                                            }
                                           } else if (type == 'FEMALE') {
-                                            femaleTicketCountMap[lotId] =
-                                                femaleTicketCountMap[lotId]! +
-                                                    1;
+                                            femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! + 1;
+                                            if (femaleTicketCountMap[lotId]! > 0) {
+                                              enableContinue = true;
+                                            }
                                           }
                                         });
                                       },
@@ -135,12 +137,15 @@ class _BuyTicketsState extends State<BuyTickets> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
+                print("anableContinue $enableContinue");
+                enableContinue ?
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const Payment(),
                   ),
-                );
+                )
+                : null;
               },
               child: const Text('Contiuar'),
             ),
