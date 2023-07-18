@@ -54,7 +54,7 @@ class _Event extends State<Event> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BuyTickets(event: event),
+                    builder: (context) => BuyTickets(event: event?['id']),
                   ),
                 );
               },

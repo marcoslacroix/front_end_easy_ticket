@@ -85,9 +85,9 @@ class _EventsState extends State<Events> {
     return DateFormat('dd/MM/yyyy').format(date);
   }
 
-  Future<List<dynamic>> fetchEvents({int page = 1, int pageSize = 10}) async {
+  Future<List<dynamic>> fetchEvents() async {
     try {
-      var url = Uri.parse('$fetchEventsUrl?page=$page&pageSize=$pageSize');
+      var url = Uri.parse(fetchEventsUrl);
       var response = await http.get(url);
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonData = jsonDecode(response.body);

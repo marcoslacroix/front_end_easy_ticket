@@ -1,5 +1,11 @@
+import 'dart:convert';
+
+import 'package:easy_ticket/page/payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import '../util/urls.dart';
 
 class BuyTickets extends StatefulWidget {
   final dynamic event;
@@ -9,10 +15,16 @@ class BuyTickets extends StatefulWidget {
 }
 
 class _BuyTicketsState extends State<BuyTickets> {
+  List<dynamic> lots = [];
+
+  @override
+  void initState() {
+    fetchLotsData(widget.event);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final event = widget.event;
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -24,9 +36,9 @@ class _BuyTicketsState extends State<BuyTickets> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: event?['lots'].length,
+              itemCount: lots.length,
               itemBuilder: (context, index) {
-                final lot = event?['lots'][index];
+                final lot = lots[index];
                 final tickets = lot?['tickets'] ?? [];
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -65,7 +77,7 @@ class _BuyTicketsState extends State<BuyTickets> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BuyTickets(event: event),
+                    builder: (context) => const Payment(),
                   ),
                 );
               },
@@ -80,5 +92,41 @@ class _BuyTicketsState extends State<BuyTickets> {
   String centsToReal(int cents) {
     double realValue = cents / 100.0;
     return realValue.toStringAsFixed(2);
+  }
+
+  Future<void> fetchLotsData(eventId) async {
+    List<dynamic> fetchedlots = await fetchLots(eventId);
+    setState(() {
+      lots = fetchedlots;
+    });
+  }
+
+  Map<String, String> _convertMapToStrings(Map<dynamic, dynamic> map) {
+    final convertedMap = <String, String>{};
+    map.forEach((key, value) {
+      convertedMap[key.toString()] = value.toString();
+    });
+    return convertedMap;
+  }
+
+  Future<List<dynamic>> fetchLots(eventId) async {
+    try {
+      var params = {
+        "eventId": eventId
+      };
+      final url = Uri.parse(fetchLotsUrl).replace(queryParameters: _convertMapToStrings(params));
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = jsonDecode(response.body);
+        List<dynamic> eventsJsonList = jsonData['lots'];
+        return eventsJsonList;
+      } else {
+        print('Failed to fetch events. Status code: ${response.statusCode}');
+        return [];
+      }
+    } catch (e) {
+      print('Error occurred while fetching events: $e');
+      return [];
+    }
   }
 }
