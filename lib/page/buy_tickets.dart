@@ -49,7 +49,6 @@ class _BuyTicketsState extends State<BuyTickets> {
                 return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
-                      color: Colors.red,
                       child: ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -58,6 +57,7 @@ class _BuyTicketsState extends State<BuyTickets> {
                           final ticket = tickets[ticketIndex];
                           String realValue = centsToReal(ticket['price']);
                           final type = ticket['type'] ?? '';
+                          final description = lot['description'];
                           final lotId = lot['id'];
 
                           // Initialize ticket counts for each lot
@@ -65,7 +65,7 @@ class _BuyTicketsState extends State<BuyTickets> {
                           femaleTicketCountMap[lotId] ??= 0;
 
                           return ListTile(
-                            title: Center(child: Text(getTypeFormated(type))),
+                            title: Center(child: Text(description + " " + getTypeFormated(type))),
                             subtitle: Column(
                               children: [
                                 Row(
@@ -90,6 +90,12 @@ class _BuyTicketsState extends State<BuyTickets> {
                                       child: const Icon(Icons.remove),
                                     ),
                                     const SizedBox(width: 20),
+                                    Text(
+                                      type == 'MALE'
+                                          ? '${maleTicketCountMap[lotId]}'
+                                          : '${femaleTicketCountMap[lotId]}',
+                                    ),
+                                    const SizedBox(width: 20),
                                     ElevatedButton(
                                       onPressed: () {
                                         setState(() {
@@ -112,9 +118,10 @@ class _BuyTicketsState extends State<BuyTickets> {
                                   children: [
                                     Center(
                                         child: Text(
-                                            'Quantity: ${ticket['quantity']} - R\$ $realValue')),
+                                            'R\$ $realValue')),
                                   ],
                                 ),
+                                const Divider(),
                               ],
                             ),
                           );
