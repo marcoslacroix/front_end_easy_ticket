@@ -23,8 +23,14 @@ class _PaymentState extends State<Payment> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => Auth(),
-      child: const Scaffold(
-        body: Text("Test"),
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          backgroundColor: Colors.transparent,
+          iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
+          elevation: 0,
+        ),
+        body: const Text("Test"),
       )
     );
   }

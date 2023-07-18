@@ -14,8 +14,9 @@ class BuyTickets extends StatefulWidget {
   State<BuyTickets> createState() => _BuyTicketsState();
 }
 
+
 class _BuyTicketsState extends State<BuyTickets> {
-  List<dynamic> lots = [];
+  List<dynamic> items = [];
 
   @override
   void initState() {
@@ -25,6 +26,7 @@ class _BuyTicketsState extends State<BuyTickets> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -36,10 +38,11 @@ class _BuyTicketsState extends State<BuyTickets> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: lots.length,
+              itemCount: items.length,
               itemBuilder: (context, index) {
-                final lot = lots[index];
-                final tickets = lot?['tickets'] ?? [];
+                final item = items[index];
+                final tickets = item?['tickets'] ?? [];
+                final lot = item?['lot'];
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
@@ -47,7 +50,7 @@ class _BuyTicketsState extends State<BuyTickets> {
                     child: Column(
                       children: [
                         ListTile(
-                          title: Center(child: Text('Lot ID: ${lot?['loteId']}')),
+                          title: Center(child: Text('${lot?['description']}')),
                         ),
                         ListView.builder(
                           shrinkWrap: true,
@@ -56,10 +59,39 @@ class _BuyTicketsState extends State<BuyTickets> {
                           itemBuilder: (context, ticketIndex) {
                             final ticket = tickets[ticketIndex];
                             String realValue = centsToReal(ticket['price']);
+                            final type = ticket['type'] ?? '';
 
                             return ListTile(
-                              title: Center(child: Text('Type: ${ticket['type']}')),
-                              subtitle: Center(child: Text('Quantity: ${ticket['quantity']} - R\$ $realValue')),
+                              title: Center(child: Text(getTypeFormated(type))),
+                              subtitle: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+
+                                        },
+                                        child: const Icon(Icons.remove),
+                                      ),
+                                      const SizedBox(width: 20),
+                                      ElevatedButton(
+                                        onPressed: () => {
+
+                                        },
+                                        child: const Icon(Icons.add),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Center(child: Text('Quantity: ${ticket['quantity']} - R\$ $realValue')),
+                                      Center(child: Text('Contador do Lote:')),                                    ],
+                                  )
+
+                                ],
+                              ),
                             );
                           },
                         ),
@@ -89,6 +121,21 @@ class _BuyTicketsState extends State<BuyTickets> {
     );
   }
 
+  String getTypeFormated(type) {
+    String typeFormated;
+    switch(type) {
+      case "FEMALE":
+        typeFormated = "Feminino";
+        break;
+      case "MALE":
+        typeFormated = "Masculino";
+        break;
+      default:
+        typeFormated = "Unisex";
+    }
+    return typeFormated;
+  }
+
   String centsToReal(int cents) {
     double realValue = cents / 100.0;
     return realValue.toStringAsFixed(2);
@@ -97,7 +144,7 @@ class _BuyTicketsState extends State<BuyTickets> {
   Future<void> fetchLotsData(eventId) async {
     List<dynamic> fetchedlots = await fetchLots(eventId);
     setState(() {
-      lots = fetchedlots;
+      items = fetchedlots;
     });
   }
 
