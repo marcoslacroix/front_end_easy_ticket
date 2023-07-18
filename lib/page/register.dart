@@ -68,6 +68,7 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         backgroundColor: Colors.transparent,
@@ -76,7 +77,7 @@ class _RegisterState extends State<Register> {
       ),
       body: Column(
         children: [
-            Row(
+          Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
@@ -90,283 +91,283 @@ class _RegisterState extends State<Register> {
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: TextField(
-                    controller: _lastnameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Sobrenome',
-                    ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                child: TextField(
+                  controller: _lastnameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Sobrenome',
                   ),
                 ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: TextField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'E-mail',
-                    ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                child: TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'E-mail',
                   ),
                 ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: TextField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Senha',
-                      suffixIcon: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isPasswordVisible = !isPasswordVisible;
-                          });
-                        },
-                        child: Icon(
-                          isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                        ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                child: TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isPasswordVisible = !isPasswordVisible;
+                        });
+                      },
+                      child: Icon(
+                        isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                       ),
                     ),
-                    obscureText: !isPasswordVisible,
                   ),
+                  obscureText: !isPasswordVisible,
                 ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: TextField(
-                    controller: _confirmPasswordController,
-                    decoration: InputDecoration(
-                      labelText: 'Confirmar senha',
-                      suffixIcon: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isConfirmPasswordVisible = !isConfirmPasswordVisible;
-                          });
-                        },
-                        child: Icon(
-                          isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                        ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                child: TextField(
+                  controller: _confirmPasswordController,
+                  decoration: InputDecoration(
+                    labelText: 'Confirmar senha',
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isConfirmPasswordVisible = !isConfirmPasswordVisible;
+                        });
+                      },
+                      child: Icon(
+                        isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
                       ),
                     ),
-                    obscureText: !isConfirmPasswordVisible,
                   ),
+                  obscureText: !isConfirmPasswordVisible,
                 ),
-              ],
-            ),
-            const SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: Row(
-                    children: [
-                      if (passwordContainsUppercase)
-                        const Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        )
-                      else
-                        const Icon(
-                          Icons.clear,
-                          color: Colors.red,
-                        ),
-                      Text(
-                        'Letra maiúscula',
-                        style: TextStyle(
-                          color: passwordContainsUppercase ? Colors.green : Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: Row(
-                    children: [
-                      if (passwordContainsNumber)
-                        const Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        )
-                      else
-                        const Icon(
-                          Icons.clear,
-                          color: Colors.red,
-                        ),
-                      Text(
-                        'Número',
-                        style: TextStyle(
-                          color: passwordContainsNumber ? Colors.green : Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: Row(
-                    children: [
-                      if (passwordContainsLowercase)
-                        const Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        )
-                      else
-                        const Icon(
-                          Icons.clear,
-                          color: Colors.red,
-                        ),
-                      Text(
-                        'Letra minuscula',
-                        style: TextStyle(
-                          color: passwordContainsLowercase ? Colors.green : Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: Row(
-                    children: [
-                      if (passwordContainsSpecialChar)
-                        const Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        )
-                      else
-                        const Icon(
-                          Icons.clear,
-                          color: Colors.red,
-                        ),
-                      Text(
-                        'Caractere especial',
-                        style: TextStyle(
-                          color: passwordContainsSpecialChar ? Colors.green : Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: Row(
-                    children: [
-                      if (_passwordController.text != '' && _passwordController.text == _confirmPasswordController.text)
-                        const Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        )
-                      else
-                        const Icon(
-                          Icons.clear,
-                          color: Colors.red,
-                        ),
-                      Flexible(
-                        child: Text(
-                          'As senhas correspondem',
-                          style: TextStyle(
-                            color: _passwordController.text != '' && _passwordController.text == _confirmPasswordController.text ? Colors.green : Colors.red,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () => _handleRegister(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Defina a cor de fundo desejada
-                  ),
-                  child: const Text(
-                    'Registrar',
-                    style: TextStyle(fontSize: 16), // Defina o estilo do texto, se necessário
-
-                  ),
-                ),
-              ],
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child:RichText(
-                text: TextSpan(
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                child: Row(
                   children: [
-                    const TextSpan(
-                      text: 'Ao me cadastrar, concordo com os ',
-                      style: TextStyle(
-                          color: Colors.black
+                    if (passwordContainsUppercase)
+                      const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    else
+                      const Icon(
+                        Icons.clear,
+                        color: Colors.red,
                       ),
-                    ),
-                    TextSpan(
-                      text: 'termos de uso',
-                      style: const TextStyle(
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (context) => const Terms(),
-                                  fullscreenDialog: false
-                              ),
-                                  (route) => true
-                          );
-                        },
-                    ),
-                    const TextSpan(
-                      text: '.',
+                    Text(
+                      'Letra maiúscula',
                       style: TextStyle(
-                          color: Colors.black
+                        color: passwordContainsUppercase ? Colors.green : Colors.red,
                       ),
                     ),
                   ],
                 ),
               ),
-            )
-          ],
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                child: Row(
+                  children: [
+                    if (passwordContainsNumber)
+                      const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    else
+                      const Icon(
+                        Icons.clear,
+                        color: Colors.red,
+                      ),
+                    Text(
+                      'Número',
+                      style: TextStyle(
+                        color: passwordContainsNumber ? Colors.green : Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                child: Row(
+                  children: [
+                    if (passwordContainsLowercase)
+                      const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    else
+                      const Icon(
+                        Icons.clear,
+                        color: Colors.red,
+                      ),
+                    Text(
+                      'Letra minuscula',
+                      style: TextStyle(
+                        color: passwordContainsLowercase ? Colors.green : Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                child: Row(
+                  children: [
+                    if (passwordContainsSpecialChar)
+                      const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    else
+                      const Icon(
+                        Icons.clear,
+                        color: Colors.red,
+                      ),
+                    Text(
+                      'Caractere especial',
+                      style: TextStyle(
+                        color: passwordContainsSpecialChar ? Colors.green : Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 200,
+                child: Row(
+                  children: [
+                    if (_passwordController.text != '' && _passwordController.text == _confirmPasswordController.text)
+                      const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    else
+                      const Icon(
+                        Icons.clear,
+                        color: Colors.red,
+                      ),
+                    Flexible(
+                      child: Text(
+                        'As senhas correspondem',
+                        style: TextStyle(
+                          color: _passwordController.text != '' && _passwordController.text == _confirmPasswordController.text ? Colors.green : Colors.red,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () => _handleRegister(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue, // Defina a cor de fundo desejada
+                ),
+                child: const Text(
+                  'Registrar',
+                  style: TextStyle(fontSize: 16), // Defina o estilo do texto, se necessário
+
+                ),
+              ),
+            ],
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child:RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(
+                    text: 'Ao me cadastrar, concordo com os ',
+                    style: TextStyle(
+                        color: Colors.black
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'termos de uso',
+                    style: const TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => const Terms(),
+                                fullscreenDialog: false
+                            ),
+                                (route) => true
+                        );
+                      },
+                  ),
+                  const TextSpan(
+                    text: '.',
+                    style: TextStyle(
+                        color: Colors.black
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
       ),
+
     );
   }
 

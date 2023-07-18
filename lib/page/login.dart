@@ -116,9 +116,15 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 250.00),
-      child: Column(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        backgroundColor: Colors.transparent,
+        iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
+        elevation: 0,
+      ),
+      body: Column(
         children: [
           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
