@@ -9,14 +9,17 @@ import '../util/urls.dart';
 
 class BuyTickets extends StatefulWidget {
   final dynamic event;
+
   const BuyTickets({required this.event, Key? key}) : super(key: key);
+
   @override
   State<BuyTickets> createState() => _BuyTicketsState();
 }
 
-
 class _BuyTicketsState extends State<BuyTickets> {
   List<dynamic> items = [];
+  Map<int, int> maleTicketCountMap = {};
+  Map<int, int> femaleTicketCountMap = {};
 
   @override
   void initState() {
@@ -26,12 +29,12 @@ class _BuyTicketsState extends State<BuyTickets> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
         backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
+        iconTheme: const IconThemeData(color: Colors.black),
+        // Definir a cor do ícone de voltar
         elevation: 0,
       ),
       body: Column(
@@ -44,61 +47,80 @@ class _BuyTicketsState extends State<BuyTickets> {
                 final tickets = item?['tickets'] ?? [];
                 final lot = item?['lot'];
                 return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    color: Colors.red,
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: Center(child: Text('${lot?['description']}')),
-                        ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: tickets.length,
-                          itemBuilder: (context, ticketIndex) {
-                            final ticket = tickets[ticketIndex];
-                            String realValue = centsToReal(ticket['price']);
-                            final type = ticket['type'] ?? '';
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      color: Colors.red,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: tickets.length,
+                        itemBuilder: (context, ticketIndex) {
+                          final ticket = tickets[ticketIndex];
+                          String realValue = centsToReal(ticket['price']);
+                          final type = ticket['type'] ?? '';
+                          final lotId = lot['id'];
 
-                            return ListTile(
-                              title: Center(child: Text(getTypeFormated(type))),
-                              subtitle: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {
+                          // Initialize ticket counts for each lot
+                          maleTicketCountMap[lotId] ??= 0;
+                          femaleTicketCountMap[lotId] ??= 0;
 
-                                        },
-                                        child: const Icon(Icons.remove),
-                                      ),
-                                      const SizedBox(width: 20),
-                                      ElevatedButton(
-                                        onPressed: () => {
-
-                                        },
-                                        child: const Icon(Icons.add),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Center(child: Text('Quantity: ${ticket['quantity']} - R\$ $realValue')),
-                                      Center(child: Text('Contador do Lote:')),                                    ],
-                                  )
-
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                );
+                          return ListTile(
+                            title: Center(child: Text(getTypeFormated(type))),
+                            subtitle: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          if (type == 'MALE' &&
+                                              maleTicketCountMap[lotId]! > 0) {
+                                            maleTicketCountMap[lotId] =
+                                                maleTicketCountMap[lotId]! - 1;
+                                          } else if (type == 'FEMALE' &&
+                                              femaleTicketCountMap[lotId]! >
+                                                  0) {
+                                            femaleTicketCountMap[lotId] =
+                                                femaleTicketCountMap[lotId]! -
+                                                    1;
+                                          }
+                                        });
+                                      },
+                                      child: const Icon(Icons.remove),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          if (type == 'MALE') {
+                                            maleTicketCountMap[lotId] =
+                                                maleTicketCountMap[lotId]! + 1;
+                                          } else if (type == 'FEMALE') {
+                                            femaleTicketCountMap[lotId] =
+                                                femaleTicketCountMap[lotId]! +
+                                                    1;
+                                          }
+                                        });
+                                      },
+                                      child: const Icon(Icons.add),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(
+                                        child: Text(
+                                            'Quantity: ${ticket['quantity']} - R\$ $realValue')),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ));
               },
             ),
           ),
@@ -123,7 +145,7 @@ class _BuyTicketsState extends State<BuyTickets> {
 
   String getTypeFormated(type) {
     String typeFormated;
-    switch(type) {
+    switch (type) {
       case "FEMALE":
         typeFormated = "Feminino";
         break;
@@ -158,10 +180,9 @@ class _BuyTicketsState extends State<BuyTickets> {
 
   Future<List<dynamic>> fetchLots(eventId) async {
     try {
-      var params = {
-        "eventId": eventId
-      };
-      final url = Uri.parse(fetchLotsUrl).replace(queryParameters: _convertMapToStrings(params));
+      var params = {"eventId": eventId};
+      final url = Uri.parse(fetchLotsUrl)
+          .replace(queryParameters: _convertMapToStrings(params));
       var response = await http.get(url);
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
