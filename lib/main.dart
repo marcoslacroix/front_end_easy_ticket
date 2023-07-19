@@ -1,5 +1,5 @@
+import 'package:easy_ticket/page/login.dart';
 import 'package:flutter/material.dart';
-
 import 'page/home.dart';
 
 void main() => runApp(const MyApp());

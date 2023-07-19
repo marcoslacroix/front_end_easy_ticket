@@ -1,4 +1,5 @@
 
+import 'package:easy_ticket/auth/token_checker.dart';
 import 'package:easy_ticket/page/my_tickets.dart';
 import 'package:easy_ticket/page/perfil.dart';
 import 'package:easy_ticket/page/events.dart';

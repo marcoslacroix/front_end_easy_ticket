@@ -21,9 +21,7 @@ class _PaymentState extends State<Payment> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => Auth(),
-      child: Scaffold(
+    return  Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,
           backgroundColor: Colors.transparent,
@@ -31,7 +29,7 @@ class _PaymentState extends State<Payment> {
           elevation: 0,
         ),
         body: const Text("Test"),
-      )
+
     );
   }
 }

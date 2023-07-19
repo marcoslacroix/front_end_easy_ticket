@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:easy_ticket/page/events.dart';
 import 'package:easy_ticket/page/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +99,7 @@ class _LoginState extends State<Login> {
             );
             Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Home())
+                MaterialPageRoute(builder: (context) => const Events())
             );
           } else {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();

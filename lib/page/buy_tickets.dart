@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:easy_ticket/page/payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
+import '../auth/auth.dart';
 import '../util/urls.dart';
 
 class BuyTickets extends StatefulWidget {
@@ -33,6 +36,7 @@ class _BuyTicketsState extends State<BuyTickets> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -128,16 +132,18 @@ class _BuyTicketsState extends State<BuyTickets> {
                                               }
                                             }
                                           } else {
-                                            // Ticket not available, show an error message or handle it as needed
-                                            // For example, you can use a Snackbar to show an error message:
                                             ScaffoldMessenger.of(context).showSnackBar(
                                               const SnackBar(
-                                                content: Text('No more tickets available for this type and lot.'),
+                                                content: Text('Não há mais ingressos disponíveis para este tipo e lote.'),
                                               ),
                                             );
                                           }
                                         })
-                                        : null;
+                                        : ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Quantidade máxima de ingressos por usuário atingido.'),
+                                          ),
+                                        );
                                       },
                                       child: const Icon(Icons.add),
                                     ),
