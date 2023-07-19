@@ -80,7 +80,7 @@ class _RegisterState extends State<Register> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: 200,
+                  width: 250,
                   child: TextField(
                     controller: _nameController,
                     decoration: const InputDecoration(
@@ -94,7 +94,7 @@ class _RegisterState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 200,
+                width: 250,
                 child: TextField(
                   controller: _lastnameController,
                   decoration: const InputDecoration(
@@ -108,7 +108,7 @@ class _RegisterState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 200,
+                width: 250,
                 child: TextField(
                   keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
@@ -123,7 +123,7 @@ class _RegisterState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 200,
+                width: 250,
                 child: TextField(
                   controller: _passwordController,
                   decoration: InputDecoration(
@@ -148,7 +148,7 @@ class _RegisterState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 200,
+                width: 250,
                 child: TextField(
                   controller: _confirmPasswordController,
                   decoration: InputDecoration(
@@ -173,7 +173,7 @@ class _RegisterState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 200,
+                width: 250,
                 child: Row(
                   children: [
                     if (passwordContainsUppercase)
@@ -201,7 +201,7 @@ class _RegisterState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 200,
+                width: 250,
                 child: Row(
                   children: [
                     if (passwordContainsNumber)
@@ -229,7 +229,7 @@ class _RegisterState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 200,
+                width: 250,
                 child: Row(
                   children: [
                     if (passwordContainsLowercase)
@@ -257,7 +257,7 @@ class _RegisterState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 200,
+                width: 250,
                 child: Row(
                   children: [
                     if (passwordContainsSpecialChar)
@@ -285,7 +285,7 @@ class _RegisterState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 200,
+                width: 250     ,
                 child: Row(
                   children: [
                     if (_passwordController.text != '' && _passwordController.text == _confirmPasswordController.text)

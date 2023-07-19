@@ -15,57 +15,53 @@ class Perfil extends StatefulWidget {
 }
 
 class _PerfilState extends State<Perfil> {
-  late Future<SharedPreferences> prefsFuture;
+  late SharedPreferences prefs;
+  bool isInitialized = false;
+  var token;
 
   @override
   void initState() {
     super.initState();
-    prefsFuture = SharedPreferences.getInstance();
+    getToken();
+  }
+
+  void getToken() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isInitialized = true;
+      token = prefs.getString("token");
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<SharedPreferences>(
-      future: prefsFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Show a loading indicator while waiting for prefs to be initialized.
-          return const CircularProgressIndicator();
-        }
 
-        if (snapshot.hasError) {
-          // Handle the case when an error occurs while initializing prefs.
-          return const Text("Error initializing SharedPreferences");
-        }
+    if (!isInitialized) {
+      return const CircularProgressIndicator();
+    }
 
-        final SharedPreferences prefs = snapshot.data!;
-
-        var token = prefs.getString("token");
-
-        if (token != null && token.isNotEmpty) {
-          return Row(
-            children: [
-              TextButton(
-                onPressed: () async {
-                  prefs.remove("token");
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Home(),
-                      fullscreenDialog: true,
-                    ),
+    if (token != null && token.isNotEmpty) {
+      return Row(
+        children: [
+          TextButton(
+            onPressed: () async {
+              prefs.remove("token");
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Home(),
+                  fullscreenDialog: true,
+                ),
                     (route) => false,
-                  );
-                },
-                child: const Text("Logout"),
-              )
-            ],
-          );
-        } else {
-          print("go page login");
-          return const Login();
-        }
-      },
-    );
+              );
+            },
+            child: const Text("Logout"),
+          )
+        ],
+      );
+    } else {
+      print("go page login");
+      return const Login();
+    }
   }
 }

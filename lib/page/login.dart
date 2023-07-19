@@ -158,7 +158,7 @@ class _LoginState extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 200,
+                width: 250,
                 child: TextField(
                   keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
@@ -173,7 +173,7 @@ class _LoginState extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 200,
+                width: 250,
                 child: TextField(
                   controller: _passwordController,
                   decoration: InputDecoration(

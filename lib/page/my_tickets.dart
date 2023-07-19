@@ -1,27 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'login.dart';
 
 class MyTickets extends StatefulWidget {
-  const MyTickets({super.key});
-
+  const MyTickets({Key? key}) : super(key: key);
 
   @override
-  _MyTickets createState() => _MyTickets();
+  _MyTicketsState createState() => _MyTicketsState();
 }
 
-class _MyTickets extends State<MyTickets> {
-
-
+class _MyTicketsState extends State<MyTickets> {
+  late SharedPreferences prefs;
+  bool isInitialized = false;
+  var token;
 
   @override
   void initState() {
     super.initState();
+    getToken();
   }
 
+  void getToken() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isInitialized = true;
+      token = prefs.getString("token");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Text("Não logado");
-  }
+    if (!isInitialized) {
+      // Show a loading indicator while waiting for prefs to be initialized.
+      return const CircularProgressIndicator();
+    }
 
+    if (token != null && token.isNotEmpty) {
+      return const Row(
+        children: [
+          Text("Meus ingressos"),
+        ],
+      );
+    } else {
+      print("go page login");
+      return const Login();
+    }
+  }
 }
