@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../auth/token_checker.dart';
+import 'package:provider/provider.dart';
 
 class MyTickets extends StatefulWidget {
   const MyTickets({super.key});
@@ -12,9 +11,17 @@ class MyTickets extends StatefulWidget {
 
 class _MyTickets extends State<MyTickets> {
 
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return TokenChecker();
-
+    return Text("Não logado");
   }
+
 }

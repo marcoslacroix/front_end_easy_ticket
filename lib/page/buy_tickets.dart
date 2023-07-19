@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-import '../auth/auth.dart';
 import '../util/urls.dart';
 
 class BuyTickets extends StatefulWidget {

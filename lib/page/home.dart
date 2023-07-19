@@ -1,11 +1,12 @@
 
-import 'package:easy_ticket/auth/token_checker.dart';
 import 'package:easy_ticket/page/my_tickets.dart';
 import 'package:easy_ticket/page/perfil.dart';
 import 'package:easy_ticket/page/events.dart';
 import 'package:easy_ticket/page/search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'login.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -67,8 +68,8 @@ class _Home extends State<Home> {
         onTap: _onItemTapped,
         selectedItemColor: Colors.black, // Defina a cor do item selecionado
         unselectedItemColor: Colors.grey,
-        showSelectedLabels: true, // Remover rótulos dos itens selecionados
-        showUnselectedLabels: true, // Remover rótulos dos itens não selecionados
+        //showSelectedLabels: true, // Remover rótulos dos itens selecionados
+        //showUnselectedLabels: true, // Remover rótulos dos itens não selecionados
       ),
     );
   }

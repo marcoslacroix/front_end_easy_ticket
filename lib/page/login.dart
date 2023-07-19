@@ -2,17 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:easy_ticket/page/events.dart';
+import 'package:easy_ticket/page/home.dart';
 import 'package:easy_ticket/page/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../auth/auth.dart';
 import '../util/urls.dart';
 import 'forgot_password.dart';
-import 'home.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class Login extends StatefulWidget {
 
 
 class _LoginState extends State<Login> {
-
+  late final SharedPreferences prefs;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   bool isPasswordVisible = false;
@@ -32,9 +32,18 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
+    getToken();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
   }
+
+  void getToken() async {
+    SharedPreferences p = await SharedPreferences.getInstance();
+    setState(() {
+      prefs = p;
+    });
+  }
+
 
   @override
   void dispose() {
@@ -71,7 +80,6 @@ class _LoginState extends State<Login> {
   void _handleLogin(BuildContext context) {
     final String email = _emailController.text;
     final String password = _passwordController.text;
-    final auth = Provider.of<Auth>(context, listen: false);
     Future<String> futureToken = doRequestLogin();
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -87,7 +95,7 @@ class _LoginState extends State<Login> {
         setState(() {
           String token = value;
           if (token.isNotEmpty) {
-            auth.token = 'Bearer $token';
+            prefs.setString('token', token);
             _emailController.clear();
             _passwordController.clear();
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -97,9 +105,13 @@ class _LoginState extends State<Login> {
                 content: Text('Login efetuado'),
               ),
             );
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Events())
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Home(),
+                fullscreenDialog: true,
+              ),
+                  (route) => false,
             );
           } else {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();

@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
 import '../util/urls.dart';
-import 'home.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -481,15 +480,16 @@ class _RegisterState extends State<Register> {
       Future<Response> futureResponse = doRegister();
 
       futureResponse.then((response) => {
+        print("login succeso"),
         if (response.statusCode == 200) {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => const Home(),
-                fullscreenDialog: false,
-              ),
-                  (route) => false
-          )
-        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.green,
+              content: Text("Registro realizado"),
+            ),
+          ),
+          Navigator.pop(context)
+    } else {
           ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
