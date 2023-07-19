@@ -23,6 +23,7 @@ class _BuyTicketsState extends State<BuyTickets> {
   int totalTicketCount = 0;
   double totalTicketValue = 0.0;
   var enableContinue = false;
+  var quantityTicketsUserAlreadyBougthForThisEvent;
 
   @override
   void initState() {
@@ -105,7 +106,9 @@ class _BuyTicketsState extends State<BuyTickets> {
                                     const SizedBox(width: 20),
                                     ElevatedButton(
                                       onPressed: () {
-                                        setState(() {
+                                        bool canBuyTickets = quantityTicketsUserAlreadyBougthForThisEvent + totalTicketCount < 5;
+                                        canBuyTickets ?
+                                          setState(() {
                                           if (isTicketAvailable(type, lotId)) {
                                             if (type == 'MALE') {
                                               maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! + 1;
@@ -133,7 +136,8 @@ class _BuyTicketsState extends State<BuyTickets> {
                                               ),
                                             );
                                           }
-                                        });
+                                        })
+                                        : null;
                                       },
                                       child: const Icon(Icons.add),
                                     ),
@@ -247,6 +251,9 @@ class _BuyTicketsState extends State<BuyTickets> {
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
         List<dynamic> eventsJsonList = jsonData['lots'];
+        setState(() {
+          quantityTicketsUserAlreadyBougthForThisEvent = jsonData['quantityTicketsUserAlreadyBougthForThisEvent'];
+        });
         return eventsJsonList;
       } else {
         print('Failed to fetch events. Status code: ${response.statusCode}');
