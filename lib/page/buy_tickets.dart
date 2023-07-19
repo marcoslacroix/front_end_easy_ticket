@@ -20,6 +20,8 @@ class _BuyTicketsState extends State<BuyTickets> {
   List<dynamic> items = [];
   Map<int, int> maleTicketCountMap = {};
   Map<int, int> femaleTicketCountMap = {};
+  int totalTicketCount = 0;
+  double totalTicketValue = 0.0;
   var enableContinue = false;
 
   @override
@@ -77,11 +79,15 @@ class _BuyTicketsState extends State<BuyTickets> {
                                         setState(() {
                                           if (type == 'MALE' && maleTicketCountMap[lotId]! > 0) {
                                               maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! - 1;
+                                              totalTicketCount--;
+                                              totalTicketValue -= ticket['price'] / 100.0;
                                               if (maleTicketCountMap[lotId]! == 0) {
                                                   enableContinue = false;
                                               }
                                           } else if (type == 'FEMALE' && femaleTicketCountMap[lotId]! > 0) {
                                               femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! - 1;
+                                              totalTicketCount--;
+                                              totalTicketValue -= ticket['price'] / 100.0;
                                               if (maleTicketCountMap[lotId]! == 0) {
                                                 enableContinue = false;
                                               }
@@ -92,7 +98,9 @@ class _BuyTicketsState extends State<BuyTickets> {
                                     ),
                                     const SizedBox(width: 20),
                                     Text(
-                                      type == 'MALE' ? '${maleTicketCountMap[lotId]}' : '${femaleTicketCountMap[lotId]}',
+                                      type == 'MALE'
+                                          ? '${maleTicketCountMap[lotId]}'
+                                          : '${femaleTicketCountMap[lotId]}',
                                     ),
                                     const SizedBox(width: 20),
                                     ElevatedButton(
@@ -100,11 +108,15 @@ class _BuyTicketsState extends State<BuyTickets> {
                                         setState(() {
                                           if (type == 'MALE') {
                                             maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! + 1;
+                                            totalTicketCount++;
+                                            totalTicketValue += ticket['price'] / 100.0;
                                             if (maleTicketCountMap[lotId]! > 0) {
                                               enableContinue = true;
                                             }
                                           } else if (type == 'FEMALE') {
                                             femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! + 1;
+                                            totalTicketCount++;
+                                            totalTicketValue += ticket['price'] / 100.0;
                                             if (femaleTicketCountMap[lotId]! > 0) {
                                               enableContinue = true;
                                             }
@@ -131,6 +143,15 @@ class _BuyTicketsState extends State<BuyTickets> {
                       ),
                     ));
               },
+            ),
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Column(
+              children: [
+                Text('Total de ingressos selecionados: $totalTicketCount'),
+                Text('Valor total: R\$ ${totalTicketValue.toStringAsFixed(2)}'),
+              ],
             ),
           ),
           SizedBox(
