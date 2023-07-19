@@ -78,19 +78,21 @@ class _BuyTicketsState extends State<BuyTickets> {
                                       onPressed: () {
                                         setState(() {
                                           if (type == 'MALE' && maleTicketCountMap[lotId]! > 0) {
-                                              maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! - 1;
-                                              totalTicketCount--;
-                                              totalTicketValue -= ticket['price'] / 100.0;
-                                              if (maleTicketCountMap[lotId]! == 0) {
-                                                  enableContinue = false;
-                                              }
+                                            maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! - 1;
+                                            totalTicketCount--;
+                                            totalTicketValue -= ticket['price'] / 100.0;
+
+                                            if (maleTicketCountMap[lotId]! == 0) {
+                                              enableContinue = false;
+                                            }
                                           } else if (type == 'FEMALE' && femaleTicketCountMap[lotId]! > 0) {
-                                              femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! - 1;
-                                              totalTicketCount--;
-                                              totalTicketValue -= ticket['price'] / 100.0;
-                                              if (maleTicketCountMap[lotId]! == 0) {
-                                                enableContinue = false;
-                                              }
+                                            femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! - 1;
+                                            totalTicketCount--;
+                                            totalTicketValue -= ticket['price'] / 100.0;
+
+                                            if (maleTicketCountMap[lotId]! == 0) {
+                                              enableContinue = false;
+                                            }
                                           }
                                         });
                                       },
@@ -98,28 +100,38 @@ class _BuyTicketsState extends State<BuyTickets> {
                                     ),
                                     const SizedBox(width: 20),
                                     Text(
-                                      type == 'MALE'
-                                          ? '${maleTicketCountMap[lotId]}'
-                                          : '${femaleTicketCountMap[lotId]}',
+                                      type == 'MALE' ? '${maleTicketCountMap[lotId]}' : '${femaleTicketCountMap[lotId]}',
                                     ),
                                     const SizedBox(width: 20),
                                     ElevatedButton(
                                       onPressed: () {
                                         setState(() {
-                                          if (type == 'MALE') {
-                                            maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! + 1;
-                                            totalTicketCount++;
-                                            totalTicketValue += ticket['price'] / 100.0;
-                                            if (maleTicketCountMap[lotId]! > 0) {
-                                              enableContinue = true;
+                                          if (isTicketAvailable(type, lotId)) {
+                                            if (type == 'MALE') {
+                                              maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! + 1;
+                                              totalTicketCount++;
+                                              totalTicketValue += ticket['price'] / 100.0;
+
+                                              if (maleTicketCountMap[lotId]! > 0) {
+                                                enableContinue = true;
+                                              }
+                                            } else if (type == 'FEMALE') {
+                                              femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! + 1;
+                                              totalTicketCount++;
+                                              totalTicketValue += ticket['price'] / 100.0;
+
+                                              if (femaleTicketCountMap[lotId]! > 0) {
+                                                enableContinue = true;
+                                              }
                                             }
-                                          } else if (type == 'FEMALE') {
-                                            femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! + 1;
-                                            totalTicketCount++;
-                                            totalTicketValue += ticket['price'] / 100.0;
-                                            if (femaleTicketCountMap[lotId]! > 0) {
-                                              enableContinue = true;
-                                            }
+                                          } else {
+                                            // Ticket not available, show an error message or handle it as needed
+                                            // For example, you can use a Snackbar to show an error message:
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              const SnackBar(
+                                                content: Text('No more tickets available for this type and lot.'),
+                                              ),
+                                            );
                                           }
                                         });
                                       },
@@ -174,6 +186,21 @@ class _BuyTicketsState extends State<BuyTickets> {
         ],
       ),
     );
+  }
+
+  bool isTicketAvailable(String type, int lotId) {
+    final lot = items.firstWhere((item) => item['lot']['id'] == lotId, orElse: () => null);
+    if (lot == null) {
+      return false;
+    }
+
+    final tickets = lot['tickets'];
+    if (type == 'MALE') {
+      return maleTicketCountMap[lotId]! < tickets[1]['quantity'];
+    } else if (type == 'FEMALE') {
+      return femaleTicketCountMap[lotId]! < tickets[0]['quantity'];
+    }
+    return false;
   }
 
   String getTypeFormated(type) {
