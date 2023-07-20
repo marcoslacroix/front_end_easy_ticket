@@ -58,14 +58,16 @@ class _BuyTicketsState extends State<BuyTickets> {
 
     return Consumer<AuthBloc>(
       builder: (context, authBloc, _) {
-
+        print("Buy tickets token: $token");
+        var status = authBloc.authStatus;
+        print("authBloc: $status");
+        print("------------");
         if (authBloc.authStatus == AuthStatus.authenticated) {
           return Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: true,
               backgroundColor: Colors.transparent,
               iconTheme: const IconThemeData(color: Colors.black),
-              // Definir a cor do ícone de voltar
               elevation: 0,
             ),
             body: Column(

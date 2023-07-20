@@ -41,31 +41,37 @@ class _PerfilState extends State<Perfil> {
       return const CircularProgressIndicator();
     }
 
-    if (token != null && token.isNotEmpty) {
-      return Row(
-        children: [
-          TextButton(
-            onPressed: () async {
-              prefs.remove("token");
-              final authBloc = Provider.of<AuthBloc>(context, listen: false);
-              authBloc.updateAuthStatus(AuthStatus.unauthenticated);
+    return Consumer<AuthBloc>(
+        builder: (context, authBloc, _) {
+          if (authBloc.authStatus == AuthStatus.unauthenticated) {
+            return Scaffold(
+              body: Row(
+                children: [
+                  TextButton(
+                    onPressed: () async {
+                      prefs.remove("token");
+                      final authBloc = Provider.of<AuthBloc>(context, listen: false);
+                      authBloc.updateAuthStatus(AuthStatus.unauthenticated);
 
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Home(),
-                  fullscreenDialog: true,
-                ),
-                    (route) => false,
-              );
-            },
-            child: const Text("Logout"),
-          )
-        ],
-      );
-    } else {
-      print("go page login");
-      return const Login(backScreen: false);
-    }
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Home(),
+                          fullscreenDialog: true,
+                        ),
+                            (route) => false,
+                      );
+                    },
+                    child: const Text("Logout"),
+                  )
+                ],
+              ),
+            );
+          } else {
+            return const Login(backScreen: false);
+          }
+        }
+    );
   }
 }
+
