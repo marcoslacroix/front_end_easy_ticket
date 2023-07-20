@@ -104,19 +104,11 @@ class _LoginState extends State<Login> {
             prefs.setString('token', token);
             _emailController.clear();
             _passwordController.clear();
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                backgroundColor: Colors.green,
-                content: Text('Login efetuado'),
-              ),
-            );
             if (backScreen) {
               Navigator.pop(context);
             } else {
               Navigator.pushReplacementNamed(context, "/home");
             }
-
           } else {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(
