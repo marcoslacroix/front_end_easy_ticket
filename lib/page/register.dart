@@ -346,13 +346,7 @@ class _RegisterState extends State<Register> {
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Terms(),
-                                fullscreenDialog: false
-                            ),
-                                (route) => true
-                        );
+                        Navigator.pushNamed(context, "/terms");
                       },
                   ),
                   const TextSpan(

@@ -114,14 +114,7 @@ class _LoginState extends State<Login> {
             if (backScreen) {
               Navigator.pop(context);
             } else {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Home(),
-                  fullscreenDialog: true,
-                ),
-                    (route) => false,
-              );
+              Navigator.pushReplacementNamed(context, "/home");
             }
 
           } else {
@@ -225,14 +218,7 @@ class _LoginState extends State<Login> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Register(),
-                      fullscreenDialog: false,
-                    ),
-                        (route) => true,
-                  );
+                  Navigator.pushNamed(context, "/register");
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,

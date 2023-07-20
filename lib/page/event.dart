@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 class Event extends StatefulWidget {
   final dynamic event;
 
-  const Event({required this.event, Key? key}) : super(key: key);
+  const Event({this.event, Key? key}) : super(key: key);
 
   @override
   _Event createState() => _Event();
@@ -16,7 +16,10 @@ class _Event extends State<Event> {
   @override
   Widget build(BuildContext context) {
     final event = widget.event;
-    String formattedDate = formatDate(event?['period']);
+    String formattedDate = "";
+    if (event != null) {
+      formattedDate = formatDate(event?['period']);
+    }
 
     return Scaffold(
       appBar: AppBar(
