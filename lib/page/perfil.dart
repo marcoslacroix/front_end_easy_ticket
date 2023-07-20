@@ -1,6 +1,8 @@
 import 'package:easy_ticket/auth/auth_bloc.dart';
 import 'package:easy_ticket/page/events.dart';
 import 'package:easy_ticket/page/home.dart';
+import 'package:easy_ticket/page/my_tickets.dart';
+import 'package:easy_ticket/page/search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,7 +49,7 @@ class _PerfilState extends State<Perfil> {
           var status = authBloc.authStatus;
           print("authBloc: $status");
           print("------------");
-          if (authBloc.authStatus == AuthStatus.authenticated) {
+          if (authBloc.authStatus == AuthStatus.authenticated || token != null) {
             return Scaffold(
               body: Row(
                 children: [
@@ -61,10 +63,10 @@ class _PerfilState extends State<Perfil> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const Home(),
+                            builder: (context) => const Home(selectedScreen: SelectedScreen.perfil),
                             fullscreenDialog: true,
                           ),
-                              (route) => false,
+                          (route) => false,
                         );
                       },
                       child: const Text("Logout"),
@@ -74,7 +76,7 @@ class _PerfilState extends State<Perfil> {
               ),
             );
           } else {
-            return const Login(backScreen: false, eventId: null,);
+            return const Login(eventId: null, screen: Screen.perfil, selectedIndex: 0);
           }
         }
     );

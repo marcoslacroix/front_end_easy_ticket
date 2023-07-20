@@ -8,16 +8,55 @@ import 'package:flutter/material.dart';
 
 import 'login.dart';
 
+enum SelectedScreen {
+  events,
+  search,
+  myTickets,
+  perfil
+}
+
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final SelectedScreen selectedScreen;
+  const Home({super.key, required this.selectedScreen});
 
   @override
   _Home createState() => _Home();
+
 }
 
 class _Home extends State<Home> {
 
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    switch (widget.selectedScreen) {
+      case SelectedScreen.events:
+        setState(() {
+          _selectedIndex = 0;
+        });
+        break;
+      case SelectedScreen.search:
+        setState(() {
+          _selectedIndex = 1;
+        });
+        break;
+      case SelectedScreen.myTickets:
+        setState(() {
+          _selectedIndex = 2;
+        });
+        break;
+      case SelectedScreen.perfil:
+        setState(() {
+          _selectedIndex = 3;
+        });
+        break;
+      default:
+        _selectedIndex = 0;
+
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {

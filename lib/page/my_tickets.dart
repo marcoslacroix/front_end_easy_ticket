@@ -43,7 +43,7 @@ class _MyTicketsState extends State<MyTickets> {
         var status = authBloc.authStatus;
         print("authBloc: $status");
         print("------------");
-        if (authBloc.authStatus == AuthStatus.authenticated) {
+        if (authBloc.authStatus == AuthStatus.authenticated || token != null) {
           return const Row(
             children: [
               Text("Meus ingressos"),
@@ -51,7 +51,7 @@ class _MyTicketsState extends State<MyTickets> {
           );
         } else {
           print("go page login");
-          return const Login(backScreen: false, eventId: null);
+          return const Login(eventId: null, screen: Screen.myTickets, selectedIndex: 3);
         }
       },
     );

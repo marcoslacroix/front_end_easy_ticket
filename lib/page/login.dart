@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:easy_ticket/page/buy_tickets.dart';
 import 'package:easy_ticket/page/home.dart';
+import 'package:easy_ticket/page/perfil.dart';
 import 'package:easy_ticket/page/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +15,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../auth/auth_bloc.dart';
 import '../util/urls.dart';
 import 'forgot_password.dart';
+import 'my_tickets.dart';
+
+enum Screen {
+  perfil,
+  myTickets,
+  buyTickets
+}
 
 class Login extends StatefulWidget {
-  final bool backScreen;
   final int? eventId;
-  const Login({Key? key, required this.backScreen, required this.eventId}) : super(key: key);
+  final Screen screen;
+  final int selectedIndex;
+
+  const Login({Key? key, required this.eventId, required this.screen, required this.selectedIndex}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
@@ -30,17 +40,17 @@ class _LoginState extends State<Login> {
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   bool isPasswordVisible = false;
-  bool backScreen = false;
   int? eventId;
+  late Screen screen;
+  late final int? selectedIndex;
 
 
   @override
   void initState() {
     setState(() {
-      final e = widget.eventId;
-      print("Init eventId: $e ");
+      selectedIndex = widget.selectedIndex;
+      screen = widget.screen;
       eventId = widget.eventId;
-      backScreen = widget.backScreen;
 
     });
     getToken();
@@ -252,24 +262,33 @@ class _LoginState extends State<Login> {
             _emailController.clear();
             _passwordController.clear();
             print("eventiId: $eventId");
+            print("screen: $screen");
             if (eventId != null) {
+              Navigator.of(context);
+            } else if (screen == Screen.perfil) {
               Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => BuyTickets(event: eventId)
-                  ),
-                  (route) => false,
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Home(selectedScreen: SelectedScreen.perfil),
+                ),
+                (route) => false,
               );
-            } else if (backScreen) {
-              Navigator.pop(context);
+            } else if (screen == Screen.myTickets) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const Home(selectedScreen: SelectedScreen.myTickets)
+                ),
+                (route) => false,
+              );
             } else {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const Home(),
+                  builder: (context) => const Home(selectedScreen: SelectedScreen.events),
                   fullscreenDialog: true,
                 ),
-                    (route) => false,
+                (route) => false,
               );
             }
 

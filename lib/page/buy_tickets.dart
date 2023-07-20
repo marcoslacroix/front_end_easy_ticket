@@ -66,7 +66,7 @@ class _BuyTicketsState extends State<BuyTickets> {
         var status = authBloc.authStatus;
         print("authBloc: $status");
         print("------------");
-        if (authBloc.authStatus == AuthStatus.authenticated) {
+        if (authBloc.authStatus == AuthStatus.authenticated || token != null) {
           return Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: true,
@@ -226,7 +226,7 @@ class _BuyTicketsState extends State<BuyTickets> {
             ),
           );
         } else {
-          return Login(backScreen: true, eventId: eventId);
+          return Login(eventId: eventId, screen: Screen.buyTickets, selectedIndex: 0);
         }
       },
     );

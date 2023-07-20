@@ -7,6 +7,8 @@ class AuthBloc extends ChangeNotifier {
   final _authStatusController = StreamController<AuthStatus>.broadcast();
   Stream<AuthStatus> get authStatusStream => _authStatusController.stream;
 
+  late String token;
+
   AuthStatus _authStatus = AuthStatus.unauthenticated;
 
   AuthStatus get authStatus => _authStatus;
@@ -19,6 +21,7 @@ class AuthBloc extends ChangeNotifier {
   }
 
   void checkAuthentication(String token) {
+    print("Oi");
     if (token != null && token.isNotEmpty) {
       _authStatus = AuthStatus.authenticated;
     } else {

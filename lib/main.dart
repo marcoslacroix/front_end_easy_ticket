@@ -11,14 +11,18 @@ void main() => runApp(const MyApp());
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+
+  // todo quando abrir o app setar authenticado true se tiver token
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AuthBloc>(create: (_) => AuthBloc()),
+        ChangeNotifierProvider<AuthBloc>(
+            create: (_) => AuthBloc(),
+        ),
       ],
-      child: MaterialApp(
-        home: Home(),
+      child: const MaterialApp(
+        home: Home(selectedScreen: SelectedScreen.events),
       ),
 
     );
