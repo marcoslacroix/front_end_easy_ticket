@@ -40,16 +40,24 @@ class _PerfilState extends State<Perfil> {
     if (!isInitialized) {
       return const CircularProgressIndicator();
     }
-    final authBloc = Provider.of<AuthBloc>(context);
 
-    if (authBloc.authStatus == AuthStatus.authenticated) {
+    if (token != null && token.isNotEmpty) {
       return Row(
         children: [
           TextButton(
             onPressed: () async {
               prefs.remove("token");
+              final authBloc = Provider.of<AuthBloc>(context, listen: false);
               authBloc.updateAuthStatus(AuthStatus.unauthenticated);
-              Navigator.pushReplacementNamed(context, "/home");
+
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Home(),
+                  fullscreenDialog: true,
+                ),
+                    (route) => false,
+              );
             },
             child: const Text("Logout"),
           )
@@ -57,7 +65,6 @@ class _PerfilState extends State<Perfil> {
       );
     } else {
       print("go page login");
-      // If the user is not authenticated, navigate to the login page.
       return const Login(backScreen: false);
     }
   }

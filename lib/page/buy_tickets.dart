@@ -205,8 +205,13 @@ class _BuyTicketsState extends State<BuyTickets> {
                     onPressed: () {
                       print("anableContinue $enableContinue");
                       enableContinue ?
-                      Navigator.of(context).pushNamed("/payment")
-                      : null;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Payment(),
+                        ),
+                      )
+                          : null;
                     },
                     child: const Text('Contiuar'),
                   ),

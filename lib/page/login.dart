@@ -107,8 +107,16 @@ class _LoginState extends State<Login> {
             if (backScreen) {
               Navigator.pop(context);
             } else {
-              Navigator.pushReplacementNamed(context, "/home");
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Home(),
+                  fullscreenDialog: true,
+                ),
+                    (route) => false,
+              );
             }
+
           } else {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(
@@ -210,7 +218,14 @@ class _LoginState extends State<Login> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, "/register");
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Register(),
+                      fullscreenDialog: false,
+                    ),
+                        (route) => true,
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -229,7 +244,14 @@ class _LoginState extends State<Login> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed("/forgot-password");
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ForgotPassword(),
+                      fullscreenDialog: false,
+                    ),
+                        (route) => true,
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
