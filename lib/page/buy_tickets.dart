@@ -6,8 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../auth/auth_bloc.dart';
 import '../util/urls.dart';
+import 'login.dart';
 
 class BuyTickets extends StatefulWidget {
   final dynamic event;
@@ -26,174 +29,200 @@ class _BuyTicketsState extends State<BuyTickets> {
   double totalTicketValue = 0.0;
   var enableContinue = false;
   var quantityTicketsUserAlreadyBougthForThisEvent;
+  late SharedPreferences prefs;
+  bool isInitialized = false;
+  var token;
+
 
   @override
   void initState() {
     fetchLotsData(widget.event);
     super.initState();
+    getToken();
+  }
+
+  void getToken() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isInitialized = true;
+      token = prefs.getString("token");
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!isInitialized) {
+      // Show a loading indicator while waiting for prefs to be initialized.
+      return const CircularProgressIndicator();
+    }
 
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: Colors.black),
-        // Definir a cor do ícone de voltar
-        elevation: 0,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                final item = items[index];
-                final tickets = item?['tickets'] ?? [];
-                final lot = item?['lot'];
-                return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: tickets.length,
-                        itemBuilder: (context, ticketIndex) {
-                          final ticket = tickets[ticketIndex];
-                          String realValue = centsToReal(ticket['price']);
-                          final type = ticket['type'] ?? '';
-                          final description = lot['description'];
-                          final lotId = lot['id'];
+    return Consumer<AuthBloc>(
+      builder: (context, authBloc, _) {
 
-                          // Initialize ticket counts for each lot
-                          maleTicketCountMap[lotId] ??= 0;
-                          femaleTicketCountMap[lotId] ??= 0;
-
-                          return ListTile(
-                            title: Center(child: Text(description + " " + getTypeFormated(type))),
-                            subtitle: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          if (type == 'MALE' && maleTicketCountMap[lotId]! > 0) {
-                                            maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! - 1;
-                                            totalTicketCount--;
-                                            totalTicketValue -= ticket['price'] / 100.0;
-
-                                            if (maleTicketCountMap[lotId]! == 0) {
-                                              enableContinue = false;
-                                            }
-                                          } else if (type == 'FEMALE' && femaleTicketCountMap[lotId]! > 0) {
-                                            femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! - 1;
-                                            totalTicketCount--;
-                                            totalTicketValue -= ticket['price'] / 100.0;
-
-                                            if (maleTicketCountMap[lotId]! == 0) {
-                                              enableContinue = false;
-                                            }
-                                          }
-                                        });
-                                      },
-                                      child: const Icon(Icons.remove),
-                                    ),
-                                    const SizedBox(width: 20),
-                                    Text(
-                                      type == 'MALE' ? '${maleTicketCountMap[lotId]}' : '${femaleTicketCountMap[lotId]}',
-                                    ),
-                                    const SizedBox(width: 20),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        bool canBuyTickets = quantityTicketsUserAlreadyBougthForThisEvent + totalTicketCount < 5;
-                                        canBuyTickets ?
-                                          setState(() {
-                                          if (isTicketAvailable(type, lotId)) {
-                                            if (type == 'MALE') {
-                                              maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! + 1;
-                                              totalTicketCount++;
-                                              totalTicketValue += ticket['price'] / 100.0;
-
-                                              if (maleTicketCountMap[lotId]! > 0) {
-                                                enableContinue = true;
-                                              }
-                                            } else if (type == 'FEMALE') {
-                                              femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! + 1;
-                                              totalTicketCount++;
-                                              totalTicketValue += ticket['price'] / 100.0;
-
-                                              if (femaleTicketCountMap[lotId]! > 0) {
-                                                enableContinue = true;
-                                              }
-                                            }
-                                          } else {
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              const SnackBar(
-                                                content: Text('Não há mais ingressos disponíveis para este tipo e lote.'),
-                                              ),
-                                            );
-                                          }
-                                        })
-                                        : ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                            content: Text('Quantidade máxima de ingressos por usuário atingido.'),
-                                          ),
-                                        );
-                                      },
-                                      child: const Icon(Icons.add),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Center(
-                                        child: Text(
-                                            'R\$ $realValue')),
-                                  ],
-                                ),
-                                const Divider(),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ));
-              },
+        if (authBloc.authStatus == AuthStatus.authenticated) {
+          return Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: true,
+              backgroundColor: Colors.transparent,
+              iconTheme: const IconThemeData(color: Colors.black),
+              // Definir a cor do ícone de voltar
+              elevation: 0,
             ),
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Column(
+            body: Column(
               children: [
-                Text('Total de ingressos selecionados: $totalTicketCount'),
-                Text('Valor total: R\$ ${totalTicketValue.toStringAsFixed(2)}'),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+                      final tickets = item?['tickets'] ?? [];
+                      final lot = item?['lot'];
+                      return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: tickets.length,
+                              itemBuilder: (context, ticketIndex) {
+                                final ticket = tickets[ticketIndex];
+                                String realValue = centsToReal(ticket['price']);
+                                final type = ticket['type'] ?? '';
+                                final description = lot['description'];
+                                final lotId = lot['id'];
+
+                                // Initialize ticket counts for each lot
+                                maleTicketCountMap[lotId] ??= 0;
+                                femaleTicketCountMap[lotId] ??= 0;
+
+                                return ListTile(
+                                  title: Center(child: Text(description + " " + getTypeFormated(type))),
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                if (type == 'MALE' && maleTicketCountMap[lotId]! > 0) {
+                                                  maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! - 1;
+                                                  totalTicketCount--;
+                                                  totalTicketValue -= ticket['price'] / 100.0;
+
+                                                  if (maleTicketCountMap[lotId]! == 0) {
+                                                    enableContinue = false;
+                                                  }
+                                                } else if (type == 'FEMALE' && femaleTicketCountMap[lotId]! > 0) {
+                                                  femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! - 1;
+                                                  totalTicketCount--;
+                                                  totalTicketValue -= ticket['price'] / 100.0;
+
+                                                  if (maleTicketCountMap[lotId]! == 0) {
+                                                    enableContinue = false;
+                                                  }
+                                                }
+                                              });
+                                            },
+                                            child: const Icon(Icons.remove),
+                                          ),
+                                          const SizedBox(width: 20),
+                                          Text(
+                                            type == 'MALE' ? '${maleTicketCountMap[lotId]}' : '${femaleTicketCountMap[lotId]}',
+                                          ),
+                                          const SizedBox(width: 20),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              bool canBuyTickets = quantityTicketsUserAlreadyBougthForThisEvent + totalTicketCount < 5;
+                                              canBuyTickets ?
+                                              setState(() {
+                                                if (isTicketAvailable(type, lotId)) {
+                                                  if (type == 'MALE') {
+                                                    maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! + 1;
+                                                    totalTicketCount++;
+                                                    totalTicketValue += ticket['price'] / 100.0;
+
+                                                    if (maleTicketCountMap[lotId]! > 0) {
+                                                      enableContinue = true;
+                                                    }
+                                                  } else if (type == 'FEMALE') {
+                                                    femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! + 1;
+                                                    totalTicketCount++;
+                                                    totalTicketValue += ticket['price'] / 100.0;
+
+                                                    if (femaleTicketCountMap[lotId]! > 0) {
+                                                      enableContinue = true;
+                                                    }
+                                                  }
+                                                } else {
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text('Não há mais ingressos disponíveis para este tipo e lote.'),
+                                                    ),
+                                                  );
+                                                }
+                                              })
+                                                  : ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text('Quantidade máxima de ingressos por usuário atingido.'),
+                                                ),
+                                              );
+                                            },
+                                            child: const Icon(Icons.add),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                              child: Text(
+                                                  'R\$ $realValue')),
+                                        ],
+                                      ),
+                                      const Divider(),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ));
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      Text('Total de ingressos selecionados: $totalTicketCount'),
+                      Text('Valor total: R\$ ${totalTicketValue.toStringAsFixed(2)}'),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      print("anableContinue $enableContinue");
+                      enableContinue ?
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Payment(),
+                        ),
+                      )
+                          : null;
+                    },
+                    child: const Text('Contiuar'),
+                  ),
+                ),
               ],
             ),
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                print("anableContinue $enableContinue");
-                enableContinue ?
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Payment(),
-                  ),
-                )
-                : null;
-              },
-              child: const Text('Contiuar'),
-            ),
-          ),
-        ],
-      ),
+          );
+        } else {
+          return const Login(backScreen: true);
+        }
+      },
     );
   }
 

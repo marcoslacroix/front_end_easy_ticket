@@ -1,3 +1,4 @@
+import 'package:easy_ticket/auth/auth_bloc.dart';
 import 'package:easy_ticket/page/events.dart';
 import 'package:easy_ticket/page/home.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,9 @@ class _PerfilState extends State<Perfil> {
           TextButton(
             onPressed: () async {
               prefs.remove("token");
+              final authBloc = Provider.of<AuthBloc>(context, listen: false);
+              authBloc.updateAuthStatus(AuthStatus.unauthenticated);
+
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
@@ -61,7 +65,7 @@ class _PerfilState extends State<Perfil> {
       );
     } else {
       print("go page login");
-      return const Login();
+      return const Login(backScreen: false);
     }
   }
 }

@@ -1,4 +1,6 @@
+import 'package:easy_ticket/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login.dart';
@@ -35,16 +37,19 @@ class _MyTicketsState extends State<MyTickets> {
       // Show a loading indicator while waiting for prefs to be initialized.
       return const CircularProgressIndicator();
     }
-
-    if (token != null && token.isNotEmpty) {
-      return const Row(
-        children: [
-          Text("Meus ingressos"),
-        ],
-      );
-    } else {
-      print("go page login");
-      return const Login();
-    }
+    return Consumer<AuthBloc>(
+      builder: (context, authBloc, _) {
+        if (authBloc.authStatus == AuthStatus.authenticated) {
+          return const Row(
+            children: [
+              Text("Meus ingressos"),
+            ],
+          );
+        } else {
+          print("go page login");
+          return const Login(backScreen: false);
+        }
+      },
+    );
   }
 }

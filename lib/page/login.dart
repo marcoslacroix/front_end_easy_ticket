@@ -11,11 +11,13 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../auth/auth_bloc.dart';
 import '../util/urls.dart';
 import 'forgot_password.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  final bool backScreen;
+  const Login({Key? key, required this.backScreen}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
@@ -27,11 +29,13 @@ class _LoginState extends State<Login> {
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   bool isPasswordVisible = false;
+  bool backScreen = false;
 
 
   @override
   void initState() {
     super.initState();
+    backScreen = widget.backScreen;
     getToken();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
@@ -95,6 +99,8 @@ class _LoginState extends State<Login> {
         setState(() {
           String token = value;
           if (token.isNotEmpty) {
+            final authBloc = Provider.of<AuthBloc>(context, listen: false);
+            authBloc.updateAuthStatus(AuthStatus.authenticated);
             prefs.setString('token', token);
             _emailController.clear();
             _passwordController.clear();
@@ -105,14 +111,19 @@ class _LoginState extends State<Login> {
                 content: Text('Login efetuado'),
               ),
             );
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Home(),
-                fullscreenDialog: true,
-              ),
-                  (route) => false,
-            );
+            if (backScreen) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Home(),
+                  fullscreenDialog: true,
+                ),
+                    (route) => false,
+              );
+            }
+
           } else {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(
@@ -240,14 +251,7 @@ class _LoginState extends State<Login> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ForgotPassword(),
-                      fullscreenDialog: false,
-                    ),
-                        (route) => true,
-                  );
+                  Navigator.of(context).pushNamed("/forgot-password");
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
