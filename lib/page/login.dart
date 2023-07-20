@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:easy_ticket/page/events.dart';
+import 'package:easy_ticket/page/buy_tickets.dart';
 import 'package:easy_ticket/page/home.dart';
 import 'package:easy_ticket/page/register.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,7 +17,8 @@ import 'forgot_password.dart';
 
 class Login extends StatefulWidget {
   final bool backScreen;
-  const Login({Key? key, required this.backScreen}) : super(key: key);
+  final int? eventId;
+  const Login({Key? key, required this.backScreen, required this.eventId}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
@@ -30,13 +31,20 @@ class _LoginState extends State<Login> {
   late TextEditingController _passwordController;
   bool isPasswordVisible = false;
   bool backScreen = false;
+  int? eventId;
 
 
   @override
   void initState() {
-    super.initState();
-    backScreen = widget.backScreen;
+    setState(() {
+      final e = widget.eventId;
+      print("Init eventId: $e ");
+      eventId = widget.eventId;
+      backScreen = widget.backScreen;
+
+    });
     getToken();
+    super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
   }
@@ -54,81 +62,6 @@ class _LoginState extends State<Login> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  Future<String> doRequestLogin() async {
-    Map<String, dynamic> payload = {
-      "email": _emailController.text,
-      "password": _passwordController.text
-    };
-    String jsonPayload = jsonEncode(payload);
-
-    String token = "";
-    var url = Uri.parse(loginUrl);
-    var response = await http.post(
-        url,
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json'
-        },
-        body: jsonPayload
-    );
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> responsePayload = jsonDecode(response.body);
-      token = (responsePayload["token"]);
-    }
-    return token;
-  }
-
-
-  void _handleLogin(BuildContext context) {
-    final String email = _emailController.text;
-    final String password = _passwordController.text;
-    Future<String> futureToken = doRequestLogin();
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.red,
-          content: Text('Favor verifique seu e-mail ou senha'),
-        ),
-      );
-    } else {
-      futureToken.then((value) =>
-      {
-        setState(() {
-          String token = value;
-          if (token.isNotEmpty) {
-            final authBloc = Provider.of<AuthBloc>(context, listen: false);
-            authBloc.updateAuthStatus(AuthStatus.authenticated);
-            prefs.setString('token', token);
-            _emailController.clear();
-            _passwordController.clear();
-            if (backScreen) {
-              Navigator.pop(context);
-            } else {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Home(),
-                  fullscreenDialog: true,
-                ),
-                    (route) => false,
-              );
-            }
-
-          } else {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                backgroundColor: Colors.red,
-                content: Text('Senha inválida'),
-              ),
-            );
-          }
-        })
-      });
-    }
   }
 
   @override
@@ -268,5 +201,89 @@ class _LoginState extends State<Login> {
         ],
       ),
     );
+  }
+
+  Future<String> doRequestLogin() async {
+    Map<String, dynamic> payload = {
+      "email": _emailController.text,
+      "password": _passwordController.text
+    };
+    String jsonPayload = jsonEncode(payload);
+
+    String token = "";
+    var url = Uri.parse(loginUrl);
+    var response = await http.post(
+        url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json'
+        },
+        body: jsonPayload
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responsePayload = jsonDecode(response.body);
+      token = (responsePayload["token"]);
+    }
+    return token;
+  }
+
+
+  void _handleLogin(BuildContext context) {
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
+    Future<String> futureToken = doRequestLogin();
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Favor verifique seu e-mail ou senha'),
+        ),
+      );
+    } else {
+      futureToken.then((value) =>
+      {
+        setState(() {
+          String token = value;
+          if (token.isNotEmpty) {
+            final authBloc = Provider.of<AuthBloc>(context, listen: false);
+            authBloc.updateAuthStatus(AuthStatus.authenticated);
+            prefs.setString('token', token);
+            _emailController.clear();
+            _passwordController.clear();
+            print("eventiId: $eventId");
+            if (eventId != null) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => BuyTickets(event: eventId)
+                  ),
+                  (route) => false,
+              );
+            } else if (backScreen) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Home(),
+                  fullscreenDialog: true,
+                ),
+                    (route) => false,
+              );
+            }
+
+          } else {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                backgroundColor: Colors.red,
+                content: Text('Senha inválida'),
+              ),
+            );
+          }
+        })
+      });
+    }
   }
 }

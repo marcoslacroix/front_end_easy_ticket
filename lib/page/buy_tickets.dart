@@ -32,10 +32,14 @@ class _BuyTicketsState extends State<BuyTickets> {
   late SharedPreferences prefs;
   bool isInitialized = false;
   var token;
+  var eventId;
 
 
   @override
   void initState() {
+    setState(() {
+      eventId =  widget.event;
+    });
     fetchLotsData(widget.event);
     super.initState();
     getToken();
@@ -222,7 +226,7 @@ class _BuyTicketsState extends State<BuyTickets> {
             ),
           );
         } else {
-          return const Login(backScreen: true);
+          return Login(backScreen: true, eventId: eventId);
         }
       },
     );

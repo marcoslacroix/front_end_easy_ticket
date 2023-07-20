@@ -43,32 +43,38 @@ class _PerfilState extends State<Perfil> {
 
     return Consumer<AuthBloc>(
         builder: (context, authBloc, _) {
-          if (authBloc.authStatus == AuthStatus.unauthenticated) {
+          print("Login token: $token");
+          var status = authBloc.authStatus;
+          print("authBloc: $status");
+          print("------------");
+          if (authBloc.authStatus == AuthStatus.authenticated) {
             return Scaffold(
               body: Row(
                 children: [
-                  TextButton(
-                    onPressed: () async {
-                      prefs.remove("token");
-                      final authBloc = Provider.of<AuthBloc>(context, listen: false);
-                      authBloc.updateAuthStatus(AuthStatus.unauthenticated);
+                  Center(
+                    child: TextButton(
+                      onPressed: () async {
+                        prefs.remove("token");
+                        final authBloc = Provider.of<AuthBloc>(context, listen: false);
+                        authBloc.updateAuthStatus(AuthStatus.unauthenticated);
 
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Home(),
-                          fullscreenDialog: true,
-                        ),
-                            (route) => false,
-                      );
-                    },
-                    child: const Text("Logout"),
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Home(),
+                            fullscreenDialog: true,
+                          ),
+                              (route) => false,
+                        );
+                      },
+                      child: const Text("Logout"),
+                    ),
                   )
                 ],
               ),
             );
           } else {
-            return const Login(backScreen: false);
+            return const Login(backScreen: false, eventId: null,);
           }
         }
     );

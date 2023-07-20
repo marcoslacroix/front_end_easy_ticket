@@ -39,6 +39,10 @@ class _MyTicketsState extends State<MyTickets> {
     }
     return Consumer<AuthBloc>(
       builder: (context, authBloc, _) {
+        print("meus ingressos token: $token");
+        var status = authBloc.authStatus;
+        print("authBloc: $status");
+        print("------------");
         if (authBloc.authStatus == AuthStatus.authenticated) {
           return const Row(
             children: [
@@ -47,7 +51,7 @@ class _MyTicketsState extends State<MyTickets> {
           );
         } else {
           print("go page login");
-          return const Login(backScreen: false);
+          return const Login(backScreen: false, eventId: null);
         }
       },
     );
