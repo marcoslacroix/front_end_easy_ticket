@@ -62,10 +62,6 @@ class _BuyTicketsState extends State<BuyTickets> {
 
     return Consumer<AuthBloc>(
       builder: (context, authBloc, _) {
-        print("Buy tickets token: $token");
-        var status = authBloc.authStatus;
-        print("authBloc: $status");
-        print("------------");
         if (authBloc.authStatus == AuthStatus.authenticated || token != null) {
           return Scaffold(
             appBar: AppBar(
@@ -161,16 +157,13 @@ class _BuyTicketsState extends State<BuyTickets> {
                                                     }
                                                   }
                                                 } else {
-                                                  ScaffoldMessenger.of(context).showSnackBar(
-                                                    const SnackBar(
-                                                      content: Text('Não há mais ingressos disponíveis para este tipo e lote.'),
-                                                    ),
-                                                  );
+
                                                 }
                                               })
                                                   : ScaffoldMessenger.of(context).showSnackBar(
                                                 const SnackBar(
                                                   content: Text('Quantidade máxima de ingressos por usuário atingido.'),
+                                                  behavior: SnackBarBehavior.floating,
                                                 ),
                                               );
                                             },

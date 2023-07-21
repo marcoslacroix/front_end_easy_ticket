@@ -77,138 +77,140 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         backgroundColor: Colors.transparent,
         iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
         elevation: 0,
       ),
-      body: Column(
-        children: [
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Text(
-                  "Area exclusiva para clientes, faça o login ou crie um cadastro",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    "Area exclusiva para clientes, faça o login ou crie um cadastro",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 250,
-                child: TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'E-mail',
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 250,
+                  child: TextField(
+                    keyboardType: TextInputType.emailAddress,
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      labelText: 'E-mail',
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 250,
-                child: TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    suffixIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isPasswordVisible = !isPasswordVisible;
-                        });
-                      },
-                      child: Icon(
-                        isPasswordVisible ? Icons.visibility : Icons
-                            .visibility_off,
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 250,
+                  child: TextField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isPasswordVisible = !isPasswordVisible;
+                          });
+                        },
+                        child: Icon(
+                          isPasswordVisible ? Icons.visibility : Icons
+                              .visibility_off,
+                        ),
                       ),
                     ),
+                    obscureText: !isPasswordVisible,
                   ),
-                  obscureText: !isPasswordVisible,
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () => _handleLogin(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+              ],
+            ),
+            const SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () => _handleLogin(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
+                  child: const Text('Acessar'),
                 ),
-                child: const Text('Acessar'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Register(),
-                      fullscreenDialog: false,
+              ],
+            ),
+            const SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Register(),
+                        fullscreenDialog: false,
+                      ),
+                          (route) => true,
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                  ),
+                  child: const Text(
+                    'Quero me registrar',
+                    style: TextStyle(
+                      color: Colors.black, // Defina a cor do texto
                     ),
-                        (route) => true,
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                ),
-                child: const Text(
-                  'Quero me registrar',
-                  style: TextStyle(
-                    color: Colors.black, // Defina a cor do texto
                   ),
-                ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ForgotPassword(),
-                      fullscreenDialog: false,
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ForgotPassword(),
+                        fullscreenDialog: false,
+                      ),
+                          (route) => true,
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                  ),
+                  child: const Text(
+                    'Esqueci minha senha',
+                    style: TextStyle(
+                      color: Colors.black, // Defina a cor do texto
                     ),
-                        (route) => true,
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                ),
-                child: const Text(
-                  'Esqueci minha senha',
-                  style: TextStyle(
-                    color: Colors.black, // Defina a cor do texto
                   ),
-                ),
-              )
-            ],
-          )
-        ],
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -246,8 +248,8 @@ class _LoginState extends State<Login> {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          backgroundColor: Colors.red,
           content: Text('Favor verifique seu e-mail ou senha'),
+          behavior: SnackBarBehavior.floating,
         ),
       );
     } else {
@@ -261,8 +263,6 @@ class _LoginState extends State<Login> {
             prefs.setString('token', token);
             _emailController.clear();
             _passwordController.clear();
-            print("eventiId: $eventId");
-            print("screen: $screen");
             if (eventId != null) {
               Navigator.of(context);
             } else if (screen == Screen.perfil) {
@@ -291,13 +291,12 @@ class _LoginState extends State<Login> {
                 (route) => false,
               );
             }
-
           } else {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                backgroundColor: Colors.red,
                 content: Text('Senha inválida'),
+                behavior: SnackBarBehavior.floating,
               ),
             );
           }

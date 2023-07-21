@@ -67,305 +67,307 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         backgroundColor: Colors.transparent,
         iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
         elevation: 0,
       ),
-      body: Column(
-        children: [
-          Row(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 250,
+                    child: TextField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Nome',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
                   width: 250,
                   child: TextField(
-                    controller: _nameController,
+                    controller: _lastnameController,
                     decoration: const InputDecoration(
-                      labelText: 'Nome',
+                      labelText: 'Sobrenome',
                     ),
                   ),
                 ),
               ],
             ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 250,
-                child: TextField(
-                  controller: _lastnameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Sobrenome',
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 250,
-                child: TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'E-mail',
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 250,
-                child: TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Senha',
-                    suffixIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isPasswordVisible = !isPasswordVisible;
-                        });
-                      },
-                      child: Icon(
-                        isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                      ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 250,
+                  child: TextField(
+                    keyboardType: TextInputType.emailAddress,
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      labelText: 'E-mail',
                     ),
                   ),
-                  obscureText: !isPasswordVisible,
                 ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 250,
-                child: TextField(
-                  controller: _confirmPasswordController,
-                  decoration: InputDecoration(
-                    labelText: 'Confirmar senha',
-                    suffixIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isConfirmPasswordVisible = !isConfirmPasswordVisible;
-                        });
-                      },
-                      child: Icon(
-                        isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                      ),
-                    ),
-                  ),
-                  obscureText: !isConfirmPasswordVisible,
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 250,
-                child: Row(
-                  children: [
-                    if (passwordContainsUppercase)
-                      const Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      )
-                    else
-                      const Icon(
-                        Icons.clear,
-                        color: Colors.red,
-                      ),
-                    Text(
-                      'Letra maiúscula',
-                      style: TextStyle(
-                        color: passwordContainsUppercase ? Colors.green : Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 250,
-                child: Row(
-                  children: [
-                    if (passwordContainsNumber)
-                      const Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      )
-                    else
-                      const Icon(
-                        Icons.clear,
-                        color: Colors.red,
-                      ),
-                    Text(
-                      'Número',
-                      style: TextStyle(
-                        color: passwordContainsNumber ? Colors.green : Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 250,
-                child: Row(
-                  children: [
-                    if (passwordContainsLowercase)
-                      const Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      )
-                    else
-                      const Icon(
-                        Icons.clear,
-                        color: Colors.red,
-                      ),
-                    Text(
-                      'Letra minuscula',
-                      style: TextStyle(
-                        color: passwordContainsLowercase ? Colors.green : Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 250,
-                child: Row(
-                  children: [
-                    if (passwordContainsSpecialChar)
-                      const Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      )
-                    else
-                      const Icon(
-                        Icons.clear,
-                        color: Colors.red,
-                      ),
-                    Text(
-                      'Caractere especial',
-                      style: TextStyle(
-                        color: passwordContainsSpecialChar ? Colors.green : Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 250     ,
-                child: Row(
-                  children: [
-                    if (_passwordController.text != '' && _passwordController.text == _confirmPasswordController.text)
-                      const Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      )
-                    else
-                      const Icon(
-                        Icons.clear,
-                        color: Colors.red,
-                      ),
-                    Flexible(
-                      child: Text(
-                        'As senhas correspondem',
-                        style: TextStyle(
-                          color: _passwordController.text != '' && _passwordController.text == _confirmPasswordController.text ? Colors.green : Colors.red,
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 250,
+                  child: TextField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: 'Senha',
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isPasswordVisible = !isPasswordVisible;
+                          });
+                        },
+                        child: Icon(
+                          isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                         ),
                       ),
                     ),
+                    obscureText: !isPasswordVisible,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 250,
+                  child: TextField(
+                    controller: _confirmPasswordController,
+                    decoration: InputDecoration(
+                      labelText: 'Confirmar senha',
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isConfirmPasswordVisible = !isConfirmPasswordVisible;
+                          });
+                        },
+                        child: Icon(
+                          isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        ),
+                      ),
+                    ),
+                    obscureText: !isConfirmPasswordVisible,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 250,
+                  child: Row(
+                    children: [
+                      if (passwordContainsUppercase)
+                        const Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                      else
+                        const Icon(
+                          Icons.clear,
+                          color: Colors.red,
+                        ),
+                      Text(
+                        'Letra maiúscula',
+                        style: TextStyle(
+                          color: passwordContainsUppercase ? Colors.green : Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 250,
+                  child: Row(
+                    children: [
+                      if (passwordContainsNumber)
+                        const Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                      else
+                        const Icon(
+                          Icons.clear,
+                          color: Colors.red,
+                        ),
+                      Text(
+                        'Número',
+                        style: TextStyle(
+                          color: passwordContainsNumber ? Colors.green : Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 250,
+                  child: Row(
+                    children: [
+                      if (passwordContainsLowercase)
+                        const Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                      else
+                        const Icon(
+                          Icons.clear,
+                          color: Colors.red,
+                        ),
+                      Text(
+                        'Letra minuscula',
+                        style: TextStyle(
+                          color: passwordContainsLowercase ? Colors.green : Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 250,
+                  child: Row(
+                    children: [
+                      if (passwordContainsSpecialChar)
+                        const Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                      else
+                        const Icon(
+                          Icons.clear,
+                          color: Colors.red,
+                        ),
+                      Text(
+                        'Caractere especial',
+                        style: TextStyle(
+                          color: passwordContainsSpecialChar ? Colors.green : Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 250     ,
+                  child: Row(
+                    children: [
+                      if (_passwordController.text != '' && _passwordController.text == _confirmPasswordController.text)
+                        const Icon(
+                          Icons.check,
+                          color: Colors.green,
+                        )
+                      else
+                        const Icon(
+                          Icons.clear,
+                          color: Colors.red,
+                        ),
+                      Flexible(
+                        child: Text(
+                          'As senhas correspondem',
+                          style: TextStyle(
+                            color: _passwordController.text != '' && _passwordController.text == _confirmPasswordController.text ? Colors.green : Colors.red,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () => _handleRegister(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue, // Defina a cor de fundo desejada
+                  ),
+                  child: const Text(
+                    'Registrar',
+                    style: TextStyle(fontSize: 16), // Defina o estilo do texto, se necessário
+
+                  ),
+                ),
+              ],
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child:RichText(
+                text: TextSpan(
+                  children: [
+                    const TextSpan(
+                      text: 'Ao me cadastrar, concordo com os ',
+                      style: TextStyle(
+                          color: Colors.black
+                      ),
+                    ),
+                    TextSpan(
+                      text: 'termos de uso',
+                      style: const TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => const Terms(),
+                                  fullscreenDialog: false
+                              ),
+                                  (route) => true
+                          );
+                        },
+                    ),
+                    const TextSpan(
+                      text: '.',
+                      style: TextStyle(
+                          color: Colors.black
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () => _handleRegister(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Defina a cor de fundo desejada
-                ),
-                child: const Text(
-                  'Registrar',
-                  style: TextStyle(fontSize: 16), // Defina o estilo do texto, se necessário
-
-                ),
-              ),
-            ],
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child:RichText(
-              text: TextSpan(
-                children: [
-                  const TextSpan(
-                    text: 'Ao me cadastrar, concordo com os ',
-                    style: TextStyle(
-                        color: Colors.black
-                    ),
-                  ),
-                  TextSpan(
-                    text: 'termos de uso',
-                    style: const TextStyle(
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Terms(),
-                                fullscreenDialog: false
-                            ),
-                                (route) => true
-                        );
-                      },
-                  ),
-                  const TextSpan(
-                    text: '.',
-                    style: TextStyle(
-                        color: Colors.black
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
 
     );
@@ -375,56 +377,56 @@ class _RegisterState extends State<Register> {
     if (_emailController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          backgroundColor: Colors.red,
           content: Text('Email obrigatório'),
+          behavior: SnackBarBehavior.floating,
         ),
       );
       return false;
     } else if (!_emailController.text.contains("@")) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          backgroundColor: Colors.red,
           content: Text('Email inválido'),
+          behavior: SnackBarBehavior.floating,
         ),
       );
       return false;
     } else if (!_emailController.text.contains(".")) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          backgroundColor: Colors.red,
           content: Text('Email inválido'),
+          behavior: SnackBarBehavior.floating,
         ),
       );
       return false;
     } else if (_nameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          backgroundColor: Colors.red,
           content: Text('Nome obrigatório'),
+          behavior: SnackBarBehavior.floating,
         ),
       );
       return false;
     } else if (_passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          backgroundColor: Colors.red,
           content: Text("Senha obrigatória"),
+          behavior: SnackBarBehavior.floating,
         ),
       );
       return false;
     } else if (_lastnameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          backgroundColor: Colors.red,
           content: Text("Sobrenome obrigatório"),
+          behavior: SnackBarBehavior.floating,
         ),
       );
       return false;
     } else if (!isPasswordStrong(_passwordController.text)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          backgroundColor: Colors.red,
           content: Text("Senha deve conter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas e números."),
+          behavior: SnackBarBehavior.floating,
         ),
       );
       return false;
@@ -471,7 +473,6 @@ class _RegisterState extends State<Register> {
         },
         body: jsonPayload
     );
-    var body = response.body;
     return response;
   }
 
@@ -480,21 +481,14 @@ class _RegisterState extends State<Register> {
       Future<Response> futureResponse = doRegister();
 
       futureResponse.then((response) => {
-        print("login succeso"),
         if (response.statusCode == 200) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.green,
-              content: Text("Registro realizado"),
-            ),
-          ),
           Navigator.pop(context)
     } else {
           ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              backgroundColor: Colors.red,
               content: Text(jsonDecode(response.body)["error"] ?? "Houve um error"),
+              behavior: SnackBarBehavior.floating,
             ),
           )
         }

@@ -45,10 +45,6 @@ class _PerfilState extends State<Perfil> {
 
     return Consumer<AuthBloc>(
         builder: (context, authBloc, _) {
-          print("Login token: $token");
-          var status = authBloc.authStatus;
-          print("authBloc: $status");
-          print("------------");
           if (authBloc.authStatus == AuthStatus.authenticated || token != null) {
             return Scaffold(
               body: Row(

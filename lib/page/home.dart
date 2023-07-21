@@ -5,8 +5,10 @@ import 'package:easy_ticket/page/events.dart';
 import 'package:easy_ticket/page/search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'login.dart';
+import '../auth/auth_bloc.dart';
 
 enum SelectedScreen {
   events,
@@ -25,12 +27,16 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
-
+  late SharedPreferences prefs;
   int _selectedIndex = 0;
+  var token;
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      getToken();
+    });
     switch (widget.selectedScreen) {
       case SelectedScreen.events:
         setState(() {
@@ -56,6 +62,15 @@ class _Home extends State<Home> {
         _selectedIndex = 0;
 
     }
+  }
+
+  void getToken() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString("token");
+      final authBloc = Provider.of<AuthBloc>(context, listen: false);
+      authBloc.checkAuthentication(token);
+    });
   }
 
   void _onItemTapped(int index) {

@@ -39,10 +39,6 @@ class _MyTicketsState extends State<MyTickets> {
     }
     return Consumer<AuthBloc>(
       builder: (context, authBloc, _) {
-        print("meus ingressos token: $token");
-        var status = authBloc.authStatus;
-        print("authBloc: $status");
-        print("------------");
         if (authBloc.authStatus == AuthStatus.authenticated || token != null) {
           return const Row(
             children: [
