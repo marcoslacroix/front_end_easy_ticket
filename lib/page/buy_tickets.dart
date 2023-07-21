@@ -157,7 +157,12 @@ class _BuyTicketsState extends State<BuyTickets> {
                                                     }
                                                   }
                                                 } else {
-
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text('Não há mais ingressos disponíveis para este tipo e lote.'),
+                                                      behavior: SnackBarBehavior.floating,
+                                                    ),
+                                                  );
                                                 }
                                               })
                                                   : ScaffoldMessenger.of(context).showSnackBar(
@@ -207,7 +212,7 @@ class _BuyTicketsState extends State<BuyTickets> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const Payment(),
+                          builder: (context) => Payment(maleTicketCountMap: maleTicketCountMap, femaleTicketCountMap: femaleTicketCountMap),
                         ),
                       )
                           : null;

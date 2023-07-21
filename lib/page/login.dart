@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:easy_ticket/page/buy_tickets.dart';
-import 'package:easy_ticket/page/home.dart';
+import 'package:easy_ticket/page/home/home.dart';
 import 'package:easy_ticket/page/perfil.dart';
 import 'package:easy_ticket/page/register.dart';
 import 'package:flutter/cupertino.dart';
@@ -69,6 +69,7 @@ class _LoginState extends State<Login> {
 
   @override
   void dispose() {
+    print("teste dispose login");
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();

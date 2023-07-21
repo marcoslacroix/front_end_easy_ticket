@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 
 
 class Payment extends StatefulWidget {
-  const Payment({Key? key}) : super(key: key);
+  final dynamic maleTicketCountMap;
+  final dynamic femaleTicketCountMap;
+  const Payment({Key? key, required this.maleTicketCountMap, required this.femaleTicketCountMap}) : super(key: key);
 
   @override
   _PaymentState createState() => _PaymentState();
@@ -12,8 +14,15 @@ class Payment extends StatefulWidget {
 
 class _PaymentState extends State<Payment> {
 
+  late final dynamic maleTicketCountMap;
+  late final dynamic femaleTicketCountMap;
   @override
   void initState() {
+    setState(() {
+      maleTicketCountMap = widget.maleTicketCountMap;
+      femaleTicketCountMap = widget.femaleTicketCountMap;
+      print("maleTicketCountMap: $maleTicketCountMap");
+    });
     super.initState();
   }
 

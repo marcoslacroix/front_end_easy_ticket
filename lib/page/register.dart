@@ -44,6 +44,7 @@ class _RegisterState extends State<Register> {
 
   @override
   void dispose() {
+    print("teste dispose register");
     _emailController.dispose();
     _nameController.dispose();
     _lastnameController.dispose();
