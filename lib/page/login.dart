@@ -51,7 +51,6 @@ class _LoginState extends State<Login> {
       selectedIndex = widget.selectedIndex;
       screen = widget.screen;
       eventId = widget.eventId;
-
     });
     getToken();
     super.initState();
@@ -69,7 +68,6 @@ class _LoginState extends State<Login> {
 
   @override
   void dispose() {
-    print("teste dispose login");
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -261,11 +259,16 @@ class _LoginState extends State<Login> {
           if (token.isNotEmpty) {
             final authBloc = Provider.of<AuthBloc>(context, listen: false);
             authBloc.updateAuthStatus(AuthStatus.authenticated);
-            prefs.setString('token', token);
+            prefs.setString('token', 'Bearer $token');
             _emailController.clear();
             _passwordController.clear();
+            print("eventId: $eventId");
             if (eventId != null) {
-              Navigator.of(context);
+              print("enviar para buy tickets");
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => BuyTickets(event: eventId)
+                ));
             } else if (screen == Screen.perfil) {
               Navigator.pushAndRemoveUntil(
                 context,

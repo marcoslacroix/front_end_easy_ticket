@@ -19,7 +19,6 @@ class AuthBloc extends ChangeNotifier {
   }
 
   void checkAuthentication(String? token) {
-    print("Oi");
     if (token != null && token.isNotEmpty) {
       _authStatus = AuthStatus.authenticated;
       print("authenticated");

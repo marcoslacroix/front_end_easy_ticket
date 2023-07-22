@@ -1,5 +1,3 @@
-import 'package:easy_ticket/page/events.dart';
-import 'package:easy_ticket/page/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'auth/auth_bloc.dart';
