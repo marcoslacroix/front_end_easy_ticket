@@ -10,6 +10,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import '../../auth/token_manager.dart';
 import '../../util/urls.dart';
 import '../home/home.dart';
 
@@ -39,7 +40,10 @@ class _PixState extends State<Pix> {
   void initState() {
     success = false;
     super.initState();
-    getToken();
+    token = TokenManager.instance.getToken();
+    totalTicketValue = widget.totalTicketValue;
+    tickets = widget.tickets;
+    _futureQrcode = generateQrcode();
   }
 
   void _copyToClipboard() {
@@ -48,17 +52,6 @@ class _PixState extends State<Pix> {
       _isCopied = true;
     });
   }
-
-  void getToken() async {
-    prefs = await SharedPreferences.getInstance();
-    setState(() {
-      totalTicketValue = widget.totalTicketValue;
-      tickets = widget.tickets;
-      token = prefs.getString("token")!;
-      _futureQrcode = generateQrcode(); // Initialize _futureQrcode with the generated Future
-    });
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +151,7 @@ class _PixState extends State<Pix> {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader: '$token'
       };
-      var url = Uri.parse(fetchQrcode + "?amount=$totalTicketValue");
+      var url = Uri.parse("$fetchQrcode?amount=$totalTicketValue");
       var response = await http.post(url, headers: headers, body: jsonBody);
 
       if (response.statusCode == 201) {

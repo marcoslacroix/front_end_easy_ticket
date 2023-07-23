@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../auth/token_manager.dart';
 import 'login.dart';
 
 
@@ -25,15 +26,7 @@ class _PerfilState extends State<Perfil> {
   @override
   void initState() {
     super.initState();
-    getToken();
-  }
-
-  void getToken() async {
-    prefs = await SharedPreferences.getInstance();
-    setState(() {
-      isInitialized = true;
-      token = prefs.getString("token");
-    });
+    token = TokenManager.instance.getToken();
   }
 
   @override
@@ -58,7 +51,7 @@ class _PerfilState extends State<Perfil> {
                         prefs.remove("token");
                         final authBloc = Provider.of<AuthBloc>(context, listen: false);
                         authBloc.updateAuthStatus(AuthStatus.unauthenticated);
-
+                        TokenManager.instance.setToken("");
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(

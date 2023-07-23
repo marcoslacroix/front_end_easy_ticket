@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../auth/token_manager.dart';
 import '../../util/urls.dart';
 
 
@@ -134,16 +135,7 @@ class _PaymentState extends State<Payment> {
     femaleTicketCountMap = widget.femaleTicketCountMap;
     totalTicketValue = widget.totalTicketValue;
     totalTicketCount = widget.totalTicketCount;
-
-    getToken();
-  }
-
-
-  void getToken() async {
-    prefs = await SharedPreferences.getInstance();
-    setState(() {
-      token = prefs.getString("token")!;
-    });
+    token = TokenManager.instance.getToken();
   }
 
   @override
