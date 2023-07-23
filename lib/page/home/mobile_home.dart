@@ -59,7 +59,7 @@ class _MobileHomeState extends State<MobileHome> {
             label: 'Eventos',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.event_available),
+            icon: Icon(Icons.search_rounded),
             label: 'Pesquisar',
           ),
           BottomNavigationBarItem(

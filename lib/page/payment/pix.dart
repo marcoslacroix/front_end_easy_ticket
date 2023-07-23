@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -122,7 +123,7 @@ class _PixState extends State<Pix> {
                     ),
                     Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Text('Valor total da compra: R\$ ${totalTicketValue.toStringAsFixed(2)}')
+                        child: Text('Valor total da compra: ${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(totalTicketValue)}'),
                     ),
                     const Padding(
                         padding: EdgeInsets.all(16.0),

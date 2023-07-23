@@ -5,6 +5,7 @@ import 'package:easy_ticket/page/payment/payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -105,7 +106,7 @@ class _BuyTicketsState extends State<BuyTickets> {
                                     itemCount: tickets.length,
                                     itemBuilder: (context, ticketIndex) {
                                       final ticket = tickets[ticketIndex];
-                                      String realValue = centsToReal(ticket['price']);
+                                      double realValue = centsToReal(ticket['price']);
                                       final type = ticket['type'] ?? '';
                                       final description = lot['description'];
                                       final lotId = lot['id'];
@@ -197,8 +198,7 @@ class _BuyTicketsState extends State<BuyTickets> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 Center(
-                                                    child: Text(
-                                                        'R\$ $realValue')),
+                                                    child: Text('${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(realValue)}')),
                                               ],
                                             ),
                                             const Divider(),
@@ -216,7 +216,7 @@ class _BuyTicketsState extends State<BuyTickets> {
                         child: Column(
                           children: [
                             Text('Total de ingressos selecionados: $totalTicketCount'),
-                            Text('Valor total: R\$ ${totalTicketValue.toStringAsFixed(2)}'),
+                            Text('Valor total: ${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(totalTicketValue)}'),
                           ],
                         ),
                       ),
@@ -291,9 +291,8 @@ class _BuyTicketsState extends State<BuyTickets> {
     return typeFormated;
   }
 
-  String centsToReal(int cents) {
-    double realValue = cents / 100.0;
-    return realValue.toStringAsFixed(2);
+  double centsToReal(int cents) {
+    return cents / 100.0;
   }
 
   Future<void> fetchLotsData(eventId) async {

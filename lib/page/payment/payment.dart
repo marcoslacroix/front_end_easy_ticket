@@ -472,7 +472,7 @@ class _PaymentState extends State<Payment> {
                 child: Column(
                   children: [
                     Text('Total de ingressos selecionados: $totalTicketCount'),
-                    Text('Valor total: R\$ ${totalTicketValue.toStringAsFixed(2)}'),
+                    Text('Valor total: ${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(totalTicketValue)}'),
                   ],
                 ),
               ),
