@@ -88,7 +88,6 @@ class _PixState extends State<Pix> {
                     "Error para gerar o QRCODE, entre em contato com a equipe."),
               );
             } else {
-              print("não deu error");
               if (success) {
                 Uint8List bytes = base64Decode(snapshot?.data['message']?['imagemQrcode'].split(',')[1]);
                 _textEditingController.text = snapshot?.data['message']?['qrcode'];

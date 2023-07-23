@@ -26,7 +26,15 @@ class _PerfilState extends State<Perfil> {
   @override
   void initState() {
     super.initState();
-    token = TokenManager.instance.getToken();
+    getToken();
+  }
+
+  void getToken() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isInitialized = true;
+      token = prefs.getString("token");
+    });
   }
 
   @override
