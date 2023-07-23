@@ -31,10 +31,12 @@ class _PixState extends State<Pix> {
   late Future<dynamic> _futureQrcode = Future.value();
   TextEditingController _textEditingController = TextEditingController();
   bool _isCopied = false;
+  late bool success;
 
 
   @override
   void initState() {
+    success = false;
     super.initState();
     getToken();
   }
@@ -92,40 +94,52 @@ class _PixState extends State<Pix> {
                     "Error para gerar o QRCODE, entre em contato com a equipe."),
               );
             } else {
-              Uint8List bytes = base64Decode(snapshot?.data['message']?['imagemQrcode'].split(',')[1]);
-              _textEditingController.text = snapshot?.data['message']?['qrcode'];
-              return Column(
-                children: [
-                  const Text("Qrcode gerado com sucesso."),
-                  const Text("Válido por 5 minutos"),
-                  Center(child: Image.memory(bytes)),
-                  Padding(
-                    padding: EdgeInsets.all(16.0),
+              print("não deu error");
+              if (success) {
+                Uint8List bytes = base64Decode(snapshot?.data['message']?['imagemQrcode'].split(',')[1]);
+                _textEditingController.text = snapshot?.data['message']?['qrcode'];
+                return Column(
+                  children: [
+                    const Text("Qrcode gerado com sucesso."),
+                    const Text("Válido por 5 minutos"),
+                    Center(child: Image.memory(bytes)),
+                    Padding(
+                      padding: EdgeInsets.all(16.0),
                       child: TextField(
-                      controller: _textEditingController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                      labelText: "Código QR",
-                      suffixIcon: _isCopied
-                      ? const Icon(Icons.check, color: Colors.green)
-                          : IconButton(
-                      icon: const Icon(Icons.copy),
-                      onPressed: () {
-                        _copyToClipboard();
-                      }),
+                        controller: _textEditingController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          labelText: "Código QR",
+                          suffixIcon: _isCopied
+                              ? const Icon(Icons.check, color: Colors.green)
+                              : IconButton(
+                              icon: const Icon(Icons.copy),
+                              onPressed: () {
+                                _copyToClipboard();
+                              }),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
+                    Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text('Valor total da compra: R\$ ${totalTicketValue.toStringAsFixed(2)}')
+                    ),
+                    const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text("Obrigado pela compra.")
+                    )
+                  ],
+                );
+              } else {
+                String msgError = snapshot?.data['message'] ?? "";
+                return Center(
+                  child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text('Valor total da compra: R\$ ${totalTicketValue.toStringAsFixed(2)}')
+                    child: Text(msgError),
                   ),
-                  const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text("Obrigado pela compra.")
-                  )
-                ],
-              );
+                );
+              }
+
             }
           }),
     );
@@ -148,11 +162,18 @@ class _PixState extends State<Pix> {
 
       if (response.statusCode == 201) {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
+        print("true sucesss");
+        setState(() {
+          success = true;
+        });
+        return jsonData;
+      } else if (response.statusCode == 400){
+        Map<String, dynamic> jsonData = jsonDecode(response.body);
+        print("response error: $jsonData");
         return jsonData;
       }
     } catch (e) {
       print('Error occurred while fetching events: $e');
-      return [];
     }
   }
 }
