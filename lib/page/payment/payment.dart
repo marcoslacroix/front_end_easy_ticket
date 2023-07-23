@@ -1,11 +1,21 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:easy_ticket/page/payment/pix.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../util/urls.dart';
+
 
 class Payment extends StatefulWidget {
   final dynamic maleTicketCountMap;
   final dynamic femaleTicketCountMap;
   final int totalTicketCount;
   final double totalTicketValue;
+  final int companyId;
+  final int eventId;
 
   const Payment({
     Key? key,
@@ -13,6 +23,8 @@ class Payment extends StatefulWidget {
     required this.femaleTicketCountMap,
     required this.totalTicketCount,
     required this.totalTicketValue,
+    required this.companyId,
+    required this.eventId
   }) : super(key: key);
 
   @override
@@ -24,10 +36,14 @@ class _PaymentState extends State<Payment> {
   late final dynamic femaleTicketCountMap;
   late final double totalTicketValue;
   late final int totalTicketCount;
+  late final int companyId;
+  late final int eventId;
+  late final String token;
   late String? selectedPaymentMethod;
   late String? selectedBandType;
   late bool showCreditCardForm ;
   late bool showPersonalInformation;
+  late SharedPreferences prefs;
 
   late TextEditingController _nameController;
   late TextEditingController _emailController;
@@ -65,14 +81,11 @@ class _PaymentState extends State<Payment> {
 
   final _formKey = GlobalKey<FormState>();
 
-
-
-
-
-
   @override
   void initState() {
     super.initState();
+    companyId = widget.companyId;
+    eventId = widget.eventId;
     showCreditCardForm = false;
     showPersonalInformation = false;
     _nameController = TextEditingController();
@@ -107,10 +120,16 @@ class _PaymentState extends State<Payment> {
     _cvvFocus = FocusNode();
     _expirationMonthFocus = FocusNode();
     _expirationYearFocus = FocusNode();
-
+    getToken();
   }
 
 
+  void getToken() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString("token")!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +139,8 @@ class _PaymentState extends State<Payment> {
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: const Center(child: Text("Pagamento")),
-          // Existing code...
+          iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
+          elevation: 0
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -357,15 +377,11 @@ class _PaymentState extends State<Payment> {
                             );
 
                             if (pickedDate != null) {
-                              print(pickedDate); // Picked date output format => 2021-03-10 00:00:00.000
                               String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
                               String formattedDateYYYYmmDD = DateFormat('yyyy-MM-dd').format(pickedDate);
-                              print(formattedDate); // Formatted date output => 16-03-2021
-                              // You can implement different kinds of date format here according to your requirement
 
                               setState(() {
                                 birthDate = formattedDateYYYYmmDD;
-                                print("birthDate $birthDate");
                                 _birthInputController.text = formattedDate; // Set output date to TextField value.
                               });
                             }
@@ -465,15 +481,21 @@ class _PaymentState extends State<Payment> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // Perform payment processing here
-                      String cardNumber = _cardNumberController.text;
-                      String expirationMonth = _expirationMonthController.text;
-                      String expirationYear = _expirationYearController.text;
+                      if (selectedPaymentMethod == 'pix') {
+                        // todo remover util
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (contex) => Pix(
+                                  totalTicketValue: totalTicketValue,
+                                  pixObject: generateTicketsObject()
+                                )
+                            ),
+                          (route) => false,
+                        );
+                      } else if (selectedPaymentMethod == 'credit_card') {
 
-                      // You can use the entered values to process the payment
-                      print('Card Number: $cardNumber');
-                      print('Expiration Month: $expirationMonth');
-                      print('Expiration Year: $expirationYear');
+                      }
                     } else {
                       // Delay to allow time for the validator to update the state
                       await Future.delayed(Duration(milliseconds: 100));
@@ -490,5 +512,46 @@ class _PaymentState extends State<Payment> {
     );
   }
 
+
+
+  dynamic generateTicketsObject() {
+    var tickets = [];
+
+    if (maleTicketCountMap != null) {
+      maleTicketCountMap.forEach((key, value) {
+        if (value > 0) {
+          var ticket = {
+            "lots": key,
+            "quantity": value,
+            "type": "MALE"
+          };
+          tickets.add(ticket);
+        }
+
+      });
+    }
+
+    if (femaleTicketCountMap != null) {
+      femaleTicketCountMap.forEach((key, value) {
+        if (value > 0) {
+          var ticket = {
+            "lots": key,
+            "quantity": value,
+            "type": "FEMALE"
+          };
+          tickets.add(ticket);
+        }
+      });
+    }
+
+    var params = {
+      "event": eventId,
+      "company": companyId,
+      "tickets": tickets
+    };
+
+    return params;
+
+  }
 
 }

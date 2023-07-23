@@ -33,6 +33,7 @@ dependencies:
   flutter_secure_storage: ^8.0.0
   http: ^0.13.3
   intl: any
+  qr_flutter: ^4.1.0
   shared_preferences: ^2.2.0
   flutter:
     sdk: flutter

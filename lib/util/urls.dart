@@ -3,3 +3,4 @@ const String createUserUrl = '$apiBaseUrl/users/';
 const String loginUrl = '$apiBaseUrl/login/';
 const String fetchEventsUrl = '$apiBaseUrl/event/';
 const String fetchLotsUrl = '$apiBaseUrl/ticket/available';
+const String fetchQrcode = '$apiBaseUrl/gerencianet/getQrcode';

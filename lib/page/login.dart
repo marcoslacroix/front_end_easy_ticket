@@ -28,7 +28,12 @@ class Login extends StatefulWidget {
   final Screen screen;
   final int selectedIndex;
 
-  const Login({Key? key, required this.eventId, required this.screen, required this.selectedIndex}) : super(key: key);
+  const Login({
+    Key? key,
+    required this.eventId,
+    required this.screen,
+    required this.selectedIndex
+  }) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();

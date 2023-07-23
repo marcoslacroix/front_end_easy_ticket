@@ -14,8 +14,10 @@ import 'login.dart';
 
 class BuyTickets extends StatefulWidget {
   final dynamic event;
-
-  const BuyTickets({required this.event, Key? key}) : super(key: key);
+  const BuyTickets({
+    required this.event,
+    Key? key
+  }) : super(key: key);
 
   @override
   State<BuyTickets> createState() => _BuyTicketsState();
@@ -25,17 +27,20 @@ class _BuyTicketsState extends State<BuyTickets> {
   List<dynamic> items = [];
   Map<int, int> maleTicketCountMap = {};
   Map<int, int> femaleTicketCountMap = {};
-  int totalTicketCount = 0;
-  double totalTicketValue = 0.0;
+  late int totalTicketCount;
+  late double totalTicketValue;
   var enableContinue = false;
   var quantityTicketsUserAlreadyBougthForThisEvent;
   late SharedPreferences prefs;
   var token;
   var eventId;
+  var companyId;
   late Future<List<dynamic>> _future = Future.value([]); // Initialize with an empty list
 
   @override
   void initState() {
+    totalTicketValue = 0;
+    totalTicketCount = 0;
     getToken();
     super.initState();
 
@@ -44,7 +49,9 @@ class _BuyTicketsState extends State<BuyTickets> {
   void getToken() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      eventId = widget.event;
+      var event = widget.event;
+      eventId = event?['id'];
+      companyId = event?['companyId'];
       token = prefs.getString("token");
       if (token != null) {
         _future = fetchLots(eventId); // Fetch data once and store it in _future
@@ -120,7 +127,7 @@ class _BuyTicketsState extends State<BuyTickets> {
                                                       if (type == 'MALE' && maleTicketCountMap[lotId]! > 0) {
                                                         maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! - 1;
                                                         totalTicketCount--;
-                                                        totalTicketValue -= ticket['price'] / 100.0;
+                                                        totalTicketValue -= ticket['price'] / 100;
 
                                                         if (maleTicketCountMap[lotId]! == 0) {
                                                           enableContinue = false;
@@ -128,7 +135,7 @@ class _BuyTicketsState extends State<BuyTickets> {
                                                       } else if (type == 'FEMALE' && femaleTicketCountMap[lotId]! > 0) {
                                                         femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! - 1;
                                                         totalTicketCount--;
-                                                        totalTicketValue -= ticket['price'] / 100.0;
+                                                        totalTicketValue -= ticket['price'] / 100;
 
                                                         if (maleTicketCountMap[lotId]! == 0) {
                                                           enableContinue = false;
@@ -227,6 +234,8 @@ class _BuyTicketsState extends State<BuyTickets> {
                                   femaleTicketCountMap: femaleTicketCountMap,
                                   totalTicketCount: totalTicketCount,
                                   totalTicketValue: totalTicketValue,
+                                  companyId: companyId,
+                                  eventId: eventId,
                                 ),
                               ),
                             )
@@ -331,4 +340,6 @@ class _BuyTicketsState extends State<BuyTickets> {
       return [];
     }
   }
+
+
 }
