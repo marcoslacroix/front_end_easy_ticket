@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:easy_ticket/page/payment.dart';
+import 'package:easy_ticket/page/payment/payment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -60,10 +60,8 @@ class _BuyTicketsState extends State<BuyTickets> {
         if (authBloc.authStatus == AuthStatus.authenticated) {
           return Scaffold(
             appBar: AppBar(
-              automaticallyImplyLeading: true,
-              backgroundColor: Colors.transparent,
+              title: const Center(child: Text("Ingressos")),
               iconTheme: const IconThemeData(color: Colors.black),
-              elevation: 0,
             ),
             body: FutureBuilder<List<dynamic>>(
               future: _future,

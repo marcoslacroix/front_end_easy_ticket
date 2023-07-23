@@ -14,7 +14,6 @@ class MyTickets extends StatefulWidget {
 
 class _MyTicketsState extends State<MyTickets> {
   late SharedPreferences prefs;
-  bool isInitialized = false;
   var token;
 
   @override
@@ -26,24 +25,25 @@ class _MyTicketsState extends State<MyTickets> {
   void getToken() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      isInitialized = true;
       token = prefs.getString("token");
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!isInitialized) {
-      // Show a loading indicator while waiting for prefs to be initialized.
-      return const CircularProgressIndicator();
-    }
+
     return Consumer<AuthBloc>(
       builder: (context, authBloc, _) {
         if (authBloc.authStatus == AuthStatus.authenticated || token != null) {
-          return const Row(
-            children: [
-              Text("Meus ingressos"),
-            ],
+          return Scaffold(
+            appBar: AppBar(
+              title: Center(child: Text("Meus ingressos"),),
+            ),
+            body: const Row(
+              children: [
+                Text("Meus ingressos"),
+              ],
+            ),
           );
         } else {
           print("go page login");

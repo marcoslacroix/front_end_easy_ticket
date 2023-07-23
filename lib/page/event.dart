@@ -22,8 +22,7 @@ class _Event extends State<Event> {
     }
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: true,
-        backgroundColor: Colors.transparent,
+        title: const Center(child: Text("Evento")),
         iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
         elevation: 0,
       ),

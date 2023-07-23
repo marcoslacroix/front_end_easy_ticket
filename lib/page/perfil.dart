@@ -47,6 +47,9 @@ class _PerfilState extends State<Perfil> {
         builder: (context, authBloc, _) {
           if (authBloc.authStatus == AuthStatus.authenticated || token != null) {
             return Scaffold(
+              appBar: AppBar(
+                title: const Center(child: Text("Meu perfil"),),
+              ),
               body: Row(
                 children: [
                   Center(

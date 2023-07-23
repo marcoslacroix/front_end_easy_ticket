@@ -24,52 +24,57 @@ class _EventsState extends State<Events> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: fetchEventsData,
-      child: Scaffold(
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: events.length,
-                itemBuilder: (context, index) {
-                  final event = events[index];
+    return Scaffold(
+      appBar: AppBar(
+        title: const Center(child: Text("Eventos"),),
+      ),
+      body: RefreshIndicator(
+        onRefresh: fetchEventsData,
+        child: Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    final event = events[index];
 
-                  return GestureDetector(
-                    onTap: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Event(event: event),
-                        ),
-                      )
-                    },
-                    child: Card(
-                      color: Colors.red,
+                    return GestureDetector(
+                      onTap: () => {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Event(event: event),
+                          ),
+                        )
+                      },
+                      child: Card(
+                        color: Colors.red,
 
-                      child: ListTile(
-                        title: Text(event['name'] ?? ''),
-                        subtitle: Column(
-                          children: [
-                            Row(
-                                children: [
-                                  Text(event?['id'].toString() ?? '')
-                                ]
-                            ),
-                            Row(
-                                children: [
-                                  Text(formatDate(event?['period']) ?? '')
-                                ]
-                            )
-                          ],
+                        child: ListTile(
+                          title: Text(event['name'] ?? ''),
+                          subtitle: Column(
+                            children: [
+                              Row(
+                                  children: [
+                                    Text(event?['id'].toString() ?? '')
+                                  ]
+                              ),
+                              Row(
+                                  children: [
+                                    Text(formatDate(event?['period']) ?? '')
+                                  ]
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                }
+                    );
+                  }
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
