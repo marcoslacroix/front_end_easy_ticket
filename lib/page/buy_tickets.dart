@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/auth_bloc.dart';
+import '../auth/token_manager.dart';
 import '../util/urls.dart';
 import 'login.dart';
 
@@ -25,39 +26,34 @@ class BuyTickets extends StatefulWidget {
 }
 
 class _BuyTicketsState extends State<BuyTickets> {
-  List<dynamic> items = [];
-  Map<int, int> maleTicketCountMap = {};
-  Map<int, int> femaleTicketCountMap = {};
+  late List<dynamic> items = [];
+  late Map<int, int> maleTicketCountMap = {};
+  late Map<int, int> femaleTicketCountMap = {};
   late int totalTicketCount;
   late double totalTicketValue;
   var enableContinue = false;
-  var quantityTicketsUserAlreadyBougthForThisEvent;
-  late SharedPreferences prefs;
-  var token;
-  var eventId;
-  var companyId;
+  late var quantityTicketsUserAlreadyBougthForThisEvent;
+  late var token;
+  late int eventId;
+  late dynamic event;
+  late int companyId;
   late Future<List<dynamic>> _future = Future.value([]); // Initialize with an empty list
 
   @override
   void initState() {
     totalTicketValue = 0;
     totalTicketCount = 0;
-    getToken();
-    super.initState();
-
-  }
-
-  void getToken() async {
-    prefs = await SharedPreferences.getInstance();
     setState(() {
-      var event = widget.event;
-      eventId = event?['id'];
-      companyId = event?['companyId'];
-      token = prefs.getString("token");
-      if (token != null) {
-        _future = fetchLots(eventId); // Fetch data once and store it in _future
+      var ev = widget.event;
+      event = ev;
+      eventId = ev?['id'];
+      companyId = ev?['companyId'];
+      token = TokenManager.instance.getToken();
+      if (token != null && token.toString().isNotEmpty) {
+        _future = fetchLots(eventId);
       }
     });
+    super.initState();
   }
 
   @override
@@ -251,8 +247,8 @@ class _BuyTicketsState extends State<BuyTickets> {
             ),
           );
         } else {
-          if (eventId != null) {
-            return Login(eventId: eventId, screen: Screen.buyTickets, selectedIndex: 0);
+          if (event != null) {
+            return Login(event: event, screen: Screen.buyTickets, selectedIndex: 0);
           } else {
             return Container();
           }
@@ -315,7 +311,6 @@ class _BuyTicketsState extends State<BuyTickets> {
       var params = {"eventId": eventId};
       final url = Uri.parse(fetchLotsUrl)
           .replace(queryParameters: _convertMapToStrings(params));
-
       var response = await http.get(
           url,
           headers: {

@@ -75,7 +75,7 @@ class _PerfilState extends State<Perfil> {
               ),
             );
           } else {
-            return const Login(eventId: null, screen: Screen.perfil, selectedIndex: 0);
+            return const Login(event: null, screen: Screen.perfil, selectedIndex: 0);
           }
         }
     );

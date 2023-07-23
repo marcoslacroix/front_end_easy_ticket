@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:easy_ticket/page/payment/credit_card.dart';
 import 'package:easy_ticket/page/payment/pix.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -95,6 +96,12 @@ class _PaymentState extends State<Payment> {
     _phoneController = TextEditingController();
     _birthInputController = TextEditingController();
 
+    _nameFocus = FocusNode();
+    _birthFocus = FocusNode();
+    _emailFocus = FocusNode();
+    _cpfFocus = FocusNode();
+    _phoneFocus = FocusNode();
+
     _streetController = TextEditingController();
     _streetNumberController = TextEditingController();
     _neighborhoodController = TextEditingController();
@@ -102,10 +109,22 @@ class _PaymentState extends State<Payment> {
     _cityController = TextEditingController();
     _stateController = TextEditingController();
 
+    _streetFocus = FocusNode();
+    _streetNumberFocus = FocusNode();
+    _neighborhoodFocus = FocusNode();
+    _zipcodeFocus = FocusNode();
+    _cityFocus = FocusNode();
+    _stateFocus = FocusNode();
+
     _cardNumberController = TextEditingController();
     _cvvController = TextEditingController();
     _expirationMonthController = TextEditingController();
     _expirationYearController = TextEditingController();
+
+    _cardNumberFocus = FocusNode();
+    _cvvFocus = FocusNode();
+    _expirationMonthFocus = FocusNode();
+    _expirationYearFocus = FocusNode();
 
     selectedPaymentMethod = "";
     selectedBandType = "";
@@ -116,10 +135,6 @@ class _PaymentState extends State<Payment> {
     totalTicketValue = widget.totalTicketValue;
     totalTicketCount = widget.totalTicketCount;
 
-    _cardNumberFocus = FocusNode();
-    _cvvFocus = FocusNode();
-    _expirationMonthFocus = FocusNode();
-    _expirationYearFocus = FocusNode();
     getToken();
   }
 
@@ -482,19 +497,26 @@ class _PaymentState extends State<Payment> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       if (selectedPaymentMethod == 'pix') {
-                        // todo remover util
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                                 builder: (contex) => Pix(
                                   totalTicketValue: totalTicketValue,
-                                  pixObject: generateTicketsObject()
+                                  tickets: generateTicketsObject()
                                 )
                             ),
                           (route) => false,
                         );
                       } else if (selectedPaymentMethod == 'credit_card') {
-
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (contex) => CreditCard(
+                                  totalTicketValue: totalTicketValue,
+                                  tickets: generateTicketsObject()
+                              )
+                          ),
+                        );
                       }
                     } else {
                       // Delay to allow time for the validator to update the state

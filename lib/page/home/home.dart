@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../auth/auth_bloc.dart';
+import '../../auth/token_manager.dart';
 import '../my_tickets.dart';
 import '../perfil.dart';
 import '../events.dart';
@@ -71,6 +72,7 @@ class _HomeState extends State<Home> {
       token = prefs.getString("token");
       final authBloc = Provider.of<AuthBloc>(context, listen: false);
       authBloc.checkAuthentication(token);
+      TokenManager.instance.setToken('$token');
     });
   }
 

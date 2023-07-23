@@ -14,10 +14,10 @@ import '../../util/urls.dart';
 import '../home/home.dart';
 
 class Pix extends StatefulWidget {
-  final dynamic pixObject;
+  final dynamic tickets;
   final double totalTicketValue;
 
-  const Pix({required this.pixObject, required this.totalTicketValue, Key? key})
+  const Pix({required this.tickets, required this.totalTicketValue, Key? key})
       : super(key: key);
 
   @override
@@ -26,7 +26,7 @@ class Pix extends StatefulWidget {
 
 class _PixState extends State<Pix> {
   late SharedPreferences prefs;
-  late dynamic pixObject;
+  late dynamic tickets;
   late final String token;
   late double totalTicketValue;
   late Future<dynamic> _futureQrcode = Future.value();
@@ -53,7 +53,7 @@ class _PixState extends State<Pix> {
     prefs = await SharedPreferences.getInstance();
     setState(() {
       totalTicketValue = widget.totalTicketValue;
-      pixObject = widget.pixObject;
+      tickets = widget.tickets;
       token = prefs.getString("token")!;
       _futureQrcode = generateQrcode(); // Initialize _futureQrcode with the generated Future
     });
@@ -152,7 +152,7 @@ class _PixState extends State<Pix> {
 
   Future<dynamic> generateQrcode() async {
     try {
-      var params = pixObject;
+      var params = tickets;
       String jsonBody = json.encode(params);
       var headers = {
         HttpHeaders.contentTypeHeader: 'application/json',

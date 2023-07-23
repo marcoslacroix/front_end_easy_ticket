@@ -15,6 +15,7 @@ class Events extends StatefulWidget {
 }
 class _EventsState extends State<Events> {
   List<dynamic> events = [];
+  late Future<List<dynamic>> _future = Future.value([]); // Initialize with an empty list
 
   @override
   void initState() {
@@ -26,65 +27,85 @@ class _EventsState extends State<Events> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text("Eventos"),),
+        title: const Center(child: Text("Eventos")),
       ),
-      body: RefreshIndicator(
-        onRefresh: fetchEventsData,
-        child: Scaffold(
-          body: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: events.length,
-                  itemBuilder: (context, index) {
-                    final event = events[index];
+      body: FutureBuilder<List<dynamic>>(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text("Erro na busca dos eventos"),
+            );
+          }  else if (snapshot == null || snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text("Nenhum evento disponível"),
+            );
+          } else {
+            events = snapshot.data!;
+            return RefreshIndicator(
+              onRefresh: fetchEventsData,
+              child: Scaffold(
+                body: Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                          itemCount: events.length,
+                          itemBuilder: (context, index) {
+                            final event = events[index];
 
-                    return GestureDetector(
-                      onTap: () => {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Event(event: event),
-                          ),
-                        )
-                      },
-                      child: Card(
-                        color: Colors.red,
+                            return GestureDetector(
+                              onTap: () => {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Event(event: event),
+                                  ),
+                                )
+                              },
+                              child: Card(
+                                color: Colors.red,
 
-                        child: ListTile(
-                          title: Text(event['name'] ?? ''),
-                          subtitle: Column(
-                            children: [
-                              Row(
-                                  children: [
-                                    Text(event?['id'].toString() ?? '')
-                                  ]
+                                child: ListTile(
+                                  title: Text(event['name'] ?? ''),
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                          children: [
+                                            Text(event?['id'].toString() ?? '')
+                                          ]
+                                      ),
+                                      Row(
+                                          children: [
+                                            Text(formatDate(event?['period']) ?? '')
+                                          ]
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ),
-                              Row(
-                                  children: [
-                                    Text(formatDate(event?['period']) ?? '')
-                                  ]
-                              )
-                            ],
-                          ),
-                        ),
+                            );
+                          }
                       ),
-                    );
-                  }
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            );
+          }
+        },
+
       ),
     );
   }
 
   Future<void> fetchEventsData() async {
 
-    List<dynamic> fetchedEvents = await fetchEvents();
     setState(() {
-      events = fetchedEvents;
+      _future = fetchEvents(); // Fetch data once and store it in _future
     });
   }
 

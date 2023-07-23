@@ -46,8 +46,7 @@ class _MyTicketsState extends State<MyTickets> {
             ),
           );
         } else {
-          print("go page login");
-          return const Login(eventId: null, screen: Screen.myTickets, selectedIndex: 3);
+          return const Login(event: null, screen: Screen.myTickets, selectedIndex: 3);
         }
       },
     );

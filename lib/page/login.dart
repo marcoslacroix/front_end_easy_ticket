@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/auth_bloc.dart';
+import '../auth/token_manager.dart';
 import '../util/urls.dart';
 import 'forgot_password.dart';
 import 'my_tickets.dart';
@@ -24,13 +25,13 @@ enum Screen {
 }
 
 class Login extends StatefulWidget {
-  final int? eventId;
+  final dynamic event;
   final Screen screen;
   final int selectedIndex;
 
   const Login({
     Key? key,
-    required this.eventId,
+    required this.event,
     required this.screen,
     required this.selectedIndex
   }) : super(key: key);
@@ -45,7 +46,7 @@ class _LoginState extends State<Login> {
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   bool isPasswordVisible = false;
-  int? eventId;
+  late dynamic event;
   late Screen screen;
   late final int? selectedIndex;
 
@@ -55,7 +56,7 @@ class _LoginState extends State<Login> {
     setState(() {
       selectedIndex = widget.selectedIndex;
       screen = widget.screen;
-      eventId = widget.eventId;
+      event = widget.event;
     });
     getToken();
     super.initState();
@@ -265,14 +266,13 @@ class _LoginState extends State<Login> {
             final authBloc = Provider.of<AuthBloc>(context, listen: false);
             authBloc.updateAuthStatus(AuthStatus.authenticated);
             prefs.setString('token', 'Bearer $token');
+            TokenManager.instance.setToken('Bearer $token');
             _emailController.clear();
             _passwordController.clear();
-            print("eventId: $eventId");
-            if (eventId != null) {
-              print("enviar para buy tickets");
+            if (event != null) {
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => BuyTickets(event: eventId)
+                    builder: (context) => BuyTickets(event: event)
                 ));
             } else if (screen == Screen.perfil) {
               Navigator.pushAndRemoveUntil(
