@@ -37,10 +37,14 @@ class _RegisterState extends State<Register> {
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
 
+  late bool _isButtonDisabled;
+
   @override
   void initState() {
     _formKey = GlobalKey<FormState>();
     super.initState();
+
+    _isButtonDisabled = false;
 
     _emailFocus = FocusNode();
     _nameFocus = FocusNode();
@@ -395,17 +399,29 @@ class _RegisterState extends State<Register> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () =>{
+                    onPressed: _isButtonDisabled
+                    ? null
+                    : () =>{
                       if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _isButtonDisabled = true;
+                        }),
                         _handleRegister(context)
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue, // Defina a cor de fundo desejada
                     ),
-                    child: const Text(
-                      'Registrar',
-                      style: TextStyle(fontSize: 16), // Defina o estilo do texto, se necessário
+                    child: _isButtonDisabled
+                    ? const SizedBox( // Show loading indicator when _isButtonDisabled is true
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                    : const Text('Registrar', style: TextStyle(fontSize: 16), // Defina o estilo do texto, se necessário
 
                     ),
                   ),
@@ -567,7 +583,10 @@ class _RegisterState extends State<Register> {
       futureResponse.then((response) => {
         if (response.statusCode == 200) {
           Navigator.pop(context)
-    } else {
+      } else {
+          setState(() {
+            _isButtonDisabled = false;
+          }),
           ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

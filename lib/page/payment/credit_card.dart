@@ -290,7 +290,7 @@ class _CreditCardState extends State<CreditCard> {
                           ),
                           DropdownButton<int>(
                             value: selectedInstallment,
-                            hint: Text("Pacelas"),
+                            hint: const Text("Pacelas"),
                             onChanged: (value) {
                               setState(() {
                                 selectedInstallment = value!;
