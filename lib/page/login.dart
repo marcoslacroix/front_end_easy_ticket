@@ -53,6 +53,8 @@ class _LoginState extends State<Login> {
   late final _passwordFocus;
   late final _emailFocus;
 
+  late bool _isButtonDisabled;
+
 
   @override
   void initState() {
@@ -62,6 +64,7 @@ class _LoginState extends State<Login> {
       screen = widget.screen;
       event = widget.event;
     });
+    _isButtonDisabled = false;
     loadPreferences();
     super.initState();
     _emailController = TextEditingController();
@@ -180,15 +183,30 @@ class _LoginState extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () => {
+                    onPressed: _isButtonDisabled
+                    ? null
+                    : () => {
                       if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _isButtonDisabled = true;
+                        }),
                         _handleLogin(context)
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                     ),
-                    child: const Text('Acessar'),
+
+                    child: _isButtonDisabled
+                    ? const SizedBox( // Show loading indicator when _isButtonDisabled is true
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                    : const Text('Acessar'),
                   ),
                 ],
               ),
@@ -333,6 +351,9 @@ class _LoginState extends State<Login> {
               );
             }
           } else {
+            setState(() {
+              _isButtonDisabled = false;
+            });
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
