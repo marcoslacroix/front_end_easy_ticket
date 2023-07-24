@@ -115,6 +115,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         controller: _nameController,
                         decoration: const InputDecoration(labelText: "Nome do titular"),
                         keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        textCapitalization: TextCapitalization.sentences,
                         focusNode: _nameFocus,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -132,6 +134,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         controller: _emailController,
                         decoration: const InputDecoration(labelText: "E-mail"),
                         keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
                         focusNode: _emailFocus,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -141,13 +144,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
                           if (!isEmailValid(value)) {
                             return 'E-mail inválido.';
                           }
-
                         },
                       ),
                       TextFormField(
                         controller: _cpfController,
                         decoration: const InputDecoration(labelText: "CPF"),
                         keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
                         maxLength: 11,
                         focusNode: _cpfFocus,
                         validator: (value) {
@@ -163,6 +166,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         controller: _phoneController,
                         decoration: const InputDecoration(labelText: "Telefone"),
                         keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
                         focusNode: _phoneFocus,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -174,6 +178,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         controller: _birthInputController,
                         decoration: const InputDecoration(labelText: "Data de nascimento (dd/MM/yyyy)"),
                         inputFormatters: [DateInputFormatter()],
+                        textInputAction: TextInputAction.next,
                         focusNode: _birthFocus,
                         keyboardType: TextInputType.number,
                         onChanged: (value) {

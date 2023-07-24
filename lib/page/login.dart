@@ -122,11 +122,16 @@ class _LoginState extends State<Login> {
                     width: 250,
                     child: TextFormField(
                       keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
                       controller: _emailController,
                       focusNode: _emailFocus,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "E-mail obrigatório.";
+                        }
+
+                        if (!isEmailValid(value)) {
+                          return 'E-mail inválido.';
                         }
                       },
                       decoration: const InputDecoration(
@@ -143,6 +148,7 @@ class _LoginState extends State<Login> {
                     width: 250,
                     child: TextFormField(
                       controller: _passwordController,
+                      textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.text,
                       focusNode: _passwordFocus,
                       validator: (value) {
@@ -338,5 +344,10 @@ class _LoginState extends State<Login> {
         })
       });
     }
+  }
+  bool isEmailValid(String email) {
+    // Expressão regular para validar o formato do e-mail
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
   }
 }

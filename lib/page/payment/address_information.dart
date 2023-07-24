@@ -122,6 +122,8 @@ class _AddressInformationState extends State<AddressInformation> {
                       TextFormField(
                         controller: _streetController,
                         decoration: const InputDecoration(labelText: "Rua"),
+                        textInputAction: TextInputAction.next,
+                        textCapitalization: TextCapitalization.sentences,
                         keyboardType: TextInputType.text,
                         focusNode: _streetFocus,
                         validator: (value) {
@@ -133,6 +135,7 @@ class _AddressInformationState extends State<AddressInformation> {
                       TextFormField(
                         controller: _streetNumberController,
                         decoration: const InputDecoration(labelText: "Número"),
+                        textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.number,
                         focusNode: _streetNumberFocus,
                         validator: (value) {
@@ -145,6 +148,8 @@ class _AddressInformationState extends State<AddressInformation> {
                         controller: _neighborhoodController,
                         decoration: const InputDecoration(labelText: "Bairro"),
                         keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        textCapitalization: TextCapitalization.sentences,
                         focusNode: _neighborhoodFocus,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -156,6 +161,7 @@ class _AddressInformationState extends State<AddressInformation> {
                         controller: _zipcodeController,
                         decoration: const InputDecoration(labelText: "CEP"),
                         keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
                         maxLength: 9,
                         focusNode: _zipcodeFocus,
                         validator: (value) {
@@ -171,6 +177,8 @@ class _AddressInformationState extends State<AddressInformation> {
                         controller: _cityController,
                         decoration: const InputDecoration(labelText: "Cidade"),
                         keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        textCapitalization: TextCapitalization.sentences,
                         focusNode: _cityFocus,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -181,6 +189,8 @@ class _AddressInformationState extends State<AddressInformation> {
                       TextFormField(
                         controller: _stateController,
                         decoration: const InputDecoration(labelText: "Estado"),
+                        textInputAction: TextInputAction.next,
+                        textCapitalization: TextCapitalization.sentences,
                         keyboardType: TextInputType.text,
                         focusNode: _stateFocus,
                         maxLength: 2,

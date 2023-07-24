@@ -222,11 +222,10 @@ class _CreditCardState extends State<CreditCard> {
                       title: const Center(child: Text("Cartão de crédito")),
                       subtitle: Column(
                         children: [
-
                           TextFormField(
                             controller: _cardNumberController,
-                            decoration: const InputDecoration(
-                                labelText: "Número"),
+                            decoration: const InputDecoration(labelText: "Número"),
+                            textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.number,
                             focusNode: _cardNumberFocus,
                             validator: (value) {
@@ -237,9 +236,9 @@ class _CreditCardState extends State<CreditCard> {
                           ),
                           TextFormField(
                             controller: _cvvController,
-                            decoration: const InputDecoration(
-                                labelText: "Código de segurança (CVV)"),
+                            decoration: const InputDecoration(labelText: "Código de segurança (CVV)"),
                             keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.next,
                             focusNode: _cvvFocus,
                             maxLength: 3,
                             validator: (value) {
@@ -253,9 +252,9 @@ class _CreditCardState extends State<CreditCard> {
                           ),
                           TextFormField(
                               controller: _expirationMonthController,
-                              decoration: const InputDecoration(
-                                  labelText: "Mês (MM)"),
+                              decoration: const InputDecoration(labelText: "Mês (MM)"),
                               keyboardType: TextInputType.number,
+                              textInputAction: TextInputAction.next,
                               maxLength: 2,
                               focusNode: _expirationMonthFocus,
                               validator: (value) {
@@ -275,6 +274,7 @@ class _CreditCardState extends State<CreditCard> {
                             decoration: const InputDecoration(
                                 labelText: "Ano (YY)"),
                             maxLength: 2,
+                            textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.number,
                             focusNode: _expirationYearFocus,
                             validator: (value) {
