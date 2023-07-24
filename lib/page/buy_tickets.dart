@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:easy_ticket/page/payment/payment.dart';
+import 'package:easy_ticket/page/payment/total_tickets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -33,7 +34,7 @@ class _BuyTicketsState extends State<BuyTickets> {
   late double totalTicketValue;
   var enableContinue = false;
   late var quantityTicketsUserAlreadyBougthForThisEvent;
-  late var token;
+  late String token;
   late int eventId;
   late dynamic event;
   late int companyId;
@@ -54,6 +55,13 @@ class _BuyTicketsState extends State<BuyTickets> {
       }
     });
     super.initState();
+  }
+
+  void updateTotalTickets(int count, double value) {
+    setState(() {
+      totalTicketCount = count;
+      totalTicketValue = value;
+    });
   }
 
   @override
@@ -125,6 +133,7 @@ class _BuyTicketsState extends State<BuyTickets> {
                                                         maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! - 1;
                                                         totalTicketCount--;
                                                         totalTicketValue -= ticket['price'] / 100;
+                                                        updateTotalTickets(totalTicketCount, totalTicketValue);
 
                                                         if (maleTicketCountMap[lotId]! == 0) {
                                                           enableContinue = false;
@@ -133,6 +142,8 @@ class _BuyTicketsState extends State<BuyTickets> {
                                                         femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! - 1;
                                                         totalTicketCount--;
                                                         totalTicketValue -= ticket['price'] / 100;
+                                                        updateTotalTickets(totalTicketCount, totalTicketValue);
+
 
                                                         if (maleTicketCountMap[lotId]! == 0) {
                                                           enableContinue = false;
@@ -157,6 +168,7 @@ class _BuyTicketsState extends State<BuyTickets> {
                                                           maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! + 1;
                                                           totalTicketCount++;
                                                           totalTicketValue += ticket['price'] / 100.0;
+                                                          updateTotalTickets(totalTicketCount, totalTicketValue);
 
                                                           if (maleTicketCountMap[lotId]! > 0) {
                                                             enableContinue = true;
@@ -165,6 +177,7 @@ class _BuyTicketsState extends State<BuyTickets> {
                                                           femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! + 1;
                                                           totalTicketCount++;
                                                           totalTicketValue += ticket['price'] / 100.0;
+                                                          updateTotalTickets(totalTicketCount, totalTicketValue);
 
                                                           if (femaleTicketCountMap[lotId]! > 0) {
                                                             enableContinue = true;
@@ -207,20 +220,13 @@ class _BuyTicketsState extends State<BuyTickets> {
                           },
                         ),
                       ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: Column(
-                          children: [
-                            Text('Total de ingressos selecionados: $totalTicketCount'),
-                            Text('Valor total: ${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(totalTicketValue)}'),
-                          ],
-                        ),
+                      TotalTickets(
+                          totalTicketCount: totalTicketCount, totalTicketValue: totalTicketValue
                       ),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            print("anableContinue $enableContinue");
                             enableContinue ?
                             Navigator.push(
                               context,

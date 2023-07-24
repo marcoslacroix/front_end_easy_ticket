@@ -42,6 +42,7 @@ class Login extends StatefulWidget {
 
 
 class _LoginState extends State<Login> {
+  late final _formKey;
   late final SharedPreferences prefs;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
@@ -49,22 +50,27 @@ class _LoginState extends State<Login> {
   late dynamic event;
   late Screen screen;
   late final int? selectedIndex;
+  late final _passwordFocus;
+  late final _emailFocus;
 
 
   @override
   void initState() {
+    _formKey = GlobalKey<FormState>();
     setState(() {
       selectedIndex = widget.selectedIndex;
       screen = widget.screen;
       event = widget.event;
     });
-    getToken();
+    loadPreferences();
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    _passwordFocus = FocusNode();
+    _emailFocus = FocusNode();
   }
 
-  void getToken() async {
+  void loadPreferences() async {
     SharedPreferences p = await SharedPreferences.getInstance();
     setState(() {
       prefs = p;
@@ -81,140 +87,160 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Text(
-                    "Area exclusiva para clientes, faça o login ou crie um cadastro",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+    return Form(
+      key: _formKey,
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          backgroundColor: Colors.transparent,
+          iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
+          elevation: 0,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Text(
+                      "Area exclusiva para clientes, faça o login ou crie um cadastro",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 250,
-                  child: TextField(
-                    keyboardType: TextInputType.emailAddress,
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'E-mail',
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 250,
+                    child: TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _emailController,
+                      focusNode: _emailFocus,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "E-mail obrigatório.";
+                        }
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'E-mail',
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 250,
-                  child: TextField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      suffixIcon: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isPasswordVisible = !isPasswordVisible;
-                          });
-                        },
-                        child: Icon(
-                          isPasswordVisible ? Icons.visibility : Icons
-                              .visibility_off,
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 250,
+                    child: TextFormField(
+                      controller: _passwordController,
+                      keyboardType: TextInputType.text,
+                      focusNode: _passwordFocus,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Password obrigatório.";
+                        }
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isPasswordVisible = !isPasswordVisible;
+                            });
+                          },
+                          child: Icon(
+                            isPasswordVisible ? Icons.visibility : Icons
+                                .visibility_off,
+                          ),
                         ),
                       ),
+                      obscureText: !isPasswordVisible,
                     ),
-                    obscureText: !isPasswordVisible,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () => _handleLogin(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                ],
+              ),
+              const SizedBox(height: 16.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => {
+                      if (_formKey.currentState!.validate()) {
+                        _handleLogin(context)
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                    child: const Text('Acessar'),
                   ),
-                  child: const Text('Acessar'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Register(),
-                        fullscreenDialog: false,
+                ],
+              ),
+              const SizedBox(height: 16.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Register(),
+                          fullscreenDialog: false,
+                        ),
+                            (route) => true,
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
+                    child: const Text(
+                      'Quero me registrar',
+                      style: TextStyle(
+                        color: Colors.black, // Defina a cor do texto
                       ),
-                          (route) => true,
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                  ),
-                  child: const Text(
-                    'Quero me registrar',
-                    style: TextStyle(
-                      color: Colors.black, // Defina a cor do texto
                     ),
-                  ),
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ForgotPassword(),
-                        fullscreenDialog: false,
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ForgotPassword(),
+                          fullscreenDialog: false,
+                        ),
+                            (route) => true,
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
+                    child: const Text(
+                      'Esqueci minha senha',
+                      style: TextStyle(
+                        color: Colors.black, // Defina a cor do texto
                       ),
-                          (route) => true,
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                  ),
-                  child: const Text(
-                    'Esqueci minha senha',
-                    style: TextStyle(
-                      color: Colors.black, // Defina a cor do texto
                     ),
-                  ),
-                )
-              ],
-            )
-          ],
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
