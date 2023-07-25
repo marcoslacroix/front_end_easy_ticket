@@ -74,7 +74,7 @@ flutter:
     - assets/images/elo.jpg
     - assets/images/amex.png
     - assets/images/hipercard.png
-
+    - assets/images/approved.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

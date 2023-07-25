@@ -105,38 +105,40 @@ class _PaymentState extends State<Payment> {
               ),
             ),
             TotalTickets(totalTicketValue: totalTicketValue,totalTicketCount: totalTicketCount),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (selectedPaymentMethod == 'pix') {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (contex) => Pix(
-                                totalTicketValue: totalTicketValue,
-                                tickets: generateTicketsObject()
-                              )
-                          ),
-                        (route) => false,
-                      );
-                  } else if (selectedPaymentMethod == 'credit_card') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (contex) => PersonalInformation(
-                              totalTicketValue: totalTicketValue,
-                              totalTicketCount: totalTicketCount,
-                              tickets: generateTicketsObject()
-                          )
-                      ),
-                    );
-                  }
-                },
-                child: const Text("Continua"),
-              ),
-            ),
           ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () async {
+              if (selectedPaymentMethod == 'pix') {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (contex) => Pix(
+                          totalTicketValue: totalTicketValue,
+                          tickets: generateTicketsObject()
+                      )
+                  ),
+                      (route) => false,
+                );
+              } else if (selectedPaymentMethod == 'credit_card') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (contex) => PersonalInformation(
+                          totalTicketValue: totalTicketValue,
+                          totalTicketCount: totalTicketCount,
+                          tickets: generateTicketsObject()
+                      )
+                  ),
+                );
+              }
+            },
+            child: const Text("Continua"),
+          ),
         ),
       ),
     );

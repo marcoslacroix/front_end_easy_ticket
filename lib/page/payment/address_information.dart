@@ -205,10 +205,16 @@ class _AddressInformationState extends State<AddressInformation> {
                 ),
               ),
               TotalTickets(totalTicketValue: totalTicketValue, totalTicketCount: totalTicketCount),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
+            ],
+          ),
+        ),
+        bottomNavigationBar: BottomAppBar(
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_right_alt_outlined),
+                  onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       Navigator.push(
                         context,
@@ -224,11 +230,9 @@ class _AddressInformationState extends State<AddressInformation> {
                       );
                     }
                   },
-                  child: const Text("Continuar"),
                 ),
-              )
-            ],
-          ),
+              ],
+            ),
         ),
       ),
     );

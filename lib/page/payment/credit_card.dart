@@ -45,7 +45,7 @@ class _CreditCardState extends State<CreditCard> {
   late final _expirationMonthFocus;
   late final _expirationYearFocus;
 
-  late bool showCardInformation;
+  late bool _showCardInformation;
   late String? selectedBandType;
   late final double totalTicketValue;
   late final int totalTicketCount;
@@ -54,14 +54,17 @@ class _CreditCardState extends State<CreditCard> {
   late dynamic installments;
   late int selectedInstallment;
   late bool _isButtonDisabled;
+  late bool _isLoading;
+
 
   @override
   void initState() {
     _formKey = GlobalKey<FormState>();
     _isButtonDisabled = false;
+    _isLoading = true;
     selectedInstallment = 1;
     installments = [];
-    showCardInformation = false;
+    _showCardInformation = false;
     _cardNumberController = TextEditingController();
     _cvvController = TextEditingController();
     _expirationMonthController = TextEditingController();
@@ -119,7 +122,7 @@ class _CreditCardState extends State<CreditCard> {
                             setState(() {
                               selectedBandType = value.toString();
                               getInstallments(value);
-                              showCardInformation = true;
+                              _showCardInformation = true;
                             });
                           },
 
@@ -142,7 +145,7 @@ class _CreditCardState extends State<CreditCard> {
                             setState(() {
                               selectedBandType = value.toString();
                               getInstallments(value);
-                              showCardInformation = true;
+                              _showCardInformation = true;
                             });
                           },
                         ),
@@ -164,7 +167,7 @@ class _CreditCardState extends State<CreditCard> {
                             setState(() {
                               selectedBandType = value.toString();
                               getInstallments(value);
-                              showCardInformation = true;
+                              _showCardInformation = true;
                             });
                           },
                         ),
@@ -186,7 +189,7 @@ class _CreditCardState extends State<CreditCard> {
                             setState(() {
                               selectedBandType = value.toString();
                               getInstallments(value);
-                              showCardInformation = true;
+                              _showCardInformation = true;
                             });
                           },
                         ),
@@ -208,7 +211,7 @@ class _CreditCardState extends State<CreditCard> {
                             setState(() {
                               selectedBandType = value.toString();
                               getInstallments(value);
-                              showCardInformation = true;
+                              _showCardInformation = true;
                             });
                           },
                         )
@@ -216,7 +219,7 @@ class _CreditCardState extends State<CreditCard> {
                     ),
                   ),
                 ),
-                if (showCardInformation)
+                if (_showCardInformation)
                   Card(
                     child: ListTile(
                       title: const Center(child: Text("Cartão de crédito")),
@@ -240,13 +243,10 @@ class _CreditCardState extends State<CreditCard> {
                             keyboardType: TextInputType.number,
                             textInputAction: TextInputAction.next,
                             focusNode: _cvvFocus,
-                            maxLength: 3,
+                            maxLength: 4,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return "Código de segurança (CVV) é obrigatório.";
-                              }
-                              if (value.length != 3) {
-                                return "Código de segurça inválido";
                               }
                             },
                           ),
@@ -274,7 +274,6 @@ class _CreditCardState extends State<CreditCard> {
                             decoration: const InputDecoration(
                                 labelText: "Ano (YY)"),
                             maxLength: 2,
-                            textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.number,
                             focusNode: _expirationYearFocus,
                             validator: (value) {
@@ -282,7 +281,14 @@ class _CreditCardState extends State<CreditCard> {
                                 return 'Ano é obrigatório.';
                               }
                               int? year = int.tryParse(value);
-                              if (year == null || year < 0 || year > 99) {
+                              int currentYear = DateTime.now().year;
+                              int currentYearReplace = int.parse(currentYear.toString().replaceRange(0, 2, ""));
+
+                              if (year == null) {
+                                return "Ano é obrigatório.";
+                              } else if (year < currentYearReplace) {
+                                return "O seu cartão está vencido.";
+                              } else if (year > 99) {
                                 return 'Ano inválido (00 to 99)';
                               }
                               return null;
@@ -308,33 +314,40 @@ class _CreditCardState extends State<CreditCard> {
                               );
                             }).toList(),
                           ),
+                          if (_isLoading) // Show the loading indicator
+                            const CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                TotalTickets(totalTicketValue: totalTicketValue,
-                    totalTicketCount: totalTicketCount),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isButtonDisabled
-                    ? null
-                    : _onConfirmPayment,
-                    child: _isButtonDisabled
-                    ? const SizedBox( // Show loading indicator when _isButtonDisabled is true
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
-                    : const Text("Confirmar pagamento"),
-                  ),
-                )
-
+                TotalTickets(totalTicketValue: totalTicketValue, totalTicketCount: totalTicketCount)
               ],
             ),
+          ),
+
+          bottomNavigationBar: BottomAppBar(
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _isButtonDisabled
+                    ? null
+                    : _isLoading ? null : _onConfirmPayment,
+                child: _isButtonDisabled
+                    ? const SizedBox( // Show loading indicator when _isButtonDisabled is true
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                )
+                    : const Text("Confirmar pagamento"),
+              ),
+            )
+
           ),
         )
     );
@@ -369,7 +382,6 @@ class _CreditCardState extends State<CreditCard> {
   }
 
   dynamic getBodyPayment() {
-    print("selectedInstallment: $selectedInstallment");
     var body = {
       "company": widget.tickets['company'],
       "event": widget.tickets['event'],
@@ -445,11 +457,15 @@ class _CreditCardState extends State<CreditCard> {
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
         print("response error: $jsonData");
-        Navigator.push(
+        setState(() {
+          _isButtonDisabled = false;
+        });
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => const SuccessPayment(),
           ),
+          (route) => false,
         );
       } else if (response.statusCode == 400) {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -465,6 +481,11 @@ class _CreditCardState extends State<CreditCard> {
 
   void getInstallments(band) async {
       try {
+        setState(() {
+          installments = [];
+          _isLoading = true;
+        });
+
         double value = realToCents(totalTicketValue);
         var params = {"brand": band, "total": value};
         final url = Uri.parse(fetchInstallmentsUrl).replace(
@@ -487,6 +508,7 @@ class _CreditCardState extends State<CreditCard> {
           setState(() {
             installments = installmentsData;
             selectedInstallment = installmentsData[0]['installment'];
+            _isLoading = false;
           });
         } else {
           installments = [];

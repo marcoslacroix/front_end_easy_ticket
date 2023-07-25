@@ -48,23 +48,26 @@ class _Event extends State<Event> {
               ),
             ),
           ),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BuyTickets(
-                        event: event
-                    ),
-                  ),
-                );
-              },
-              child: const Text('Comprar ingressos'),
-            ),
-          ),
+
         ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BuyTickets(
+                      event: event
+                  ),
+                ),
+              );
+            },
+            child: const Text('Comprar ingressos'),
+          ),
+        ),
       ),
     );
   }

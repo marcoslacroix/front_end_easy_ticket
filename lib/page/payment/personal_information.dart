@@ -195,30 +195,35 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 ),
               ),
               TotalTickets(totalTicketValue: totalTicketValue, totalTicketCount: totalTicketCount),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (contex) => AddressInformation(
-                                totalTicketValue: totalTicketValue,
-                                totalTicketCount: totalTicketCount,
-                                tickets: tickets,
-                                customer: generateCustomerObject()
-                            )
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text("Continuar"),
-                ),
-              )
+
             ],
           ),
         ),
+        bottomNavigationBar: BottomAppBar(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_right_alt_outlined),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (contex) => AddressInformation(
+                              totalTicketValue: totalTicketValue,
+                              totalTicketCount: totalTicketCount,
+                              tickets: tickets,
+                              customer: generateCustomerObject()
+                          )
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+        )
       ),
     );
   }

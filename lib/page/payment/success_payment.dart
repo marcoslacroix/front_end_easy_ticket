@@ -21,18 +21,64 @@ class _SuccessPaymentState extends State<SuccessPayment> {
             icon: const Icon(Icons.home),
             onPressed: () {
               Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Home(selectedScreen: SelectedScreen.events)),
-                      (route) => false
+                context,
+                MaterialPageRoute(builder: (context) => const Home(selectedScreen: SelectedScreen.events)),
+                    (route) => false,
               ); // Navigate back to the previous screen (home page)
             },
           ),
         ],
       ),
-      body: Column(
-        children: [
-          const Text("Pagamento aprovado.")
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/approved.png',
+                    width: 64,
+                    height: 64,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Pagamento aprovado.",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Após aprovação, em até uma hora seu ingresso estará disponível.",
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Obrigado pela compra.",
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

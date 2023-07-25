@@ -223,33 +223,36 @@ class _BuyTicketsState extends State<BuyTickets> {
                       TotalTickets(
                           totalTicketCount: totalTicketCount, totalTicketValue: totalTicketValue
                       ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            enableContinue ?
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Payment(
-                                  maleTicketCountMap: maleTicketCountMap,
-                                  femaleTicketCountMap: femaleTicketCountMap,
-                                  totalTicketCount: totalTicketCount,
-                                  totalTicketValue: totalTicketValue,
-                                  companyId: companyId,
-                                  eventId: eventId,
-                                ),
-                              ),
-                            )
-                                : null;
-                          },
-                          child: const Text('Contiuar'),
-                        ),
-                      ),
+
                     ],
                   );
                 }
               }
+            ),
+            bottomNavigationBar: BottomAppBar(
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    enableContinue ?
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Payment(
+                          maleTicketCountMap: maleTicketCountMap,
+                          femaleTicketCountMap: femaleTicketCountMap,
+                          totalTicketCount: totalTicketCount,
+                          totalTicketValue: totalTicketValue,
+                          companyId: companyId,
+                          eventId: eventId,
+                        ),
+                      ),
+                    )
+                        : null;
+                  },
+                  child: const Text('Contiuar'),
+                ),
+              ),
             ),
           );
         } else {

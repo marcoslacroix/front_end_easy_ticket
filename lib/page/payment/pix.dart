@@ -83,9 +83,14 @@ class _PixState extends State<Pix> {
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasError) {
-              return const Center(
-                child: Text(
-                    "Error para gerar o QRCODE, entre em contato com a equipe."),
+              return const  Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "Error para gerar o QRCODE, entre em contato com a equipe.",
+                    style: TextStyle(color: Colors.red), // Change the error message text color
+                  ),
+                ),
               );
             } else {
               if (success) {
@@ -93,11 +98,19 @@ class _PixState extends State<Pix> {
                 _textEditingController.text = snapshot?.data['message']?['qrcode'];
                 return Column(
                   children: [
-                    const Text("Qrcode gerado com sucesso."),
+                    const Text(
+                      "Qrcode gerado com sucesso.",
+                      style: TextStyle(
+                        fontFamily: 'Roboto', // Change the font family
+                        fontSize: 20.0, // Change the font size
+                        fontWeight: FontWeight.bold, // Change the font weight
+                        color: Colors.black, // Change the text color
+                      ),
+                    ),
                     const Text("Válido por 5 minutos"),
                     Center(child: Image.memory(bytes)),
                     Padding(
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: TextField(
                         controller: _textEditingController,
                         readOnly: true,
@@ -118,9 +131,15 @@ class _PixState extends State<Pix> {
                         child: Text('Valor total da compra: ${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(totalTicketValue)}'),
                     ),
                     const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text("Obrigado pela compra.")
-                    )
+                      padding: EdgeInsets.all(16.0),
+                      child: Text(
+                        "Obrigado pela compra.",
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic, // Change the font style
+                          color: Colors.grey, // Change the text color
+                        ),
+                      ),
+                    ),
                   ],
                 );
               } else {
