@@ -31,7 +31,7 @@ class _PixState extends State<Pix> {
   late final String token;
   late double totalTicketValue;
   late Future<dynamic> _futureQrcode = Future.value();
-  TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
   bool _isCopied = false;
   late bool success;
 

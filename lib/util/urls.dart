@@ -6,3 +6,5 @@ const String fetchLotsUrl = '$apiBaseUrl/ticket/available';
 const String fetchQrcode = '$apiBaseUrl/gerencianet/getQrcode';
 const String fetchInstallmentsUrl = '$apiBaseUrl/gerencianet/getInstallments';
 const String payUrl = '$apiBaseUrl/gerencianet/pay';
+const String fetchTicketsUrl = '$apiBaseUrl/ticket/my-tickets';
+const String ticketQrCodeUrl = '$apiBaseUrl/ticket/get-qrcode';

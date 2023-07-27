@@ -1,7 +1,7 @@
 import 'package:easy_ticket/auth/auth_bloc.dart';
-import 'package:easy_ticket/page/events.dart';
+import 'package:easy_ticket/page/event/events.dart';
 import 'package:easy_ticket/page/home/home.dart';
-import 'package:easy_ticket/page/my_tickets.dart';
+import 'package:easy_ticket/page/ticket/my_tickets.dart';
 import 'package:easy_ticket/page/search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

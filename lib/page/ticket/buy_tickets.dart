@@ -10,10 +10,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../auth/auth_bloc.dart';
-import '../auth/token_manager.dart';
-import '../util/urls.dart';
-import 'login.dart';
+import '../../auth/auth_bloc.dart';
+import '../../auth/token_manager.dart';
+import '../../util/urls.dart';
+import '../../util/util_ticket.dart';
+import '../login.dart';
 
 class BuyTickets extends StatefulWidget {
   final dynamic event;
@@ -38,7 +39,7 @@ class _BuyTicketsState extends State<BuyTickets> {
   late int eventId;
   late dynamic event;
   late int companyId;
-  late Future<List<dynamic>> _future = Future.value([]); // Initialize with an empty list
+  late Future<List<dynamic>> _future = Future.value([]);
 
   @override
   void initState() {
@@ -279,25 +280,6 @@ class _BuyTicketsState extends State<BuyTickets> {
       return femaleTicketCountMap[lotId]! < tickets[0]['quantity'];
     }
     return false;
-  }
-
-  String getTypeFormated(type) {
-    String typeFormated;
-    switch (type) {
-      case "FEMALE":
-        typeFormated = "Feminino";
-        break;
-      case "MALE":
-        typeFormated = "Masculino";
-        break;
-      default:
-        typeFormated = "Unisex";
-    }
-    return typeFormated;
-  }
-
-  double centsToReal(int cents) {
-    return cents / 100.0;
   }
 
   Future<void> fetchLotsData(eventId) async {

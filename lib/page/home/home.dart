@@ -7,9 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../auth/auth_bloc.dart';
 import '../../auth/token_manager.dart';
-import '../my_tickets.dart';
+import '../ticket/my_tickets.dart';
 import '../perfil.dart';
-import '../events.dart';
+import '../event/events.dart';
 import '../search.dart';
 
 enum SelectedScreen {
@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
   late SharedPreferences prefs;
   int _selectedIndex = 0;
 
-  var token;
+  late String token;
 
   @override
   void initState() {
@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
   void getToken() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      token = prefs.getString("token");
+      token = prefs.getString("token")!;
       final authBloc = Provider.of<AuthBloc>(context, listen: false);
       authBloc.checkAuthentication(token);
       TokenManager.instance.setToken('$token');

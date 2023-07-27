@@ -581,7 +581,7 @@ class _RegisterState extends State<Register> {
       Future<Response> futureResponse = doRegister();
 
       futureResponse.then((response) => {
-        if (response.statusCode == 200) {
+        if (response.statusCode == 201) {
           Navigator.pop(context)
       } else {
           setState(() {
@@ -590,7 +590,7 @@ class _RegisterState extends State<Register> {
           ScaffoldMessenger.of(context).hideCurrentSnackBar(),
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(jsonDecode(response.body)["error"] ?? "Houve um error"),
+              content: Text(jsonDecode(response.body)["error"] ?? "Houve um erro"),
               behavior: SnackBarBehavior.floating,
             ),
           )

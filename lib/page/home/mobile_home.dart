@@ -3,8 +3,8 @@ import 'package:easy_ticket/page/search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../events.dart';
-import '../my_tickets.dart';
+import '../event/events.dart';
+import '../ticket/my_tickets.dart';
 
 class MobileHome extends StatefulWidget {
   final int selectedIndex;

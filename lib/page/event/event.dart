@@ -1,4 +1,4 @@
-import 'package:easy_ticket/page/buy_tickets.dart';
+import 'package:easy_ticket/page/ticket/buy_tickets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -15,10 +15,9 @@ class _Event extends State<Event> {
 
   @override
   Widget build(BuildContext context) {
-    final event = widget.event;
     String formattedDate = "";
-    if (event != null) {
-      formattedDate = formatDate(event?['period']);
+    if (widget.event != null) {
+      formattedDate = formatDate(widget.event?['period']);
     }
     return Scaffold(
       appBar: AppBar(
@@ -33,16 +32,16 @@ class _Event extends State<Event> {
               child: Column(
                 children: [
                   Center(
-                    child: Text('Evento: ${event?['name'] ?? 'Nome do Evento Desconhecido'}'),
+                    child: Text('Evento: ${widget.event?['name'] ?? 'Nome do Evento Desconhecido'}'),
                   ),
                   Center(
                     child: Text('Data: ${formattedDate ?? ''}'),
                   ),
                   Center(
-                    child: Text('Abertura: ${event?['start'] ?? ''}'),
+                    child: Text('Abertura: ${widget.event?['start'] ?? ''}'),
                   ),
                   Center(
-                    child: Text('Descrição: ${event?['description'] ?? ''}'),
+                    child: Text('Descrição: ${widget.event?['description'] ?? ''}'),
                   ),
                 ],
               ),
@@ -60,7 +59,7 @@ class _Event extends State<Event> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BuyTickets(
-                      event: event
+                      event: widget.event
                   ),
                 ),
               );
@@ -70,11 +69,6 @@ class _Event extends State<Event> {
         ),
       ),
     );
-  }
-
-  String centsToReal(int cents) {
-    double realValue = cents / 100.0;
-    return realValue.toStringAsFixed(2);
   }
 
   String formatDate(String dateStr) {

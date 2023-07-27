@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../events.dart';
-import '../my_tickets.dart';
+import '../event/events.dart';
+import '../ticket/my_tickets.dart';
 import '../perfil.dart';
 import '../search.dart';
 

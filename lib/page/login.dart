@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:easy_ticket/page/buy_tickets.dart';
+import 'package:easy_ticket/page/ticket/buy_tickets.dart';
 import 'package:easy_ticket/page/home/home.dart';
 import 'package:easy_ticket/page/perfil.dart';
 import 'package:easy_ticket/page/register.dart';
@@ -16,7 +16,7 @@ import '../auth/auth_bloc.dart';
 import '../auth/token_manager.dart';
 import '../util/urls.dart';
 import 'forgot_password.dart';
-import 'my_tickets.dart';
+import 'ticket/my_tickets.dart';
 
 enum Screen {
   perfil,

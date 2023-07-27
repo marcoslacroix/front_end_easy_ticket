@@ -1,11 +1,12 @@
 import 'dart:convert';
 
-import 'package:easy_ticket/page/event.dart';
+import 'package:easy_ticket/page/event/event.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:intl/intl.dart';
-import '../util/urls.dart';
+import '../../util/urls.dart';
+import '../../util/util_data.dart';
 
 class Events extends StatefulWidget {
   const Events({Key? key}) : super(key: key);
@@ -107,11 +108,6 @@ class _EventsState extends State<Events> {
     setState(() {
       _future = fetchEvents(); // Fetch data once and store it in _future
     });
-  }
-
-  String formatDate(String dateStr) {
-    DateTime date = DateTime.parse(dateStr);
-    return DateFormat('dd/MM/yyyy').format(date);
   }
 
   Future<List<dynamic>> fetchEvents() async {
