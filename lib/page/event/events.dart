@@ -68,7 +68,6 @@ class _EventsState extends State<Events> {
                                 )
                               },
                               child: Card(
-                                color: Colors.red,
 
                                 child: ListTile(
                                   title: Text(event['name'] ?? ''),

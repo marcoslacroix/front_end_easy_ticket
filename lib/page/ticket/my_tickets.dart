@@ -39,7 +39,7 @@ class _MyTicketsState extends State<MyTickets> {
   void getToken() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      token = prefs.getString("token")!;
+      token = prefs.getString("token")?? "";
       print("token home: $token");
       if (token.toString().isNotEmpty) {
         _future = fetchTickets();

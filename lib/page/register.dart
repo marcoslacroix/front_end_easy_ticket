@@ -475,64 +475,38 @@ class _RegisterState extends State<Register> {
 
   bool validateFields() {
     if (_emailController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Email obrigatório'),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      showMessageError("Email obrigatório");
       return false;
     } else if (!_emailController.text.contains("@")) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Email inválido'),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      showMessageError("Email inválido");
       return false;
     } else if (!_emailController.text.contains(".")) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Email inválido'),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      showMessageError("Email inválido");
       return false;
     } else if (_nameController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Nome obrigatório'),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      showMessageError("Nome obrigatório");
       return false;
     } else if (_passwordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Senha obrigatória"),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      showMessageError("Senha obrigatória");
       return false;
     } else if (_lastnameController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Sobrenome obrigatório"),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      showMessageError("Sobrenome obrigatório");
       return false;
     } else if (!isPasswordStrong(_passwordController.text)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Senha deve conter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas e números."),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      showMessageError("Senha deve conter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas e números.");
       return false;
     }
 
     return true;
+  }
+
+  void showMessageError(text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   bool isPasswordStrong(String password) {
@@ -556,46 +530,57 @@ class _RegisterState extends State<Register> {
   }
 
 
-  Future<Response> doRegister() async {
-    Map<String, dynamic> payload = {
-      "email": _emailController.text,
-      "password": _passwordController.text,
-      "confirmPassword": _confirmPasswordController.text,
-      "name": _nameController.text,
-      "lastname": _lastnameController.text
-    };
-    String jsonPayload = jsonEncode(payload);
-    var url = Uri.parse(createUserUrl);
-    var response = await http.post(
-        url,
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json'
-        },
-        body: jsonPayload
-    );
-    return response;
+  Future<void> doRegister() async {
+    try {
+      Map<String, dynamic> payload = {
+        "email": _emailController.text,
+        "password": _passwordController.text,
+        "confirmPassword": _confirmPasswordController.text,
+        "name": _nameController.text,
+        "lastname": _lastnameController.text
+      };
+      String jsonPayload = jsonEncode(payload);
+      var url = Uri.parse(createUserUrl);
+      var response = await http.post(
+          url,
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json'
+          },
+          body: jsonPayload
+      );
+
+      if (response.statusCode == 201) {
+        returnToPreviusScreen();
+      } else if (response.statusCode == 400) {
+        Map<String, dynamic> responsePayload = jsonDecode(response.body);
+        _handleError(responsePayload['error']);
+      }
+    } catch(e) {
+      print('Error occurred while register: $e');
+    }
+
   }
 
-  void _handleRegister(BuildContext context) {
-    if (validateFields()) {
-      Future<Response> futureResponse = doRegister();
+  void returnToPreviusScreen() {
+    Navigator.pop(context);
+  }
 
-      futureResponse.then((response) => {
-        if (response.statusCode == 201) {
-          Navigator.pop(context)
-      } else {
-          setState(() {
-            _isButtonDisabled = false;
-          }),
-          ScaffoldMessenger.of(context).hideCurrentSnackBar(),
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(jsonDecode(response.body)["error"] ?? "Houve um erro"),
-              behavior: SnackBarBehavior.floating,
-            ),
-          )
-        }
-      });
+  void _handleError(error) {
+    setState(() {
+      _isButtonDisabled = false;
+    });
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(error ?? "Houve um erro"),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _handleRegister(BuildContext context) async {
+    if (validateFields()) {
+      await doRegister();
     }
   }
 

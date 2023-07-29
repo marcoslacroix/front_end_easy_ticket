@@ -76,7 +76,7 @@ class _HomeState extends State<Home> {
   void getToken() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
-      token = prefs.getString("token")!;
+      token = prefs.getString("token")?? "";
       final authBloc = Provider.of<AuthBloc>(context, listen: false);
       authBloc.checkAuthentication(token);
       TokenManager.instance.setToken('$token');

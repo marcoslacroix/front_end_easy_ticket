@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'auth/auth_bloc.dart';
+import 'auth/auth_provider.dart';
 import 'page/home/home.dart';
 
 
@@ -16,6 +17,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<AuthBloc>(
             create: (_) => AuthBloc(),
         ),
+        ChangeNotifierProvider(
+            create: (_) => AuthProvider()
+        )
       ],
       child: const MaterialApp(
         home: Home(selectedScreen: SelectedScreen.events),

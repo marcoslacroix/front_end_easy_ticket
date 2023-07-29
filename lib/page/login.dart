@@ -13,8 +13,11 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/auth_bloc.dart';
+import '../auth/auth_provider.dart';
 import '../auth/token_manager.dart';
+import '../enum/user_role.dart';
 import '../util/urls.dart';
+import '../util/util_routes.dart';
 import 'forgot_password.dart';
 import 'ticket/my_tickets.dart';
 
@@ -289,86 +292,122 @@ class _LoginState extends State<Login> {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> responsePayload = jsonDecode(response.body);
-      token = (responsePayload["token"]);
+      token = responsePayload["token"];
     }
     return token;
   }
 
+  Future<List<dynamic>> doRequestGetRoles(token) async {
+    try {
+      var url = Uri.parse(fetchUserRoles);
+      var response = await http.get(
+        url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.authorizationHeader: 'Bearer $token'
+        },
+      );
+      List<dynamic> roles = [];
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responsePayload = jsonDecode(response.body);
+        roles = responsePayload["roles"];
+      }
+      return roles;
+    } catch (e) {
+      print('Error occurred while fetching roles: $e');
+      return [];
+    }
 
-  void _handleLogin(BuildContext context) {
+  }
+
+  void alertVerifyCredentials() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Favor verifique seu e-mail ou senha'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  Future<String> requestLogin() async {
+    String token = await doRequestLogin();
+    return token;
+  }
+
+  void _handleLogin(BuildContext context) async {
     final String email = _emailController.text;
     final String password = _passwordController.text;
-    Future<String> futureToken = doRequestLogin();
     if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Favor verifique seu e-mail ou senha'),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      alertVerifyCredentials();
+    }
+
+    String token = await requestLogin();
+    if (token.isNotEmpty) {
+      await applyRoles(token);
+      doLogin(token);
+      moveToScreen();
     } else {
-      futureToken.then((value) =>
-      {
-        setState(() {
-          String token = value;
-          if (token.isNotEmpty) {
-            final authBloc = Provider.of<AuthBloc>(context, listen: false);
-            authBloc.updateAuthStatus(AuthStatus.authenticated);
-            prefs.setString('token', 'Bearer $token');
-            TokenManager.instance.setToken('Bearer $token');
-            _emailController.clear();
-            _passwordController.clear();
-            if (event != null) {
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => BuyTickets(event: event)
-                ));
-            } else if (screen == Screen.perfil) {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Home(selectedScreen: SelectedScreen.perfil),
-                ),
-                (route) => false,
-              );
-            } else if (screen == Screen.myTickets) {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const Home(selectedScreen: SelectedScreen.myTickets)
-                ),
-                (route) => false,
-              );
-            } else {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Home(selectedScreen: SelectedScreen.events),
-                  fullscreenDialog: true,
-                ),
-                (route) => false,
-              );
-            }
-          } else {
-            setState(() {
-              _isButtonDisabled = false;
-            });
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Senha inválida'),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        })
-      });
+      invalidLogin();
     }
   }
-  bool isEmailValid(String email) {
-    // Expressão regular para validar o formato do e-mail
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(email);
+
+  void moveToScreen() {
+    if (event != null) {
+      moveToTickets(context, event);
+    } else if (screen == Screen.perfil) {
+      moveToHome(context, SelectedScreen.perfil, false);
+    } else if (screen == Screen.myTickets) {
+      moveToHome(context, SelectedScreen.myTickets, false);
+    } else {
+      moveToHome(context, SelectedScreen.events, true);
+    }
   }
+
+  Future<void> applyRoles(token) async {
+    List<dynamic> futureRoles = await doRequestGetRoles(token);
+    updateRoles(futureRoles);
+  }
+
+  void updateRoles(futureRoles) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    List<String> roleStrings = futureRoles.cast<String>();
+    List<UserRole> userRoles = [];
+    userRoles = roleStrings.map((role) => parseUserRole(role)).toList();
+    authProvider.updateRoles(userRoles);
+    setState(() {
+      prefs.setStringList("roles", roleStrings);
+    });
+  }
+
+  void invalidLogin() {
+    setState(() {
+      _isButtonDisabled = false;
+    });
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+      content: Text('Senha ou e-mail inválida'),
+      behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void doLogin(value) {
+    setState(() {
+      String token = value;
+      final authBloc = Provider.of<AuthBloc>(context, listen: false);
+      authBloc.updateAuthStatus(AuthStatus.authenticated);
+      prefs.setString('token', 'Bearer $token');
+      TokenManager.instance.setToken('Bearer $token');
+      _emailController.clear();
+      _passwordController.clear();
+    });
+  }
+
+    bool isEmailValid(String email) {
+      // Expressão regular para validar o formato do e-mail
+      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+      return emailRegex.hasMatch(email);
+    }
 }
