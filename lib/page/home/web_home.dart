@@ -34,9 +34,6 @@ class _WebHomeState extends State<WebHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Easy Ticket'),
-      ),
       body: Row(
         children: [
           // Menu lateral (drawer) para a web

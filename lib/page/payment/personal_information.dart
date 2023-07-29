@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PersonalInformation extends StatefulWidget {
@@ -69,6 +70,18 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
     super.initState();
   }
+
+  var maskFormatterBirth = MaskTextInputFormatter(
+      mask: '##/##/####',
+      filter: { "#": RegExp(r'[0-9]') },
+      type: MaskAutoCompletionType.lazy
+  );
+
+  var maskFormatterCPF = MaskTextInputFormatter(
+      mask: '###.###.###-##',
+      filter: { "#": RegExp(r'[0-9]') },
+      type: MaskAutoCompletionType.lazy
+  );
 
   void loadPreferences() async {
     SharedPreferences p = await SharedPreferences.getInstance();
@@ -151,15 +164,17 @@ class _PersonalInformationState extends State<PersonalInformation> {
                         decoration: const InputDecoration(labelText: "CPF"),
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.next,
-                        maxLength: 11,
                         focusNode: _cpfFocus,
+                        inputFormatters: [maskFormatterCPF],
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "CPF obrigatório.";
                           }
-                          if (value.length < 11) {
+
+                          if (!validateCPF(value)) {
                             return "CPF inválido.";
                           }
+
                         },
                       ),
                       TextFormField(
@@ -177,7 +192,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                       TextFormField(
                         controller: _birthInputController,
                         decoration: const InputDecoration(labelText: "Data de nascimento (dd/MM/yyyy)"),
-                        inputFormatters: [DateInputFormatter()],
+                        inputFormatters: [DateInputFormatter(), maskFormatterBirth],
                         textInputAction: TextInputAction.next,
                         focusNode: _birthFocus,
                         keyboardType: TextInputType.number,
@@ -226,6 +241,55 @@ class _PersonalInformationState extends State<PersonalInformation> {
         )
       ),
     );
+  }
+
+  bool validateCPF(String cpf) {
+    if (cpf == null || cpf.isEmpty) {
+      return false;
+    }
+
+    // Remover caracteres não numéricos do CPF
+    cpf = cpf.replaceAll(RegExp(r'[^0-9]'), '');
+
+    if (cpf.length != 11) {
+      return false;
+    }
+
+    // Verificar se todos os dígitos são iguais, o que é inválido
+    if (RegExp(r'^(\d)\1+$').hasMatch(cpf)) {
+      return false;
+    }
+
+    // Verificar os dígitos verificadores
+    List<int> digits = cpf.split('').map(int.parse).toList();
+
+    int sum = 0;
+    int mod;
+
+    // Primeiro dígito verificador
+    for (int i = 0; i < 9; i++) {
+      sum += digits[i] * (10 - i);
+    }
+    mod = sum % 11;
+    int firstVerifier = (mod < 2) ? 0 : 11 - mod;
+
+    if (digits[9] != firstVerifier) {
+      return false;
+    }
+
+    // Segundo dígito verificador
+    sum = 0;
+    for (int i = 0; i < 10; i++) {
+      sum += digits[i] * (11 - i);
+    }
+    mod = sum % 11;
+    int secondVerifier = (mod < 2) ? 0 : 11 - mod;
+
+    if (digits[10] != secondVerifier) {
+      return false;
+    }
+
+    return true;
   }
 
   dynamic generateCustomerObject() {

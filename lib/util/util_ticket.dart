@@ -26,6 +26,8 @@ double centsToReal(int cents) {
   return cents / 100.0;
 }
 
+
+
 Future<String> fetchTicketQrcode(uuid, token) async {
   try {
     var params = {"uuid": uuid};

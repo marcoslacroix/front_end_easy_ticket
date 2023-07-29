@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 
 import '../../auth/token_manager.dart';
@@ -38,12 +39,10 @@ class _CreditCardState extends State<CreditCard> {
 
   late TextEditingController _cardNumberController;
   late TextEditingController _cvvController;
-  late TextEditingController _expirationMonthController;
-  late TextEditingController _expirationYearController;
+  late TextEditingController _expirationPeriodController;
   late final _cardNumberFocus;
   late final _cvvFocus;
-  late final _expirationMonthFocus;
-  late final _expirationYearFocus;
+  late final _expirationPeriodFocus;
 
   late bool _showCardInformation;
   late String? selectedBandType;
@@ -56,6 +55,11 @@ class _CreditCardState extends State<CreditCard> {
   late bool _isButtonDisabled;
   late bool _isLoading;
 
+  var maskFormatterPeriod = MaskTextInputFormatter(
+      mask: '##/##',
+      filter: { "#": RegExp(r'[0-9]') },
+      type: MaskAutoCompletionType.lazy
+  );
 
   @override
   void initState() {
@@ -67,13 +71,11 @@ class _CreditCardState extends State<CreditCard> {
     _showCardInformation = false;
     _cardNumberController = TextEditingController();
     _cvvController = TextEditingController();
-    _expirationMonthController = TextEditingController();
-    _expirationYearController = TextEditingController();
+    _expirationPeriodController = TextEditingController();
 
     _cardNumberFocus = FocusNode();
     _cvvFocus = FocusNode();
-    _expirationMonthFocus = FocusNode();
-    _expirationYearFocus = FocusNode();
+    _expirationPeriodFocus = FocusNode();
 
     selectedBandType = "";
     totalTicketValue = widget.totalTicketValue;
@@ -251,48 +253,43 @@ class _CreditCardState extends State<CreditCard> {
                             },
                           ),
                           TextFormField(
-                              controller: _expirationMonthController,
-                              decoration: const InputDecoration(labelText: "Mês (MM)"),
+                              controller: _expirationPeriodController,
+                              decoration: const InputDecoration(labelText: "Período (MM/YY)"),
                               keyboardType: TextInputType.number,
                               textInputAction: TextInputAction.next,
-                              maxLength: 2,
-                              focusNode: _expirationMonthFocus,
+                              inputFormatters: [maskFormatterPeriod],
+                              focusNode: _expirationPeriodFocus,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Mês é obrigatório.';
+                                  return 'Período é obrigatório.';
+                                }
+                                if (value.length < 5) {
+                                  return "Período inválido.";
                                 }
 
-                                int? month = int.tryParse(value);
-                                if (month == null || month < 1 || month > 12) {
-                                  return 'Mês inválido (1 a 12)';
+                                print("value: $value");
+                                if (value.length > 1) {
+                                  String month = value.substring(0, 2);
+                                  int? monthInt = int.tryParse(month);
+                                  if (monthInt == null || monthInt < 1 || monthInt > 12) {
+                                    return 'Mês inválido (1 a 12)';
+                                  }
+                                }
+
+                                if(value.length > 3) {
+                                  String year = value.substring(3, 5);
+
+                                  int? yearInt = int.tryParse(year);
+                                  int currentYear = DateTime.now().year;
+                                  int currentYearReplace = int.parse(currentYear.toString().replaceRange(0, 2, ""));
+                                   if (yearInt! < currentYearReplace) {
+                                    return "O seu cartão está vencido.";
+                                  } else if (yearInt > 99) {
+                                    return 'Ano inválido (00 to 99)';
+                                  }
                                 }
                                 return null;
                               }
-                          ),
-                          TextFormField(
-                            controller: _expirationYearController,
-                            decoration: const InputDecoration(
-                                labelText: "Ano (YY)"),
-                            maxLength: 2,
-                            keyboardType: TextInputType.number,
-                            focusNode: _expirationYearFocus,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Ano é obrigatório.';
-                              }
-                              int? year = int.tryParse(value);
-                              int currentYear = DateTime.now().year;
-                              int currentYearReplace = int.parse(currentYear.toString().replaceRange(0, 2, ""));
-
-                              if (year == null) {
-                                return "Ano é obrigatório.";
-                              } else if (year < currentYearReplace) {
-                                return "O seu cartão está vencido.";
-                              } else if (year > 99) {
-                                return 'Ano inválido (00 to 99)';
-                              }
-                              return null;
-                            },
                           ),
                           DropdownButton<int>(
                             value: selectedInstallment,
@@ -377,7 +374,7 @@ class _CreditCardState extends State<CreditCard> {
         _isButtonDisabled = true;
       });
       print("starting payment...");
-      await requestPayment(context); // Pass the context here
+      await requestPayment(context);
     }
   }
 
@@ -390,8 +387,8 @@ class _CreditCardState extends State<CreditCard> {
         "brand": selectedBandType,
         "number": _cardNumberController.text,
         "cvv": _cvvController.text,
-        "expiration_month": _expirationMonthController.text,
-        "expiration_year": _expirationYearController.text
+        "expiration_month": _expirationPeriodController.text.substring(0,2),
+        "expiration_year": _expirationPeriodController.text.substring(3,5),
       },
       "payment": {
         "credit_card": {
@@ -422,11 +419,11 @@ class _CreditCardState extends State<CreditCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Erro no pagamento'),
+          title: const Text('Erro no pagamento'),
           content: Text(errorMessage),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },

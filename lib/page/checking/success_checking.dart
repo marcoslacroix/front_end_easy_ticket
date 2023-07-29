@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+
+import '../home/home.dart';
+
+class SuccessChecking extends StatefulWidget {
+  const SuccessChecking({Key? key}) : super(key: key);
+
+  @override
+  State<SuccessChecking> createState() => _SuccessCheckingState();
+}
+
+class _SuccessCheckingState extends State<SuccessChecking> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const Home(selectedScreen: SelectedScreen.checking)),
+                    (route) => false,
+              ); // Navigate back to the previous screen (home page)
+            },
+          ),
+        ],
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.check_circle,
+              size: 80,
+              color: Colors.green,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Ingresso Confirmado!",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "O usuario está liberado para entrar no evento.",
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

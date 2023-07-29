@@ -8,3 +8,5 @@ const String fetchInstallmentsUrl = '$apiBaseUrl/gerencianet/getInstallments';
 const String payUrl = '$apiBaseUrl/gerencianet/pay';
 const String fetchTicketsUrl = '$apiBaseUrl/ticket/my-tickets';
 const String ticketQrCodeUrl = '$apiBaseUrl/ticket/get-qrcode';
+const String fetchTicketByUuid = '$apiBaseUrl/ticket/get-ticket-by-uuid';
+const String ticketChecking = '$apiBaseUrl/ticket/checking';

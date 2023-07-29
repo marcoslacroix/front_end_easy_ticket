@@ -3,6 +3,7 @@ import 'package:easy_ticket/page/search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../checking/scan_ticket.dart';
 import '../event/events.dart';
 import '../ticket/my_tickets.dart';
 
@@ -32,26 +33,29 @@ class _MobileHomeState extends State<MobileHome> {
     });
   }
 
+  final List<Widget Function()> _pages = [
+        () => Center(
+      child: Events(),
+    ),
+        () => Center(
+      child: Search(),
+    ),
+        () => Center(
+      child: ScanTicket(),
+    ),
+        () => Center(
+      child: MyTickets(),
+    ),
+        () => Center(
+      child: Perfil(),
+    ),
+  ];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: const <Widget>[
-          Center(
-            child: Events(),
-          ),
-          Center(
-            child: Search(),
-          ),
-          Center(
-            child: MyTickets(),
-          ),
-          Center(
-            child: Perfil(),
-          ),
-        ],
-      ),
+      body: _pages[_selectedIndex](),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -61,6 +65,10 @@ class _MobileHomeState extends State<MobileHome> {
           BottomNavigationBarItem(
             icon: Icon(Icons.search_rounded),
             label: 'Pesquisar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera_alt_outlined),
+            label: 'Checking',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart_outlined),

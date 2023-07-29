@@ -15,6 +15,7 @@ import '../search.dart';
 enum SelectedScreen {
   events,
   search,
+  checking,
   myTickets,
   perfil,
 }
@@ -51,15 +52,21 @@ class _HomeState extends State<Home> {
           _selectedIndex = 1;
         });
         break;
-      case SelectedScreen.myTickets:
+      case SelectedScreen.checking:
         setState(() {
           _selectedIndex = 2;
+        });
+      case SelectedScreen.myTickets:
+        setState(() {
+          _selectedIndex = 3;
         });
         break;
       case SelectedScreen.perfil:
         setState(() {
-          _selectedIndex = 3;
+          _selectedIndex = 4;
         });
+        break;
+
         break;
       default:
         _selectedIndex = 0;
