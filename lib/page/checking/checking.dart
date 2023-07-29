@@ -79,7 +79,6 @@ class _CheckingState extends State<Checking> {
                 return Center(
                   child: Column(
                     children: [
-                      const Text("Informações do ingresso"),
                       Padding(
                         padding: const EdgeInsets.only(top: 400.0),
                         child: Text("Evento: ${snapshot.data['event']['name']}"),

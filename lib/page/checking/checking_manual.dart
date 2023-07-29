@@ -17,9 +17,10 @@ class _CheckingManualState extends State<CheckingManual> {
   late final TextEditingController _uuidController;
   late final _uuidFocus;
 
+
   var maskFormatter = MaskTextInputFormatter(
       mask: '########-####-####-####-############',
-      filter: { "#": RegExp('.') },
+      filter: { "#": RegExp(r'^[0-9a-z]+$')},
       type: MaskAutoCompletionType.lazy
   );
 
@@ -28,7 +29,20 @@ class _CheckingManualState extends State<CheckingManual> {
     _formKey = GlobalKey<FormState>();
     super.initState();
     _uuidController = TextEditingController();
+    _uuidController.addListener(handlePasteEvent);
     _uuidFocus = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _uuidController.removeListener(handlePasteEvent);
+    _uuidController.dispose();
+    super.dispose();
+  }
+
+  void handlePasteEvent() {
+    String newText = _uuidController.text;
+    print('Text pasted: $newText');
   }
 
   @override
@@ -45,9 +59,9 @@ class _CheckingManualState extends State<CheckingManual> {
           child: SizedBox(
             width: 350,
             child: TextFormField(
-            maxLength: 36,
             decoration: const InputDecoration(labelText: "Digite o código"),
             controller: _uuidController,
+            maxLength: 36,
             focusNode: _uuidFocus,
             inputFormatters: [maskFormatter], // Adicione o maskFormatter aqui
             textInputAction: TextInputAction.next,
