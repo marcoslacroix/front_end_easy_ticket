@@ -13,6 +13,11 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeAllRoles() {
+    _roles = [];
+    notifyListeners();
+  }
+
   void addRole(UserRole newRole) {
     if (!_roles.contains(newRole)) {
       _roles.add(newRole);

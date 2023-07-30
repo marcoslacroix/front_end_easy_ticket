@@ -1,3 +1,4 @@
+import 'package:easy_ticket/auth/auth_provider.dart';
 import 'package:easy_ticket/page/home/mobile_home.dart';
 import 'package:easy_ticket/page/home/web_home.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../auth/auth_bloc.dart';
 import '../../auth/token_manager.dart';
+import '../../enum/user_role.dart';
 import '../ticket/my_tickets.dart';
 import '../perfil.dart';
 import '../event/events.dart';
@@ -31,15 +33,16 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late SharedPreferences prefs;
   int _selectedIndex = 0;
+  late final authProvider;
 
   late String token;
+  late List<UserRole> listRoles;
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      getToken();
-    });
+    authProvider = Provider.of<AuthProvider>(context, listen: false);
+    getToken();
 
     switch (widget.selectedScreen) {
       case SelectedScreen.events:
@@ -52,25 +55,36 @@ class _HomeState extends State<Home> {
           _selectedIndex = 1;
         });
         break;
-      case SelectedScreen.checking:
-        setState(() {
-          _selectedIndex = 2;
-        });
       case SelectedScreen.myTickets:
         setState(() {
-          _selectedIndex = 3;
+          _selectedIndex = 2;
         });
         break;
       case SelectedScreen.perfil:
         setState(() {
-          _selectedIndex = 4;
+          _selectedIndex = 3;
         });
         break;
-
+      case SelectedScreen.checking:
+        setState(() {
+          if (listRoles.contains(UserRole.CHECKING_TICKET)) {
+            _selectedIndex = 4;
+          }
+        });
         break;
       default:
         _selectedIndex = 0;
     }
+  }
+
+  void getRoles() {
+    setState(() {
+      List<String> roles = prefs.getStringList("roles") ?? [];
+      List<UserRole> userRoles = [];
+      userRoles = roles.map((role) => parseUserRole(role)).toList();
+      listRoles = userRoles;
+      authProvider.updateRoles(userRoles);
+    });
   }
 
   void getToken() async {
@@ -80,6 +94,7 @@ class _HomeState extends State<Home> {
       final authBloc = Provider.of<AuthBloc>(context, listen: false);
       authBloc.checkAuthentication(token);
       TokenManager.instance.setToken('$token');
+      getRoles();
     });
   }
 
@@ -89,6 +104,7 @@ class _HomeState extends State<Home> {
     if (kIsWeb) {
       return WebHome(selectedIndex: _selectedIndex);
     } else {
+      print("index: $_selectedIndex");
       return MobileHome(selectedIndex: _selectedIndex);
     }
   }

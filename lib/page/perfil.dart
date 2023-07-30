@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../auth/auth_provider.dart';
 import '../auth/token_manager.dart';
 import 'login.dart';
 
@@ -60,6 +61,9 @@ class _PerfilState extends State<Perfil> {
                         final authBloc = Provider.of<AuthBloc>(context, listen: false);
                         authBloc.updateAuthStatus(AuthStatus.unauthenticated);
                         TokenManager.instance.setToken("");
+                        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                        authProvider.removeAllRoles();
+                        prefs.setStringList("roles", []);
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(

@@ -43,25 +43,25 @@ class _WebHomeState extends State<WebHome> {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 ListTile(
-                  title: Text('Eventos'),
+                  title: const Text('Eventos'),
                   onTap: () {
                     _onItemTapped(0);
                   },
                 ),
                 ListTile(
-                  title: Text('Pesquisar'),
+                  title: const Text('Pesquisar'),
                   onTap: () {
                     _onItemTapped(1);
                   },
                 ),
                 ListTile(
-                  title: Text('Meus ingressos'),
+                  title: const Text('Meus ingressos'),
                   onTap: () {
                     _onItemTapped(2);
                   },
                 ),
                 ListTile(
-                  title: Text('Perfil'),
+                  title: const Text('Perfil'),
                   onTap: () {
                     _onItemTapped(3);
                   },

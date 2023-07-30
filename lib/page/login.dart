@@ -354,12 +354,16 @@ class _LoginState extends State<Login> {
 
   void moveToScreen() {
     if (event != null) {
+      print("ticket");
       moveToTickets(context, event);
     } else if (screen == Screen.perfil) {
+      print("perfil");
       moveToHome(context, SelectedScreen.perfil, false);
     } else if (screen == Screen.myTickets) {
+      print("my_tickets");
       moveToHome(context, SelectedScreen.myTickets, false);
     } else {
+      print("events");
       moveToHome(context, SelectedScreen.events, true);
     }
   }
