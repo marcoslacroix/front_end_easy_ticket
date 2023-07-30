@@ -108,7 +108,7 @@ class _AddressInformationState extends State<AddressInformation> {
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
             title: const Center(child: Text("Endereço")),
-            iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
+            iconTheme: const IconThemeData(color: Colors.black),
             elevation: 0
         ),
         body: SingleChildScrollView(
@@ -246,7 +246,6 @@ class _AddressInformationState extends State<AddressInformation> {
     prefs.setString("address_information_city", _cityController.text);
     prefs.setString("address_information_state", _stateController.text);
     var d = _zipcodeController.text;
-    print("zipcode:? $d");
     var params = {
       "street": _streetController.text,
       "number": _streetNumberController.text,

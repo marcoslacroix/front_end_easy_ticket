@@ -11,6 +11,8 @@ import 'package:http/http.dart' as http;
 
 import '../../auth/token_manager.dart';
 import '../../util/urls.dart';
+import '../../util/util_http.dart';
+import '../../util/util_routes.dart';
 import '../../util/util_ticket.dart';
 
 class Checking extends StatefulWidget {
@@ -44,17 +46,15 @@ class _CheckingState extends State<Checking> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           title: const Center(child: Text("Checking")),
-          iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
+          iconTheme: const IconThemeData(color: Colors.black),
           elevation: 0,
         ),
         body: FutureBuilder<dynamic>(
           future: _futureTicket,
           builder: (context, snapshot) {
-
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: CircularProgressIndicator(),
@@ -72,7 +72,6 @@ class _CheckingState extends State<Checking> {
             } else {
               String? error = snapshot.data['error'];
               if (error != null && error.isNotEmpty) {
-                print("error");
                 return Center(child: Text(error));
               } else {
                 String type = getTypeFormated(snapshot.data['ticket']['type']);
@@ -111,9 +110,8 @@ class _CheckingState extends State<Checking> {
             child: ElevatedButton(
               onPressed: () => {
                 isButtonDisabled ? null : _confirmChecking(context)
-              } , // Set onPressed to null when button is disabled
+              },
               child: const Text('Confirmar checking')
-
             ),
           ),
         ),
@@ -127,7 +125,7 @@ class _CheckingState extends State<Checking> {
 
       var params = {"uuid": uuid};
       final url = Uri.parse(fetchTicketByUuid)
-          .replace(queryParameters: _convertMapToStrings(params));
+          .replace(queryParameters: convertMapToStrings(params));
       var response = await http.get(
         url,
         headers: {
@@ -153,13 +151,7 @@ class _CheckingState extends State<Checking> {
     }
   }
 
-  Map<String, String> _convertMapToStrings(Map<dynamic, dynamic> map) {
-    final convertedMap = <String, String>{};
-    map.forEach((key, value) {
-      convertedMap[key.toString()] = value.toString();
-    });
-    return convertedMap;
-  }
+
 
   void showErrorDialog(BuildContext context, String errorMessage) {
     showDialog(
@@ -172,7 +164,7 @@ class _CheckingState extends State<Checking> {
             TextButton(
               child: const Text('OK'),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -182,19 +174,15 @@ class _CheckingState extends State<Checking> {
   }
 
   Future<void> _confirmChecking(context) async {
-    print("teste");
-    // Disable the button
     setState(() {
       isButtonDisabled = true;
     });
-    print("starting checking...");
     try {
       var body = {
         "uuid": widget.ticketUuid,
         "event": eventId
       };
       String jsonBody = json.encode(body);
-      print("jsonBody $jsonBody");
 
       var url = Uri.parse(ticketChecking);
       var response = await http.post(
@@ -211,13 +199,7 @@ class _CheckingState extends State<Checking> {
       });
 
       if (response.statusCode == 204) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const SuccessChecking()
-          ),
-              (route) => false,
-        );
+        moveToSuccessChecking(context);
       } else if (response.statusCode == 400){
         Map<String, dynamic> jsonData = jsonDecode(response.body);
         showErrorDialog(context, jsonData['error']);

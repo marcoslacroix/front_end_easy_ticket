@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:easy_ticket/util/urls.dart';
+import 'package:easy_ticket/util/util_http.dart';
 import 'package:http/http.dart' as http;
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -32,7 +33,7 @@ Future<String> fetchTicketQrcode(uuid, token) async {
   try {
     var params = {"uuid": uuid};
     final url = Uri.parse(ticketQrCodeUrl)
-        .replace(queryParameters: _convertMapToStrings(params));
+        .replace(queryParameters: convertMapToStrings(params));
     var response = await http.get(
       url,
       headers: {
@@ -56,12 +57,6 @@ Future<String> fetchTicketQrcode(uuid, token) async {
   }
 }
 
-Map<String, String> _convertMapToStrings(Map<dynamic, dynamic> map) {
-  final convertedMap = <String, String>{};
-  map.forEach((key, value) {
-    convertedMap[key.toString()] = value.toString();
-  });
-  return convertedMap;
-}
+
 
 

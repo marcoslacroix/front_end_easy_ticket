@@ -26,7 +26,7 @@ class _ScanTicketState extends State<ScanTicket> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Leitor de QR Code'),
+        title: const Text('Leitor de QR Code'),
       ),
       body: Stack(
         children: [
@@ -37,10 +37,10 @@ class _ScanTicketState extends State<ScanTicket> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.only(bottom: 20), // Espaçamento do botão para a parte inferior da tela
+              padding: const EdgeInsets.only(bottom: 20), // Espaçamento do botão para a parte inferior da tela
               child: ElevatedButton(
                 onPressed: _renderManuallyChecking,
-                child: Text('Digite o código do ingresso'),
+                child: const Text('Digite o código do ingresso'),
               ),
             ),
           ),
@@ -79,12 +79,9 @@ class _ScanTicketState extends State<ScanTicket> {
 
     _controller!.scannedDataStream.listen((scanData) async {
       if (mounted) {
-        // Aqui você pode tratar os dados lidos do QR Code
-        print('QR Code lido: ${scanData.code}');
         var ticketUuid = scanData.code;
         if (ticketUuid != null && ticketUuid.length == 36) {
           _stopCamera();
-          print('Send request do checking!: ${scanData.code}');
            await Navigator.push(
             context,
             MaterialPageRoute(
@@ -92,9 +89,7 @@ class _ScanTicketState extends State<ScanTicket> {
             )
           );
           _startCamera();
-
         }
-        print('QR Code lido: ${scanData.code}');
       }
     });
   }

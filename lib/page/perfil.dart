@@ -1,4 +1,5 @@
 import 'package:easy_ticket/auth/auth_bloc.dart';
+import 'package:easy_ticket/buttom/logout.dart';
 import 'package:easy_ticket/page/event/events.dart';
 import 'package:easy_ticket/page/home/home.dart';
 import 'package:easy_ticket/page/ticket/my_tickets.dart';
@@ -50,31 +51,12 @@ class _PerfilState extends State<Perfil> {
           if (authBloc.authStatus == AuthStatus.authenticated || token != null) {
             return Scaffold(
               appBar: AppBar(
-                title: const Center(child: Text("Meu perfil"),),
+                title: const Center(child: Text("Meu perfil")),
               ),
               body: Row(
                 children: [
                   Center(
-                    child: TextButton(
-                      onPressed: () async {
-                        prefs.remove("token");
-                        final authBloc = Provider.of<AuthBloc>(context, listen: false);
-                        authBloc.updateAuthStatus(AuthStatus.unauthenticated);
-                        TokenManager.instance.setToken("");
-                        final authProvider = Provider.of<AuthProvider>(context, listen: false);
-                        authProvider.removeAllRoles();
-                        prefs.setStringList("roles", []);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Home(selectedScreen: SelectedScreen.perfil),
-                            fullscreenDialog: true,
-                          ),
-                          (route) => false,
-                        );
-                      },
-                      child: const Text("Logout"),
-                    ),
+                    child: Logout(prefs: prefs)
                   )
                 ],
               ),

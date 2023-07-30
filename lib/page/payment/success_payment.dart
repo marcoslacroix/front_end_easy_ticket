@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../util/util_routes.dart';
 import '../home/home.dart';
 
 class SuccessPayment extends StatefulWidget {
@@ -20,11 +21,7 @@ class _SuccessPaymentState extends State<SuccessPayment> {
           IconButton(
             icon: const Icon(Icons.home),
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const Home(selectedScreen: SelectedScreen.events)),
-                    (route) => false,
-              ); // Navigate back to the previous screen (home page)
+              moveToHome(context, SelectedScreen.events);
             },
           ),
         ],

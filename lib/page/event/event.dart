@@ -2,6 +2,9 @@ import 'package:easy_ticket/page/ticket/buy_tickets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../util/util_data.dart';
+import '../../util/util_routes.dart';
+
 class Event extends StatefulWidget {
   final dynamic event;
 
@@ -55,14 +58,7 @@ class _Event extends State<Event> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BuyTickets(
-                      event: widget.event
-                  ),
-                ),
-              );
+              moveToBuyTicket(context, widget.event);
             },
             child: const Text('Comprar ingressos'),
           ),
@@ -71,8 +67,4 @@ class _Event extends State<Event> {
     );
   }
 
-  String formatDate(String dateStr) {
-    DateTime date = DateTime.parse(dateStr);
-    return DateFormat('dd/MM/yyyy').format(date);
-  }
 }

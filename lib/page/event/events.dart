@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:intl/intl.dart';
 import '../../util/urls.dart';
 import '../../util/util_data.dart';
+import '../../util/util_routes.dart';
 
 class Events extends StatefulWidget {
   const Events({Key? key}) : super(key: key);
@@ -60,15 +61,9 @@ class _EventsState extends State<Events> {
 
                             return GestureDetector(
                               onTap: () => {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Event(event: event),
-                                  ),
-                                )
+                                moveToEvent(context, event)
                               },
                               child: Card(
-
                                 child: ListTile(
                                   title: Text(event['name'] ?? ''),
                                   subtitle: Column(

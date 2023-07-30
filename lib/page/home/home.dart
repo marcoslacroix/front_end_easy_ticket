@@ -93,7 +93,7 @@ class _HomeState extends State<Home> {
       token = prefs.getString("token")?? "";
       final authBloc = Provider.of<AuthBloc>(context, listen: false);
       authBloc.checkAuthentication(token);
-      TokenManager.instance.setToken('$token');
+      TokenManager.instance.setToken(token);
       getRoles();
     });
   }
@@ -104,7 +104,6 @@ class _HomeState extends State<Home> {
     if (kIsWeb) {
       return WebHome(selectedIndex: _selectedIndex);
     } else {
-      print("index: $_selectedIndex");
       return MobileHome(selectedIndex: _selectedIndex);
     }
   }

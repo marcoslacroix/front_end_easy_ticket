@@ -12,6 +12,9 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../auth/token_manager.dart';
 import '../../util/urls.dart';
+import '../../util/util_http.dart';
+import '../../util/util_routes.dart';
+import '../../util/util_values.dart';
 
 class CreditCard extends StatefulWidget {
   final dynamic tickets;
@@ -350,30 +353,14 @@ class _CreditCardState extends State<CreditCard> {
     );
   }
 
-  Map<String, String> _convertMapToStrings(Map<dynamic, dynamic> map) {
-    final convertedMap = <String, String>{};
-    map.forEach((key, value) {
-      convertedMap[key.toString()] = value.toString();
-    });
-    return convertedMap;
-  }
 
-  double realToCents(double real) {
-    return real * 100.0;
-  }
 
-  String formatCurrency(double value) {
-    final currencyFormat = NumberFormat.currency(
-        locale: 'pt_BR', symbol: 'R\$');
-    return currencyFormat.format(value);
-  }
 
   void _onConfirmPayment() async {
     if (_formKey.currentState!.validate() && selectedBandType!.isNotEmpty) {
       setState(() {
         _isButtonDisabled = true;
       });
-      print("starting payment...");
       await requestPayment(context);
     }
   }
@@ -425,7 +412,7 @@ class _CreditCardState extends State<CreditCard> {
             TextButton(
               child: const Text('OK'),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -434,13 +421,11 @@ class _CreditCardState extends State<CreditCard> {
     );
   }
 
-
   Future<void> requestPayment(context) async {
     try {
       var body = getBodyPayment();
       String jsonPayload = jsonEncode(body);
 
-      print("body $body");
       final url = Uri.parse(payUrl);
       var response = await http.post(
         url,
@@ -453,17 +438,10 @@ class _CreditCardState extends State<CreditCard> {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
-        print("response error: $jsonData");
         setState(() {
           _isButtonDisabled = false;
         });
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SuccessPayment(),
-          ),
-          (route) => false,
-        );
+        moveToSuccessPayment(context);
       } else if (response.statusCode == 400) {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
         showErrorDialog(context, jsonData['message']);
@@ -486,7 +464,7 @@ class _CreditCardState extends State<CreditCard> {
         double value = realToCents(totalTicketValue);
         var params = {"brand": band, "total": value};
         final url = Uri.parse(fetchInstallmentsUrl).replace(
-            queryParameters: _convertMapToStrings(params));
+            queryParameters: convertMapToStrings(params));
         var response = await http.get(
           url,
           headers: {

@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../auth/auth_bloc.dart';
 import '../../auth/token_manager.dart';
 import '../../util/urls.dart';
+import '../../util/util_http.dart';
 import '../../util/util_ticket.dart';
 import '../login.dart';
 
@@ -289,19 +290,11 @@ class _BuyTicketsState extends State<BuyTickets> {
     });
   }
 
-  Map<String, String> _convertMapToStrings(Map<dynamic, dynamic> map) {
-    final convertedMap = <String, String>{};
-    map.forEach((key, value) {
-      convertedMap[key.toString()] = value.toString();
-    });
-    return convertedMap;
-  }
-
   Future<List<dynamic>> fetchLots(eventId) async {
     try {
       var params = {"eventId": eventId};
       final url = Uri.parse(fetchLotsUrl)
-          .replace(queryParameters: _convertMapToStrings(params));
+          .replace(queryParameters: convertMapToStrings(params));
       var response = await http.get(
           url,
           headers: {

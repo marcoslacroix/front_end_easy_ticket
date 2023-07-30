@@ -18,10 +18,8 @@ class _ForgotPassword extends State<ForgotPassword> {
         iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
         elevation: 0,
       ),
-      body: Container(
-        child: Center(
-          child: Text('Esqueci minha senha'),
-        ),
+      body: const Center(
+        child: Text('Esqueci minha senha'),
       ),
     );
   }

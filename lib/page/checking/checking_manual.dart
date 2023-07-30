@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import '../../util/util_routes.dart';
 import 'checking.dart';
 
 class CheckingManual extends StatefulWidget {
@@ -17,7 +18,6 @@ class _CheckingManualState extends State<CheckingManual> {
   late final TextEditingController _uuidController;
   late final _uuidFocus;
 
-
   var maskFormatter = MaskTextInputFormatter(
       mask: '########-####-####-####-############',
       filter: { "#": RegExp(r'^[0-9a-z]+$')},
@@ -29,20 +29,13 @@ class _CheckingManualState extends State<CheckingManual> {
     _formKey = GlobalKey<FormState>();
     super.initState();
     _uuidController = TextEditingController();
-    _uuidController.addListener(handlePasteEvent);
     _uuidFocus = FocusNode();
   }
 
   @override
   void dispose() {
-    _uuidController.removeListener(handlePasteEvent);
     _uuidController.dispose();
     super.dispose();
-  }
-
-  void handlePasteEvent() {
-    String newText = _uuidController.text;
-    print('Text pasted: $newText');
   }
 
   @override
@@ -83,12 +76,7 @@ class _CheckingManualState extends State<CheckingManual> {
                   icon: const Icon(Icons.arrow_right_alt_outlined),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (contex) => Checking(ticketUuid: _uuidController.text)
-                        ),
-                      );
+                      moveToChecking(context, _uuidController.text);
                     }
                   },
                 ),

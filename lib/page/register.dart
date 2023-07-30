@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
 import '../util/urls.dart';
+import '../util/util_routes.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -446,13 +447,7 @@ class _RegisterState extends State<Register> {
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (context) => const Terms(),
-                                    fullscreenDialog: false
-                                ),
-                                    (route) => true
-                            );
+                            moveToTerms(context);
                           },
                       ),
                       const TextSpan(

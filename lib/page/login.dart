@@ -346,25 +346,21 @@ class _LoginState extends State<Login> {
     if (token.isNotEmpty) {
       await applyRoles(token);
       doLogin(token);
-      moveToScreen();
+      chooseScreenToMove();
     } else {
       invalidLogin();
     }
   }
 
-  void moveToScreen() {
+  void chooseScreenToMove() {
     if (event != null) {
-      print("ticket");
       moveToTickets(context, event);
     } else if (screen == Screen.perfil) {
-      print("perfil");
-      moveToHome(context, SelectedScreen.perfil, false);
+      moveToHome(context, SelectedScreen.perfil);
     } else if (screen == Screen.myTickets) {
-      print("my_tickets");
-      moveToHome(context, SelectedScreen.myTickets, false);
+      moveToHome(context, SelectedScreen.myTickets);
     } else {
-      print("events");
-      moveToHome(context, SelectedScreen.events, true);
+      moveToHome(context, SelectedScreen.events);
     }
   }
 
@@ -409,9 +405,9 @@ class _LoginState extends State<Login> {
     });
   }
 
-    bool isEmailValid(String email) {
-      // Expressão regular para validar o formato do e-mail
-      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-      return emailRegex.hasMatch(email);
-    }
+  bool isEmailValid(String email) {
+    // Expressão regular para validar o formato do e-mail
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
+  }
 }

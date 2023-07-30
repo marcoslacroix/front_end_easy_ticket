@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 
 import '../../auth/token_manager.dart';
 import '../../util/urls.dart';
+import '../../util/util_routes.dart';
 import '../home/home.dart';
 
 class Pix extends StatefulWidget {
@@ -65,11 +66,7 @@ class _PixState extends State<Pix> {
           IconButton(
             icon: const Icon(Icons.home),
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Home(selectedScreen: SelectedScreen.events)),
-                  (route) => false
-              ); // Navigate back to the previous screen (home page)
+              moveToHome(context, SelectedScreen.events);
             },
           ),
         ],
@@ -94,8 +91,8 @@ class _PixState extends State<Pix> {
               );
             } else {
               if (success) {
-                Uint8List bytes = base64Decode(snapshot?.data['message']?['imagemQrcode'].split(',')[1]);
-                _textEditingController.text = snapshot?.data['message']?['qrcode'];
+                Uint8List bytes = base64Decode(snapshot.data['message']?['imagemQrcode'].split(',')[1]);
+                _textEditingController.text = snapshot.data['message']?['qrcode'];
                 return Column(
                   children: [
                     const Text(
@@ -143,7 +140,7 @@ class _PixState extends State<Pix> {
                   ],
                 );
               } else {
-                String msgError = snapshot?.data['message'] ?? "";
+                String msgError = snapshot.data['message'] ?? "";
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -174,14 +171,12 @@ class _PixState extends State<Pix> {
 
       if (response.statusCode == 201) {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
-        print("true sucesss");
         setState(() {
           success = true;
         });
         return jsonData;
       } else if (response.statusCode == 400){
         Map<String, dynamic> jsonData = jsonDecode(response.body);
-        print("response error: $jsonData");
         return jsonData;
       }
     } catch (e) {
