@@ -11,3 +11,4 @@ const String ticketQrCodeUrl = '$apiBaseUrl/ticket/get-qrcode';
 const String fetchTicketByUuid = '$apiBaseUrl/ticket/get-ticket-by-uuid';
 const String ticketChecking = '$apiBaseUrl/ticket/checking';
 const String fetchUserRoles = '$apiBaseUrl/users/get-roles';
+const String createEventUrl = '$apiBaseUrl/event';

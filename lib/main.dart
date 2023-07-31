@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'auth/auth_bloc.dart';
-import 'auth/auth_provider.dart';
+import 'auth/auth_roles.dart';
 import 'page/home/home.dart';
 
 
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
             create: (_) => AuthBloc(),
         ),
         ChangeNotifierProvider(
-            create: (_) => AuthProvider()
+            create: (context) => AuthRoles()
         )
       ],
       child: const MaterialApp(

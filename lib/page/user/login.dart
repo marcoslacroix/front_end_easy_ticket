@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:easy_ticket/page/ticket/buy_tickets.dart';
 import 'package:easy_ticket/page/home/home.dart';
-import 'package:easy_ticket/page/perfil.dart';
-import 'package:easy_ticket/page/register.dart';
+import 'package:easy_ticket/page/user/perfil.dart';
+import 'package:easy_ticket/page/user/new_user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,14 +12,14 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../auth/auth_bloc.dart';
-import '../auth/auth_provider.dart';
-import '../auth/token_manager.dart';
-import '../enum/user_role.dart';
-import '../util/urls.dart';
-import '../util/util_routes.dart';
+import '../../auth/auth_bloc.dart';
+import '../../auth/auth_roles.dart';
+import '../../auth/token_manager.dart';
+import '../../enum/user_role.dart';
+import '../../util/urls.dart';
+import '../../util/util_routes.dart';
 import 'forgot_password.dart';
-import 'ticket/my_tickets.dart';
+import '../ticket/my_tickets.dart';
 
 enum Screen {
   perfil,
@@ -222,7 +222,7 @@ class _LoginState extends State<Login> {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const Register(),
+                          builder: (context) => const NewUser(),
                           fullscreenDialog: false,
                         ),
                             (route) => true,
@@ -370,7 +370,7 @@ class _LoginState extends State<Login> {
   }
 
   void updateRoles(futureRoles) {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthRoles>(context, listen: false);
     List<String> roleStrings = futureRoles.cast<String>();
     List<UserRole> userRoles = [];
     userRoles = roleStrings.map((role) => parseUserRole(role)).toList();

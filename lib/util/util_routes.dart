@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import '../page/checking/checking.dart';
 import '../page/checking/success_checking.dart';
 import '../page/event/event.dart';
+import '../page/event/success_new_event.dart';
 import '../page/home/home.dart';
 import '../page/payment/credit_card.dart';
 import '../page/payment/success_payment.dart';
-import '../page/terms.dart';
+import '../page/terms/terms.dart';
 import '../page/ticket/buy_tickets.dart';
 
 void moveToHome(context, screen) {
@@ -64,6 +65,16 @@ void moveToEvent(context, event) {
     MaterialPageRoute(
       builder: (context) => Event(event: event),
     ),
+  );
+}
+
+void moveToSuccessCreatedEvent(context) {
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const SuccessNewEvent(),
+    ),
+        (route) => false,
   );
 }
 

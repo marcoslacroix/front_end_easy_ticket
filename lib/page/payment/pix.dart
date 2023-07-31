@@ -140,7 +140,7 @@ class _PixState extends State<Pix> {
                   ],
                 );
               } else {
-                String msgError = snapshot.data['message'] ?? "";
+                String msgError = snapshot.data['error'] ?? "";
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),

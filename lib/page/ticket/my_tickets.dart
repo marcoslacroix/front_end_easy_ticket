@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../auth/token_manager.dart';
 import '../../util/urls.dart';
 import '../../util/util_ticket.dart';
-import '../login.dart';
+import '../user/login.dart';
 import 'package:http/http.dart' as http;
 
 class MyTickets extends StatefulWidget {

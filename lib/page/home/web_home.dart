@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../event/events.dart';
 import '../ticket/my_tickets.dart';
-import '../perfil.dart';
-import '../search.dart';
+import '../user/perfil.dart';
+import '../event/search.dart';
 
 class WebHome extends StatefulWidget {
   final int selectedIndex;

@@ -15,7 +15,7 @@ import '../../auth/token_manager.dart';
 import '../../util/urls.dart';
 import '../../util/util_http.dart';
 import '../../util/util_ticket.dart';
-import '../login.dart';
+import '../user/login.dart';
 
 class BuyTickets extends StatefulWidget {
   final dynamic event;

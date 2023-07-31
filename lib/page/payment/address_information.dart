@@ -2,6 +2,7 @@ import 'package:easy_ticket/page/payment/credit_card.dart';
 import 'package:easy_ticket/page/payment/total_tickets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddressInformation extends StatefulWidget {
@@ -34,15 +35,17 @@ class _AddressInformationState extends State<AddressInformation> {
   late TextEditingController _zipcodeController;
   late TextEditingController _cityController;
   late TextEditingController _stateController;
-  late final _streetFocus;
-  late final _streetNumberFocus;
-  late final _neighborhoodFocus;
-  late final _zipcodeFocus;
-  late final _cityFocus;
-  late final _stateFocus;
+  final _streetFocus = FocusNode();
+  final _streetNumberFocus = FocusNode();
+  final _neighborhoodFocus = FocusNode();
+  final _zipcodeFocus = FocusNode();
+  final _cityFocus = FocusNode();
+  late String _selectedState;
 
   late final double totalTicketValue;
   late final int totalTicketCount;
+
+  late final List<String> _statesList;
 
   @override
   void initState() {
@@ -57,17 +60,13 @@ class _AddressInformationState extends State<AddressInformation> {
     _cityController = TextEditingController();
     _stateController = TextEditingController();
 
-    _streetFocus = FocusNode();
-    _streetNumberFocus = FocusNode();
-    _neighborhoodFocus = FocusNode();
-    _zipcodeFocus = FocusNode();
-    _cityFocus = FocusNode();
-    _stateFocus = FocusNode();
-
-
     totalTicketValue = widget.totalTicketValue;
     totalTicketCount = widget.totalTicketCount;
-
+    _statesList = [
+      'Selecione o estado', 'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG',
+      'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+    ];
+    _selectedState = _statesList[0];
     loadPreferences();
     
     super.initState();
@@ -93,12 +92,17 @@ class _AddressInformationState extends State<AddressInformation> {
         _cityController.text = prefs.getString("address_information_city").toString();
       }
       if (prefs.getString("address_information_state") != null && prefs.getString("address_information_state")!.isNotEmpty) {
-        _stateController.text = prefs.getString("address_information_state").toString();
+        _selectedState = prefs.getString("address_information_state").toString();
       }
       
     });
   }
 
+  var maskFormatterCep = MaskTextInputFormatter(
+      mask: '#####-###',
+      filter: { "#": RegExp(r'[0-9]') },
+      type: MaskAutoCompletionType.lazy
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -130,6 +134,7 @@ class _AddressInformationState extends State<AddressInformation> {
                           if (value == null || value.isEmpty) {
                             return "Rua obrigatório.";
                           }
+                          return null;
                         },
                       ),
                       TextFormField(
@@ -142,6 +147,7 @@ class _AddressInformationState extends State<AddressInformation> {
                           if (value == null || value.isEmpty) {
                             return "Número do endereço é obrigatório.";
                           }
+                          return null;
                         },
                       ),
                       TextFormField(
@@ -155,6 +161,7 @@ class _AddressInformationState extends State<AddressInformation> {
                           if (value == null || value.isEmpty) {
                             return "Bairro obrigatório.";
                           }
+                          return null;
                         },
                       ),
                       TextFormField(
@@ -162,7 +169,7 @@ class _AddressInformationState extends State<AddressInformation> {
                         decoration: const InputDecoration(labelText: "CEP"),
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.next,
-                        maxLength: 9,
+                        inputFormatters: [maskFormatterCep],
                         focusNode: _zipcodeFocus,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -171,6 +178,7 @@ class _AddressInformationState extends State<AddressInformation> {
                           if (value.length < 8) {
                             return "CEP inválido";
                           }
+                          return null;
                         },
                       ),
                       TextFormField(
@@ -184,22 +192,33 @@ class _AddressInformationState extends State<AddressInformation> {
                           if (value == null || value.isEmpty) {
                             return "Cidade obrigatório";
                           }
+                          return null;
                         },
                       ),
-                      TextFormField(
-                        controller: _stateController,
-                        decoration: const InputDecoration(labelText: "Estado"),
-                        textInputAction: TextInputAction.next,
-                        textCapitalization: TextCapitalization.sentences,
-                        keyboardType: TextInputType.text,
-                        focusNode: _stateFocus,
-                        maxLength: 2,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Estado obrigatório.";
-                          }
+                      DropdownButtonFormField<String>(
+                        value: _selectedState,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedState = newValue!;
+                          });
                         },
-                      )
+                        items: _statesList.map((state) {
+                          return DropdownMenuItem<String>(
+                            value: state, // Make sure each state has a unique value.
+                            child: Text(state),
+                          );
+                        }).toList(),
+                        decoration: const InputDecoration(
+                          labelText: 'Estado',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty || value == "Selecione o estado") {
+                            return 'Estado obrigatório.';
+                          }
+                          print("value: $value");
+                          return null;
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -208,32 +227,26 @@ class _AddressInformationState extends State<AddressInformation> {
             ],
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_right_alt_outlined),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (contex) => CreditCard(
-                                totalTicketValue: totalTicketValue,
-                                totalTicketCount: totalTicketCount,
-                                tickets: tickets,
-                                customer: customer,
-                                address: generateAddressObject()
-                            )
-                        ),
-                      );
-                    }
-                  },
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (contex) => CreditCard(
+                        totalTicketValue: totalTicketValue,
+                        totalTicketCount: totalTicketCount,
+                        tickets: tickets,
+                        customer: customer,
+                        address: generateAddressObject()
+                    )
                 ),
-              ],
-            ),
+              );
+            }
+          },
+          child: const Icon(Icons.arrow_right_alt_outlined),
         ),
+
       ),
     );
   }
@@ -244,15 +257,15 @@ class _AddressInformationState extends State<AddressInformation> {
     prefs.setString("address_information_neighborhood", _neighborhoodController.text);
     prefs.setString("address_information_zipcode", _zipcodeController.text);
     prefs.setString("address_information_city", _cityController.text);
-    prefs.setString("address_information_state", _stateController.text);
-    var d = _zipcodeController.text;
+    prefs.setString("address_information_state", _selectedState);
+
     var params = {
       "street": _streetController.text,
       "number": _streetNumberController.text,
       "neighborhood": _neighborhoodController.text,
       "zipcode": _zipcodeController.text,
       "city": _cityController.text,
-      "state": _stateController.text
+      "state": _selectedState
     };
     return params;
   }

@@ -12,6 +12,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../auth/token_manager.dart';
 import '../../util/urls.dart';
+import '../../util/util_dialog.dart';
 import '../../util/util_http.dart';
 import '../../util/util_routes.dart';
 import '../../util/util_values.dart';
@@ -270,7 +271,6 @@ class _CreditCardState extends State<CreditCard> {
                                   return "Período inválido.";
                                 }
 
-                                print("value: $value");
                                 if (value.length > 1) {
                                   String month = value.substring(0, 2);
                                   int? monthInt = int.tryParse(month);
@@ -353,9 +353,6 @@ class _CreditCardState extends State<CreditCard> {
     );
   }
 
-
-
-
   void _onConfirmPayment() async {
     if (_formKey.currentState!.validate() && selectedBandType!.isNotEmpty) {
       setState(() {
@@ -401,26 +398,6 @@ class _CreditCardState extends State<CreditCard> {
     return body;
   }
 
-  void showErrorDialog(BuildContext context, String errorMessage) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Erro no pagamento'),
-          content: Text(errorMessage),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Future<void> requestPayment(context) async {
     try {
       var body = getBodyPayment();
@@ -444,7 +421,7 @@ class _CreditCardState extends State<CreditCard> {
         moveToSuccessPayment(context);
       } else if (response.statusCode == 400) {
         Map<String, dynamic> jsonData = jsonDecode(response.body);
-        showErrorDialog(context, jsonData['message']);
+        showErrorDialog(context, jsonData['error'], "Erro no pagamento");
           setState(() {
             _isButtonDisabled = false;
           });

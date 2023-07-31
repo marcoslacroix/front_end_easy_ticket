@@ -1,4 +1,4 @@
-import 'package:easy_ticket/auth/auth_provider.dart';
+import 'package:easy_ticket/auth/auth_roles.dart';
 import 'package:easy_ticket/page/home/mobile_home.dart';
 import 'package:easy_ticket/page/home/web_home.dart';
 import 'package:flutter/foundation.dart';
@@ -10,9 +10,9 @@ import '../../auth/auth_bloc.dart';
 import '../../auth/token_manager.dart';
 import '../../enum/user_role.dart';
 import '../ticket/my_tickets.dart';
-import '../perfil.dart';
+import '../user/perfil.dart';
 import '../event/events.dart';
-import '../search.dart';
+import '../event/search.dart';
 
 enum SelectedScreen {
   events,
@@ -33,15 +33,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late SharedPreferences prefs;
   int _selectedIndex = 0;
-  late final authProvider;
-
   late String token;
   late List<UserRole> listRoles;
 
   @override
   void initState() {
     super.initState();
-    authProvider = Provider.of<AuthProvider>(context, listen: false);
     getToken();
 
     switch (widget.selectedScreen) {
@@ -77,15 +74,6 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void getRoles() {
-    setState(() {
-      List<String> roles = prefs.getStringList("roles") ?? [];
-      List<UserRole> userRoles = [];
-      userRoles = roles.map((role) => parseUserRole(role)).toList();
-      listRoles = userRoles;
-      authProvider.updateRoles(userRoles);
-    });
-  }
 
   void getToken() async {
     prefs = await SharedPreferences.getInstance();
@@ -98,6 +86,17 @@ class _HomeState extends State<Home> {
     });
   }
 
+
+  void getRoles() {
+    setState(() {
+      final authRoles = Provider.of<AuthRoles>(context, listen: false);
+      List<String> roles = prefs.getStringList("roles") ?? [];
+      List<UserRole> userRoles = [];
+      userRoles = roles.map((role) => parseUserRole(role)).toList();
+      listRoles = userRoles;
+      authRoles.updateRoles(userRoles);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

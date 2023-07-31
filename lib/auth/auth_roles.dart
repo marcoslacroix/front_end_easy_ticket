@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../enum/user_role.dart';
 
-class AuthProvider extends ChangeNotifier {
+class AuthRoles extends ChangeNotifier {
   List<UserRole> _roles = [];
 
   List<UserRole> get roles => _roles;

@@ -14,9 +14,9 @@ class CheckingManual extends StatefulWidget {
 }
 
 class _CheckingManualState extends State<CheckingManual> {
-  late final _formKey;
+  final _formKey = GlobalKey<FormState>();
   late final TextEditingController _uuidController;
-  late final _uuidFocus;
+  final _uuidFocus = FocusNode();
 
   var maskFormatter = MaskTextInputFormatter(
       mask: '########-####-####-####-############',
@@ -26,10 +26,8 @@ class _CheckingManualState extends State<CheckingManual> {
 
   @override
   void initState() {
-    _formKey = GlobalKey<FormState>();
     super.initState();
     _uuidController = TextEditingController();
-    _uuidFocus = FocusNode();
   }
 
   @override

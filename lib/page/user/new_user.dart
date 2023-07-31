@@ -1,22 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:easy_ticket/page/terms.dart';
+import 'package:easy_ticket/page/terms/terms.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
-import '../util/urls.dart';
-import '../util/util_routes.dart';
+import '../../util/urls.dart';
+import '../../util/util_routes.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class NewUser extends StatefulWidget {
+  const NewUser({super.key});
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _NewUserState createState() => _NewUserState();
 }
 
-class _RegisterState extends State<Register> {
+class _NewUserState extends State<NewUser> {
   late final _formKey;
   late TextEditingController _emailController;
   late TextEditingController _nameController;

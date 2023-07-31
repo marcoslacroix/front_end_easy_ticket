@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/auth_bloc.dart';
-import '../auth/auth_provider.dart';
+import '../auth/auth_roles.dart';
 import '../auth/token_manager.dart';
 import '../page/home/home.dart';
 
@@ -26,7 +26,7 @@ class _LogoutState extends State<Logout> {
         final authBloc = Provider.of<AuthBloc>(context, listen: false);
         authBloc.updateAuthStatus(AuthStatus.unauthenticated);
         TokenManager.instance.setToken("");
-        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        final authProvider = Provider.of<AuthRoles>(context, listen: false);
         authProvider.removeAllRoles();
         widget.prefs.setStringList("roles", []);
         Navigator.pushAndRemoveUntil(
