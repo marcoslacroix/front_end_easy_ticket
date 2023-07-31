@@ -194,7 +194,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                       TextFormField(
                         controller: _birthInputController,
                         decoration: const InputDecoration(labelText: "Data de nascimento (dd/MM/yyyy)"),
-                        inputFormatters: [maskFormatterBirth],
+                        inputFormatters: [DateInputFormatter(), maskFormatterBirth],
                         textInputAction: TextInputAction.next,
                         focusNode: _birthFocus,
                         keyboardType: TextInputType.number,

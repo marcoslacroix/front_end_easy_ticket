@@ -275,19 +275,21 @@ class _EventAddressState extends State<EventAddress> {
             ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _isButtonDisabled ? null : _saveEvent(),
-        child:
-        _isButtonDisabled ? const SizedBox( // Show loading indicator when _isButtonDisabled is true
-          height: 24,
-          width: 24,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-        ) :
-        const Icon(Icons.save),
-      )
+      bottomNavigationBar: BottomAppBar(
+        child: ElevatedButton(
+          onPressed: () => _isButtonDisabled ? null : _saveEvent(),
+          child:
+          _isButtonDisabled ? const SizedBox( // Show loading indicator when _isButtonDisabled is true
+            height: 24,
+            width: 24,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          ) :
+          const Text("Salvar"),
+        ),
+      ),
     );
   }
 

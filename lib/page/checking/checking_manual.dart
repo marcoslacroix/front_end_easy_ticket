@@ -47,14 +47,14 @@ class _CheckingManualState extends State<CheckingManual> {
               color: Colors.black), // Definir a cor do ícone de voltar
         ),
         body: Center(
-          child: SizedBox(
-            width: 350,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: TextFormField(
-            decoration: const InputDecoration(labelText: "Digite o código"),
+            decoration: const InputDecoration(labelText: "Digite o código", border: OutlineInputBorder()),
             controller: _uuidController,
             maxLength: 36,
             focusNode: _uuidFocus,
-            inputFormatters: [maskFormatter], // Adicione o maskFormatter aqui
+            inputFormatters: [maskFormatter],
             textInputAction: TextInputAction.next,
             validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -64,24 +64,17 @@ class _CheckingManualState extends State<CheckingManual> {
                   return "Código inválido";
                 }
             },
-          ),
-          )),
-          bottomNavigationBar: BottomAppBar(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_right_alt_outlined),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      moveToChecking(context, _uuidController.text);
-                    }
-                  },
-                ),
-              ],
             ),
           )
-
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              moveToChecking(context, _uuidController.text);
+            }
+          },
+          child: const Icon(Icons.arrow_right_alt_outlined),
+        ),
       ),
     );
   }

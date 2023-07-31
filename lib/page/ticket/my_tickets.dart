@@ -104,6 +104,7 @@ class _MyTicketsState extends State<MyTickets> {
                                           Center(child: Text(ticket['event']['period'] ?? ""))
                                         ],
                                       ),
+                                      trailing: const Icon(Icons.arrow_forward), // Add the arrow icon here
                                     ),
                                   ),
                                 );

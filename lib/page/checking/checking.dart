@@ -62,7 +62,7 @@ class _CheckingState extends State<Checking> {
             } else if (snapshot.hasError) {
               return const Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(16.0),
                   child: Text(
                     "Ingresso inválido",
                     style: TextStyle(color: Colors.red), // Change the error message text color
@@ -72,7 +72,10 @@ class _CheckingState extends State<Checking> {
             } else {
               String? error = snapshot.data['error'];
               if (error != null && error.isNotEmpty) {
-                return Center(child: Text(error));
+                return Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Center(child: Text(error)),
+                );
               } else {
                 String type = getTypeFormated(snapshot.data['ticket']['type']);
                 return Center(

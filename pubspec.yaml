@@ -37,6 +37,7 @@ dependencies:
   qr_code_scanner: ^1.0.1
   mask_text_input_formatter: ^2.1.0
   shared_preferences: ^2.2.0
+  currency_text_input_formatter: ^2.1.10
   flutter:
     sdk: flutter
 

@@ -106,80 +106,65 @@ class _LoginState extends State<Login> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                    child: Text(
-                      "Area exclusiva para clientes, faça o login ou crie um cadastro",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
+              Text(
+                "Area exclusiva para clientes, faça o login ou crie um cadastro",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 250,
-                    child: TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      controller: _emailController,
-                      focusNode: _emailFocus,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "E-mail obrigatório.";
-                        }
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  controller: _emailController,
+                  focusNode: _emailFocus,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "E-mail obrigatório.";
+                    }
 
-                        if (!isEmailValid(value)) {
-                          return 'E-mail inválido.';
-                        }
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'E-mail',
-                      ),
-                    ),
+                    if (!isEmailValid(value)) {
+                      return 'E-mail inválido.';
+                    }
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'E-mail',
+                    border: OutlineInputBorder()
                   ),
-                ],
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 250,
-                    child: TextFormField(
-                      controller: _passwordController,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.text,
-                      focusNode: _passwordFocus,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Password obrigatório.";
-                        }
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: _passwordController,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.text,
+                  focusNode: _passwordFocus,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Password obrigatório.";
+                    }
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isPasswordVisible = !isPasswordVisible;
+                        });
                       },
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isPasswordVisible = !isPasswordVisible;
-                            });
-                          },
-                          child: Icon(
-                            isPasswordVisible ? Icons.visibility : Icons
-                                .visibility_off,
-                          ),
-                        ),
+                      child: Icon(
+                        isPasswordVisible ? Icons.visibility : Icons
+                            .visibility_off,
                       ),
-                      obscureText: !isPasswordVisible,
                     ),
                   ),
-                ],
+                  obscureText: !isPasswordVisible,
+                ),
               ),
               const SizedBox(height: 16.0),
               Row(

@@ -10,6 +10,7 @@ import '../page/payment/credit_card.dart';
 import '../page/payment/success_payment.dart';
 import '../page/terms/terms.dart';
 import '../page/ticket/buy_tickets.dart';
+import '../page/ticket/success_new_ticket.dart';
 
 void moveToHome(context, screen) {
   Navigator.pushAndRemoveUntil(
@@ -65,6 +66,16 @@ void moveToEvent(context, event) {
     MaterialPageRoute(
       builder: (context) => Event(event: event),
     ),
+  );
+}
+
+void moveToSuccessCreatedTicket(context) {
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const SuccessNewTicket(),
+    ),
+        (route) => false,
   );
 }
 

@@ -9,3 +9,4 @@ String formatCurrency(double value) {
 double realToCents(double real) {
   return real * 100.0;
 }
+

@@ -99,299 +99,236 @@ class _NewUserState extends State<NewUser> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 250,
-                      child: TextFormField(
-                        controller: _nameController,
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                        textCapitalization: TextCapitalization.sentences,
-                        decoration: const InputDecoration(labelText: 'Nome'),
-                        focusNode: _nameFocus,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Nome obrigatório.";
-                          }
-                        },
-                      ),
-                    ),
-                  ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: _nameController,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: const InputDecoration(labelText: 'Nome', border: OutlineInputBorder()),
+                  focusNode: _nameFocus,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Nome obrigatório.";
+                    }
+                  },
                 ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 250,
-                    child: TextFormField(
-                      controller: _lastnameController,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      textCapitalization: TextCapitalization.sentences,
-                      focusNode: _lastnameFocus,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Sobrenome obrigatório.";
-                        }
-                      },
-                      decoration: const InputDecoration(labelText: 'Sobrenome'),
-                    ),
-                  ),
-                ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 250,
-                    child: TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      controller: _emailController,
-                      textInputAction: TextInputAction.next,
-                      focusNode: _emailFocus,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "E-mail obrigatório.";
-                        }
-                        if (!isEmailValid(value)) {
-                          return 'E-mail inválido.';
-                        }
-                      },
-                      decoration: const InputDecoration(labelText: 'E-mail'),
-                    ),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: _lastnameController,
+                  decoration: const InputDecoration(labelText: 'Sobrenome', border: OutlineInputBorder()),
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                  textCapitalization: TextCapitalization.sentences,
+                  focusNode: _lastnameFocus,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Sobrenome obrigatório.";
+                    }
+                  },
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 250,
-                    child: TextFormField(
-                      controller: _passwordController,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.text,
-                      focusNode: _passwordFocus,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Senha obrigatório.";
-                        }
-                        if (!passwordContainsUppercase) {
-                          return "A senha deve ter pelo menos uma letra maiuscula";
-                        }
-                        if (!passwordContainsSpecialChar) {
-                          return "A senha deve conter pelo menos um caracter especial.";
-                        }
-                        if (!passwordContainsNumber) {
-                          return "A senha deve conter pelo menos um número.";
-                        }
-                        if (!passwordContainsLowercase) {
-                          return "A senha deve conter pelo menos uma letra minuscula.";
-                        }
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(labelText: 'E-mail', border: OutlineInputBorder()),
+                  controller: _emailController,
+                  textInputAction: TextInputAction.next,
+                  focusNode: _emailFocus,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "E-mail obrigatório.";
+                    }
+                    if (!isEmailValid(value)) {
+                      return 'E-mail inválido.';
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: _passwordController,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.text,
+                  focusNode: _passwordFocus,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Senha obrigatório.";
+                    }
+                    if (!passwordContainsUppercase) {
+                      return "A senha deve ter pelo menos uma letra maiuscula";
+                    }
+                    if (!passwordContainsSpecialChar) {
+                      return "A senha deve conter pelo menos um caracter especial.";
+                    }
+                    if (!passwordContainsNumber) {
+                      return "A senha deve conter pelo menos um número.";
+                    }
+                    if (!passwordContainsLowercase) {
+                      return "A senha deve conter pelo menos uma letra minuscula.";
+                    }
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    border: OutlineInputBorder(),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isPasswordVisible = !isPasswordVisible;
+                        });
                       },
-                      decoration: InputDecoration(
-                        labelText: 'Senha',
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isPasswordVisible = !isPasswordVisible;
-                            });
-                          },
-                          child: Icon(
-                            isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                          ),
-                        ),
+                      child: Icon(
+                        isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                       ),
-                      obscureText: !isPasswordVisible,
                     ),
                   ),
-                ],
+                  obscureText: !isPasswordVisible,
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 250,
-                    child: TextFormField(
-                      controller: _confirmPasswordController,
-                      textInputAction: TextInputAction.next,
-                      focusNode: _confirmPasswordFocus,
-                      keyboardType: TextInputType.text,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Senha obrigatório.";
-                        }
-                        if (!passwordContainsUppercase) {
-                          return "A senha deve ter pelo menos uma letra maiuscula";
-                        }
-                        if (!passwordContainsSpecialChar) {
-                          return "A senha deve conter pelo menos um caracter especial.";
-                        }
-                        if (!passwordContainsNumber) {
-                          return "A senha deve conter pelo menos um número.";
-                        }
-                        if (!passwordContainsLowercase) {
-                          return "A senha deve conter pelo menos uma letra minuscula.";
-                        }
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: _confirmPasswordController,
+                  textInputAction: TextInputAction.next,
+                  focusNode: _confirmPasswordFocus,
+                  keyboardType: TextInputType.text,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Senha obrigatório.";
+                    }
+                    if (!passwordContainsUppercase) {
+                      return "A senha deve ter pelo menos uma letra maiuscula";
+                    }
+                    if (!passwordContainsSpecialChar) {
+                      return "A senha deve conter pelo menos um caracter especial.";
+                    }
+                    if (!passwordContainsNumber) {
+                      return "A senha deve conter pelo menos um número.";
+                    }
+                    if (!passwordContainsLowercase) {
+                      return "A senha deve conter pelo menos uma letra minuscula.";
+                    }
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Confirmar senha',
+                    border: OutlineInputBorder(),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isConfirmPasswordVisible = !isConfirmPasswordVisible;
+                        });
                       },
-                      decoration: InputDecoration(
-                        labelText: 'Confirmar senha',
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isConfirmPasswordVisible = !isConfirmPasswordVisible;
-                            });
-                          },
-                          child: Icon(
-                            isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                          ),
-                        ),
+                      child: Icon(
+                        isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
                       ),
-                      obscureText: !isConfirmPasswordVisible,
+                    ),
+                  ),
+                  obscureText: !isConfirmPasswordVisible,
+                ),
+              ),
+              Row(
+                children: [
+                  if (passwordContainsUppercase)
+                    const Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    )
+                  else
+                    const Icon(
+                      Icons.clear,
+                      color: Colors.red,
+                    ),
+                  Text(
+                    'Letra maiúscula',
+                    style: TextStyle(
+                      color: passwordContainsUppercase ? Colors.green : Colors.red,
                     ),
                   ),
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 250,
-                    child: Row(
-                      children: [
-                        if (passwordContainsUppercase)
-                          const Icon(
-                            Icons.check,
-                            color: Colors.green,
-                          )
-                        else
-                          const Icon(
-                            Icons.clear,
-                            color: Colors.red,
-                          ),
-                        Text(
-                          'Letra maiúscula',
-                          style: TextStyle(
-                            color: passwordContainsUppercase ? Colors.green : Colors.red,
-                          ),
-                        ),
-                      ],
+                  if (passwordContainsNumber)
+                    const Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    )
+                  else
+                    const Icon(
+                      Icons.clear,
+                      color: Colors.red,
+                    ),
+                  Text(
+                    'Número',
+                    style: TextStyle(
+                      color: passwordContainsNumber ? Colors.green : Colors.red,
                     ),
                   ),
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 250,
-                    child: Row(
-                      children: [
-                        if (passwordContainsNumber)
-                          const Icon(
-                            Icons.check,
-                            color: Colors.green,
-                          )
-                        else
-                          const Icon(
-                            Icons.clear,
-                            color: Colors.red,
-                          ),
-                        Text(
-                          'Número',
-                          style: TextStyle(
-                            color: passwordContainsNumber ? Colors.green : Colors.red,
-                          ),
-                        ),
-                      ],
+                  if (passwordContainsLowercase)
+                    const Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    )
+                  else
+                    const Icon(
+                      Icons.clear,
+                      color: Colors.red,
+                    ),
+                  Text(
+                    'Letra minuscula',
+                    style: TextStyle(
+                      color: passwordContainsLowercase ? Colors.green : Colors.red,
                     ),
                   ),
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 250,
-                    child: Row(
-                      children: [
-                        if (passwordContainsLowercase)
-                          const Icon(
-                            Icons.check,
-                            color: Colors.green,
-                          )
-                        else
-                          const Icon(
-                            Icons.clear,
-                            color: Colors.red,
-                          ),
-                        Text(
-                          'Letra minuscula',
-                          style: TextStyle(
-                            color: passwordContainsLowercase ? Colors.green : Colors.red,
-                          ),
-                        ),
-                      ],
+                  if (passwordContainsSpecialChar)
+                    const Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    )
+                  else
+                    const Icon(
+                      Icons.clear,
+                      color: Colors.red,
+                    ),
+                  Text(
+                    'Caractere especial',
+                    style: TextStyle(
+                      color: passwordContainsSpecialChar ? Colors.green : Colors.red,
                     ),
                   ),
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 250,
-                    child: Row(
-                      children: [
-                        if (passwordContainsSpecialChar)
-                          const Icon(
-                            Icons.check,
-                            color: Colors.green,
-                          )
-                        else
-                          const Icon(
-                            Icons.clear,
-                            color: Colors.red,
-                          ),
-                        Text(
-                          'Caractere especial',
-                          style: TextStyle(
-                            color: passwordContainsSpecialChar ? Colors.green : Colors.red,
-                          ),
-                        ),
-                      ],
+                  if (_passwordController.text != '' && _passwordController.text == _confirmPasswordController.text)
+                    const Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    )
+                  else
+                    const Icon(
+                      Icons.clear,
+                      color: Colors.red,
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 250     ,
-                    child: Row(
-                      children: [
-                        if (_passwordController.text != '' && _passwordController.text == _confirmPasswordController.text)
-                          const Icon(
-                            Icons.check,
-                            color: Colors.green,
-                          )
-                        else
-                          const Icon(
-                            Icons.clear,
-                            color: Colors.red,
-                          ),
-                        Flexible(
-                          child: Text(
-                            'As senhas correspondem',
-                            style: TextStyle(
-                              color: _passwordController.text != '' && _passwordController.text == _confirmPasswordController.text ? Colors.green : Colors.red,
-                            ),
-                          ),
-                        ),
-                      ],
+                  Flexible(
+                    child: Text(
+                      'As senhas correspondem',
+                      style: TextStyle(
+                        color: _passwordController.text != '' && _passwordController.text == _confirmPasswordController.text ? Colors.green : Colors.red,
+                      ),
                     ),
                   ),
                 ],

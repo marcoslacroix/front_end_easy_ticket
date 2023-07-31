@@ -50,7 +50,7 @@ class _NewEventState extends State<NewEvent> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(child: Text("Novo evento")),
-        iconTheme: const IconThemeData(color: Colors.black), // Definir a cor do ícone de voltar
+        iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0,
       ),
       body: Form(
@@ -83,7 +83,6 @@ class _NewEventState extends State<NewEvent> {
                   if (value == null || value.isEmpty) {
                     return "Período obrigatório.";
                   }
-                  print("value $value");
                   if (value.length < 10) {
                     return "Período inválido";
                   }

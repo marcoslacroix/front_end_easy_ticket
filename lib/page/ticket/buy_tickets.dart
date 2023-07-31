@@ -121,99 +121,102 @@ class _BuyTicketsState extends State<BuyTickets> {
                                       maleTicketCountMap[lotId] ??= 0;
                                       femaleTicketCountMap[lotId] ??= 0;
 
-                                      return ListTile(
-                                        title: Center(child: Text(description + " " + getTypeFormated(type))),
-                                        subtitle: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                ElevatedButton(
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      if (type == 'MALE' && maleTicketCountMap[lotId]! > 0) {
-                                                        maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! - 1;
-                                                        totalTicketCount--;
-                                                        totalTicketValue -= ticket['price'] / 100;
-                                                        updateTotalTickets(totalTicketCount, totalTicketValue);
-
-                                                        if (maleTicketCountMap[lotId]! == 0) {
-                                                          enableContinue = false;
-                                                        }
-                                                      } else if (type == 'FEMALE' && femaleTicketCountMap[lotId]! > 0) {
-                                                        femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! - 1;
-                                                        totalTicketCount--;
-                                                        totalTicketValue -= ticket['price'] / 100;
-                                                        updateTotalTickets(totalTicketCount, totalTicketValue);
-
-
-                                                        if (maleTicketCountMap[lotId]! == 0) {
-                                                          enableContinue = false;
-                                                        }
-                                                      }
-                                                    });
-                                                  },
-                                                  child: const Icon(Icons.remove),
-                                                ),
-                                                const SizedBox(width: 20),
-                                                Text(
-                                                  type == 'MALE' ? '${maleTicketCountMap[lotId]}' : '${femaleTicketCountMap[lotId]}',
-                                                ),
-                                                const SizedBox(width: 20),
-                                                ElevatedButton(
-                                                  onPressed: () {
-                                                    bool canBuyTickets = quantityTicketsUserAlreadyBougthForThisEvent + totalTicketCount < 5;
-                                                    canBuyTickets ?
-                                                    setState(() {
-                                                      if (isTicketAvailable(type, lotId)) {
-                                                        if (type == 'MALE') {
-                                                          maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! + 1;
-                                                          totalTicketCount++;
-                                                          totalTicketValue += ticket['price'] / 100.0;
+                                      return Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: ListTile(
+                                          title: Center(child: Text(description + " " + getTypeFormated(type), style: TextStyle(color: type == "MALE" ? Colors.blue : Colors.pinkAccent ),)),
+                                          subtitle: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        if (type == 'MALE' && maleTicketCountMap[lotId]! > 0) {
+                                                          maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! - 1;
+                                                          totalTicketCount--;
+                                                          totalTicketValue -= ticket['price'] / 100;
                                                           updateTotalTickets(totalTicketCount, totalTicketValue);
 
-                                                          if (maleTicketCountMap[lotId]! > 0) {
-                                                            enableContinue = true;
+                                                          if (maleTicketCountMap[lotId]! == 0) {
+                                                            enableContinue = false;
                                                           }
-                                                        } else if (type == 'FEMALE') {
-                                                          femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! + 1;
-                                                          totalTicketCount++;
-                                                          totalTicketValue += ticket['price'] / 100.0;
+                                                        } else if (type == 'FEMALE' && femaleTicketCountMap[lotId]! > 0) {
+                                                          femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! - 1;
+                                                          totalTicketCount--;
+                                                          totalTicketValue -= ticket['price'] / 100;
                                                           updateTotalTickets(totalTicketCount, totalTicketValue);
 
-                                                          if (femaleTicketCountMap[lotId]! > 0) {
-                                                            enableContinue = true;
+
+                                                          if (maleTicketCountMap[lotId]! == 0) {
+                                                            enableContinue = false;
                                                           }
                                                         }
-                                                      } else {
-                                                        ScaffoldMessenger.of(context).showSnackBar(
-                                                          const SnackBar(
-                                                            content: Text('Não há mais ingressos disponíveis para este tipo e lote.'),
-                                                            behavior: SnackBarBehavior.floating,
-                                                          ),
-                                                        );
-                                                      }
-                                                    })
-                                                        : ScaffoldMessenger.of(context).showSnackBar(
-                                                      const SnackBar(
-                                                        content: Text('Quantidade máxima de ingressos por usuário atingido.'),
-                                                        behavior: SnackBarBehavior.floating,
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: const Icon(Icons.add),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Center(
-                                                    child: Text('${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(realValue)}')),
-                                              ],
-                                            ),
-                                            const Divider(),
-                                          ],
+                                                      });
+                                                    },
+                                                    child: const Icon(Icons.remove),
+                                                  ),
+                                                  const SizedBox(width: 20),
+                                                  Text(
+                                                    type == 'MALE' ? '${maleTicketCountMap[lotId]}' : '${femaleTicketCountMap[lotId]}',
+                                                  ),
+                                                  const SizedBox(width: 20),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      bool canBuyTickets = quantityTicketsUserAlreadyBougthForThisEvent + totalTicketCount < 5;
+                                                      canBuyTickets ?
+                                                      setState(() {
+                                                        if (isTicketAvailable(type, lotId)) {
+                                                          if (type == 'MALE') {
+                                                            maleTicketCountMap[lotId] = maleTicketCountMap[lotId]! + 1;
+                                                            totalTicketCount++;
+                                                            totalTicketValue += ticket['price'] / 100.0;
+                                                            updateTotalTickets(totalTicketCount, totalTicketValue);
+
+                                                            if (maleTicketCountMap[lotId]! > 0) {
+                                                              enableContinue = true;
+                                                            }
+                                                          } else if (type == 'FEMALE') {
+                                                            femaleTicketCountMap[lotId] = femaleTicketCountMap[lotId]! + 1;
+                                                            totalTicketCount++;
+                                                            totalTicketValue += ticket['price'] / 100.0;
+                                                            updateTotalTickets(totalTicketCount, totalTicketValue);
+
+                                                            if (femaleTicketCountMap[lotId]! > 0) {
+                                                              enableContinue = true;
+                                                            }
+                                                          }
+                                                        } else {
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                            const SnackBar(
+                                                              content: Text('Não há mais ingressos disponíveis para este tipo e lote.'),
+                                                              behavior: SnackBarBehavior.floating,
+                                                            ),
+                                                          );
+                                                        }
+                                                      })
+                                                          : ScaffoldMessenger.of(context).showSnackBar(
+                                                        const SnackBar(
+                                                          content: Text('Quantidade máxima de ingressos por usuário atingido.'),
+                                                          behavior: SnackBarBehavior.floating,
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: const Icon(Icons.add),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Center(
+                                                      child: Text('${NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(realValue)}')),
+                                                ],
+                                              ),
+                                              const Divider(),
+                                            ],
+                                          ),
                                         ),
                                       );
                                     },

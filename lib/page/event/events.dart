@@ -92,6 +92,7 @@ class _EventsState extends State<Events> {
                                           )
                                         ],
                                       ),
+                                      trailing: const Icon(Icons.arrow_forward), // Add the arrow icon here
                                     ),
                                   ),
                                 );
